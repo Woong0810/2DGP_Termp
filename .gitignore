@@ -1,0 +1,16 @@
+# JetBrains / PyCharm
+.idea/
+*.iml
+copilot.data.migration.*.xml
+
+# Python caches & venv
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env/
+
+# OS/editor junk
+.DS_Store
+Thumbs.db
+.vscode/
