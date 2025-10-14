@@ -1,7 +1,7 @@
 from pico2d import *
 # from characters_naruto_frames import FRAMES
 # from characters_itachi_frames import FRAMES
-from characters_jiraiya_frames_by_gpt import FRAMES
+from characters_jiraiya_frames import FRAMES
 
 open_canvas(800, 600)
 # img = load_image('Characters_Naruto_clean.png')

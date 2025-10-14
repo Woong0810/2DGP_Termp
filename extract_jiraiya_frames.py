@@ -1,6 +1,25 @@
 from PIL import Image
 import os
 
+def is_frame_empty(img, left, top, right, bottom, background_color, border_colors):
+    """
+    Check if a frame contains actual character pixels (not just background/border)
+    """
+    character_pixel_count = 0
+    min_character_pixels = 10  # Minimum pixels to consider frame non-empty
+
+    for y in range(top, bottom):
+        for x in range(left, right):
+            if x < img.width and y < img.height:
+                pixel = img.getpixel((x, y))
+                # If pixel is not background and not border, it's a character pixel
+                if pixel != background_color and pixel not in border_colors:
+                    character_pixel_count += 1
+                    if character_pixel_count >= min_character_pixels:
+                        return False  # Frame has enough character pixels
+
+    return True  # Frame is empty or has too few pixels
+
 def extract_frames(image_path, border_colors, background_color):
     """
     Extract frame information from sprite sheet with colored borders
@@ -49,6 +68,15 @@ def extract_frames(image_path, border_colors, background_color):
                         # Check if bottom-right corner has border
                         if (frame_right < width and frame_bottom < height and
                             img.getpixel((frame_right, frame_bottom)) in border_colors):
+
+                            # Skip empty frames
+                            if is_frame_empty(img, frame_left, frame_top, frame_right, frame_bottom,
+                                            background_color, border_colors):
+                                # Mark as visited but don't add to frames
+                                for vy in range(top, bottom):
+                                    for vx in range(left, right):
+                                        visited.add((vx, vy))
+                                continue
 
                             frame_width = frame_right - frame_left
                             frame_height = frame_bottom - frame_top
@@ -131,4 +159,3 @@ if __name__ == "__main__":
                             background_color, border_colors)
 
     print("Done!")
-
