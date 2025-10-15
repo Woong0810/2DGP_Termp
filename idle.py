@@ -16,7 +16,6 @@ class Idle:
 
         if self.naruto.face_dir == 1:  # 오른쪽
             self.naruto.image.clip_draw(l, b, w, h, self.naruto.x, self.naruto.y)
-        else:  # 왼쪽: 수평 플립
-            # angle = 0.0, flip = 'h'
+        else:
             self.naruto.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
                                                   self.naruto.x, self.naruto.y, w, h)
