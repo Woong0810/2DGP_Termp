@@ -14,7 +14,7 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             running = False
         else:
-            character.state_machine.handle_event(event)
+            character.handle_event(event)
 
 running = True
 

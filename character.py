@@ -12,9 +12,17 @@ class Character:
         self.image = load_image('Characters_Naruto_clean.png')
         self.IDLE = Idle(self)  # Idle 상태 객체 생성
         self.RUN = Run(self)
-        self.state_machine = StateMachine(self.RUN)
+        self.state_machine = StateMachine(
+            self.RUN,
+            {
+                'IDLE':  {},
+                'RUN': {}
+            }
+        )
     def update(self):
         self.state_machine.update()
     def draw(self):
         self.state_machine.draw()
         pass
+    def handle_event(self, event):
+        self.state_machine.handle_event(event)
