@@ -10,5 +10,15 @@ class StateMachine:
     def draw(self):
         self.cur_state.draw()
     def handle_event(self, state_event):
-        pass
+        for check_event in self.rules[self.cur_state].keys():
+            if check_event(state_event):
+                next_state = self.rules[self.cur_state][check_event]
+                self.cur_state.exit()
+                next_state.enter()
+                print(f'{self.cur_state.__class__.__name__} ============== {event_to_string(state_event)} =============> {next_state.__class__.__name__}')
+                self.cur_state = next_state
+                return
+        print(f'처리되지 않은 이벤트 {event_to_string(state_event)}가 있습니다')
+
+
 
