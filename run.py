@@ -1,4 +1,4 @@
-from character import right_down, right_up, left_down, left_up
+from event_to_string import right_down, right_up, left_down, left_up
 from characters_naruto_frames import FRAMES
 RUN_FRAMES = [FRAMES[i] for i in range(26, 32)]
 
