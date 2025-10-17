@@ -13,11 +13,11 @@ class Character:
         self.IDLE = Idle(self)  # Idle 상태 객체 생성
         self.RUN = Run(self)
         self.state_machine = StateMachine(
-            self.RUN,
-            {
-                'IDLE': {},
-                'RUN': {}
-            }
+            self.IDLE,
+        {
+                self.IDLE: {right_up: self.RUN, left_up: self.RUN, right_down: self.RUN, left_down: self.RUN},
+                self.RUN: {right_up: self.IDLE, left_up: self.IDLE}
+             }
         )
     def update(self):
         self.state_machine.update()
