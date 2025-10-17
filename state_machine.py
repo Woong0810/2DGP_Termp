@@ -4,7 +4,7 @@ class StateMachine:
     def __init__(self, initial_state, rules):
         self.cur_state = initial_state
         self.rules = rules
-        self.cur_state.enter()
+        self.cur_state.enter(('START', None))
     def update(self):
         self.cur_state.do()
     def draw(self):
@@ -13,8 +13,8 @@ class StateMachine:
         for check_event in self.rules[self.cur_state].keys():
             if check_event(state_event):
                 next_state = self.rules[self.cur_state][check_event]
-                self.cur_state.exit()
-                next_state.enter()
+                self.cur_state.exit(state_event)
+                next_state.enter(state_event)
                 print(f'{self.cur_state.__class__.__name__} ============== {event_to_string(state_event)} =============> {next_state.__class__.__name__}')
                 self.cur_state = next_state
                 return

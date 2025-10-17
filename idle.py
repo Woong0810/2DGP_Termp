@@ -4,9 +4,9 @@ IDLE_FRAMES = [FRAMES[i] for i in range(41, 47)]  # Idle 애니메이션에 해�
 class Idle:
     def __init__(self, naruto):
         self.naruto = naruto
-    def enter(self):
+    def enter(self, e):
         pass
-    def exit(self):
+    def exit(self, e):
         pass
     def do(self):
         self.naruto.frame = (self.naruto.frame + 1) % len(IDLE_FRAMES)

@@ -5,12 +5,12 @@ RUN_FRAMES = [FRAMES[i] for i in range(26, 32)]
 class Run:
     def __init__(self, naruto):
         self.naruto = naruto
-    def enter(self):
+    def enter(self, e):
         if right_down(e) or left_up(e):
             self.naruto.dir = self.naruto.face_dir = 1
         elif left_down(e) or right_up(e):
             self.naruto.dir = self.naruto.face_dir = -1
-    def exit(self):
+    def exit(self, e):
         pass
     def do(self):
         self.naruto.frame = (self.naruto.frame + 1) % len(RUN_FRAMES)
