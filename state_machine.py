@@ -6,3 +6,6 @@ class StateMachine:
         self.cur_state.do()
     def draw(self):
         self.cur_state.draw()
+    def handle_event(self, state_event):
+        pass
+
