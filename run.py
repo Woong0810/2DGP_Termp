@@ -14,7 +14,7 @@ class Run:
         pass
     def do(self):
         self.naruto.frame = (self.naruto.frame + 1) % len(RUN_FRAMES)
-        self.naruto.x += 5 * self.naruto.face_dir
+        self.naruto.x += 10 * self.naruto.dir
         pass
     def draw(self):
         frame = RUN_FRAMES[self.naruto.frame]

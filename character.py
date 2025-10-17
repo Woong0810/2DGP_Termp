@@ -17,7 +17,7 @@ class Character:
             self.IDLE,
         {
                 self.IDLE: {right_up: self.RUN, left_up: self.RUN, right_down: self.RUN, left_down: self.RUN},
-                self.RUN: {right_up: self.IDLE, left_up: self.IDLE}
+                self.RUN: {right_up: self.IDLE, left_up: self.IDLE, right_down: self.IDLE, left_down: self.IDLE},
              }
         )
     def update(self):
