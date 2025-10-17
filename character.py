@@ -15,7 +15,7 @@ class Character:
         self.state_machine = StateMachine(
             self.RUN,
             {
-                'IDLE':  {},
+                'IDLE': {},
                 'RUN': {}
             }
         )
@@ -25,4 +25,4 @@ class Character:
         self.state_machine.draw()
         pass
     def handle_event(self, event):
-        self.state_machine.handle_event(event)
+        self.state_machine.handle_event(('INPUT', event))
