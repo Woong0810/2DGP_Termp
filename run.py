@@ -1,5 +1,6 @@
 from event_to_string import right_down, right_up, left_down, left_up
 from characters_naruto_frames import FRAMES
+from pico2d import delay
 RUN_FRAMES = [FRAMES[i] for i in range(26, 32)]
 
 class Run:
@@ -25,3 +26,4 @@ class Run:
         else:
             self.naruto.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
                                                   self.naruto.x, self.naruto.y, w, h)
+        delay(0.04)

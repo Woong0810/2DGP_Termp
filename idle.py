@@ -1,4 +1,5 @@
 from characters_naruto_frames import FRAMES
+from pico2d import delay
 IDLE_FRAMES = [FRAMES[i] for i in range(41, 47)]  # Idle 애니메이션에 해당하는 프레임들
 
 class Idle:
@@ -19,3 +20,4 @@ class Idle:
         else:
             self.naruto.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
                                                   self.naruto.x, self.naruto.y, w, h)
+        delay(0.04)

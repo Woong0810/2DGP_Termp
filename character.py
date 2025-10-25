@@ -30,3 +30,4 @@ class Character:
         pass
     def handle_event(self, event):
         self.state_machine.handle_event(('INPUT', event))
+
