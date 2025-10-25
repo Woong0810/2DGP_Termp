@@ -5,19 +5,18 @@ IDLE_FRAMES = [FRAMES[i] for i in range(41, 47)]
 class Idle:
     def __init__(self, naruto):
         self.naruto = naruto
-        self.accum_time = 0.0
-        self.frame_duration = 0.1  # 프레임당 0.1초
 
     def enter(self, e):
-        self.accum_time = 0.0
+        self.naruto.accum_time = 0.0
+        self.naruto.frame_duration = 0.1
 
     def exit(self, e):
         pass
 
     def do(self, dt):
-        self.accum_time += dt
-        if self.accum_time >= self.frame_duration:
-            self.accum_time -= self.frame_duration
+        self.naruto.accum_time += dt
+        if self.naruto.accum_time >= self.naruto.frame_duration:
+            self.naruto.accum_time -= self.naruto.frame_duration
             self.naruto.frame = (self.naruto.frame + 1) % len(IDLE_FRAMES)
 
     def draw(self):

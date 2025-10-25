@@ -12,6 +12,10 @@ class Character:
         self.frame = 0
         self.face_dir = 1
         self.image = load_image('Characters_Naruto_clean.png')
+
+        self.accum_time = 0.0
+        self.frame_duration = 0.1  # 기본값, 상태별로 변경 가능
+
         self.IDLE = Idle(self)  # Idle 상태 객체 생성
         self.RUN = Run(self)
         self.NORMAL_ATTACK = Normal_Attack(self)
