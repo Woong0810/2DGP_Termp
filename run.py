@@ -10,6 +10,7 @@ class Run:
     def enter(self, e):
         self.naruto.accum_time = 0.0
         self.naruto.frame_duration = 0.04
+        self.naruto.frame = 0
         if right_down(e) or left_up(e):
             self.naruto.dir = self.naruto.face_dir = 1
         elif left_down(e) or right_up(e):
