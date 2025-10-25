@@ -18,16 +18,17 @@ class Character:
         self.state_machine = StateMachine(
             self.IDLE,
         {
-                self.IDLE: {n_down: self.NORMAL_ATTACK, right_up: self.RUN, left_up: self.RUN, right_down: self.RUN, left_down: self.RUN},
-                self.RUN: {right_up: self.IDLE, left_up: self.IDLE, right_down: self.IDLE, left_down: self.IDLE},
+                self.IDLE: {n_down: self.NORMAL_ATTACK, right_up: self.RUN,
+                            left_up: self.RUN, right_down: self.RUN, left_down: self.RUN},
+                self.RUN: {right_up: self.IDLE, left_up: self.IDLE, right_down: self.IDLE,
+                           left_down: self.IDLE, n_down: self.NORMAL_ATTACK},
                 self.NORMAL_ATTACK: {n_up: self.IDLE},
              }
         )
-    def update(self):
-        self.state_machine.update()
+    def update(self, dt):
+        self.state_machine.update(dt)
     def draw(self):
         self.state_machine.draw()
         pass
     def handle_event(self, event):
         self.state_machine.handle_event(('INPUT', event))
-

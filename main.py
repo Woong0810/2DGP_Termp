@@ -1,3 +1,4 @@
+import time
 from pico2d import *
 
 from character import Character
@@ -26,9 +27,9 @@ def reset_world():
     character = Character()
     world.append(character)
 
-def update_world():
+def update_world(dt):
     for o in world:
-        o.update()
+        o.update(dt)
 
 def render_world():
     clear_canvas()
@@ -39,9 +40,16 @@ def render_world():
 open_canvas(800, 600)
 
 reset_world()
+
+last_time = time.time()
 while running:
+    current = time.time()
+    dt = current - last_time
+    last_time = current
+
     handle_events()
-    update_world()
+    update_world(dt)
     render_world()
+    delay(0.001)
 
 close_canvas()

@@ -17,7 +17,7 @@ class Normal_Attack:
         self.naruto.frame = self.cur
     def exit(self, e):
         pass
-    def do(self):
+    def do(self, dt):
         if self.cur < self.end_frame:
             self.cur += 1
             self.naruto.frame = self.cur

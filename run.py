@@ -13,7 +13,7 @@ class Run:
             self.naruto.dir = self.naruto.face_dir = -1
     def exit(self, e):
         pass
-    def do(self):
+    def do(self, dt):
         self.naruto.frame = (self.naruto.frame + 1) % len(RUN_FRAMES)
         self.naruto.x += 10 * self.naruto.dir
         pass

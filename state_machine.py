@@ -5,8 +5,8 @@ class StateMachine:
         self.cur_state = initial_state
         self.rules = rules
         self.cur_state.enter(('START', None))
-    def update(self):
-        self.cur_state.do()
+    def update(self, dt):
+        self.cur_state.do(dt)
     def draw(self):
         self.cur_state.draw()
     def handle_event(self, state_event):
@@ -19,6 +19,3 @@ class StateMachine:
                 self.cur_state = next_state
                 return
         print(f'처리되지 않은 이벤트 {event_to_string(state_event)}가 있습니다')
-
-
-
