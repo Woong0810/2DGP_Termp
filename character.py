@@ -5,7 +5,7 @@ from run import Run
 from normal_attack import Normal_Attack
 from jump import Jump
 from state_machine import StateMachine
-from event_to_string import right_down, right_up, left_down, left_up, n_down, n_up, up_down, up_up
+from event_to_string import right_down, right_up, left_down, left_up, n_down, n_up, up_down, up_up, landed
 
 class Character:
     def __init__(self):
@@ -29,9 +29,9 @@ class Character:
                             up_down: self.JUMP},
                 self.RUN: {right_up: self.IDLE, left_up: self.IDLE, right_down: self.IDLE,
                            left_down: self.IDLE, n_down: self.NORMAL_ATTACK,
-                           up_down: self.JUMP},
+                           },
                 self.NORMAL_ATTACK: {n_up: self.IDLE},
-                self.JUMP: {}
+                self.JUMP: {up_down: self.JUMP, landed: self.IDLE}
              }
         )
     def update(self, dt):
