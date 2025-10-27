@@ -1,4 +1,5 @@
 from characters_naruto_frames import FRAMES
+from event_to_string import up_down
 
 IDLE_FRAMES = [FRAMES[i] for i in range(41, 47)]
 
@@ -12,9 +13,13 @@ class Idle:
         self.naruto.frame = 0
 
     def exit(self, e):
-        pass
+        if up_down(e):
+            self.naruto.jump_action()
 
     def do(self, dt):
+        if self.naruto.JUMP.active:
+            return
+
         self.naruto.accum_time += dt
         if self.naruto.accum_time >= self.naruto.frame_duration:
             self.naruto.accum_time -= self.naruto.frame_duration

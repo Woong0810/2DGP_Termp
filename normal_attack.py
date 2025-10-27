@@ -1,4 +1,4 @@
-from event_to_string import right_down, right_up, left_down, left_up
+from event_to_string import right_down, right_up, left_down, left_up, up_down
 from characters_naruto_frames import FRAMES
 
 NORMAL_ATTACK_FRAME = [FRAMES[i] for i in range(0, 12)]
@@ -20,9 +20,13 @@ class Normal_Attack:
         self.naruto.frame_duration = 0.13
 
     def exit(self, e):
-        pass
+        if up_down(e):
+            self.naruto.jump_action()
 
     def do(self, dt):
+        if self.naruto.JUMP.active:
+            return
+
         self.naruto.accum_time += dt
         if self.naruto.accum_time >= self.naruto.frame_duration:
             self.naruto.accum_time -= self.naruto.frame_duration
