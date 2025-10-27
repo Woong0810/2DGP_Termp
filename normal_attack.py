@@ -17,7 +17,7 @@ class Normal_Attack:
         self.cur = self.start_frame
         self.naruto.frame = self.cur
         self.naruto.accum_time = 0.0
-        self.naruto.frame_duration = 0.1
+        self.naruto.frame_duration = 0.13
 
     def exit(self, e):
         pass
