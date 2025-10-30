@@ -40,12 +40,10 @@ class Character:
                 },
                 self.NORMAL_ATTACK: {
                     segment_end: self.IDLE,
-                    n_down: self.NORMAL_ATTACK,  # 다음 콤보
                     up_down: self.JUMP
                 },
                 self.JUMP: {
                     landed: self.IDLE
-                    # up_down은 제거 - handle_event에서 처리
                 }
             }
         )
@@ -57,10 +55,12 @@ class Character:
         self.state_machine.draw()
 
     def handle_event(self, event):
-        # NORMAL_ATTACK 상태에서 N키를 누르면 다음 콤보 예약
-        if self.state_machine.cur_state == self.NORMAL_ATTACK and event.type == SDL_KEYDOWN and event.key == SDLK_n:
-            self.NORMAL_ATTACK.request_next_combo()
-            return  # 상태 머신에 이벤트 전달하지 않음 (상태 전환 방지)
+        # NORMAL_ATTACK 상태에서 N키 DOWN/UP 추적
+        if self.state_machine.cur_state == self.NORMAL_ATTACK:
+            if event.type == SDL_KEYDOWN and event.key == SDLK_n:
+                self.NORMAL_ATTACK.handle_n_key_down()
+            elif event.type == SDL_KEYUP and event.key == SDLK_n:
+                self.NORMAL_ATTACK.handle_n_key_up()
 
         # JUMP 상태에서 처리
         if self.state_machine.cur_state == self.JUMP:
