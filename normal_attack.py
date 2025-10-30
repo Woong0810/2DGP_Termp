@@ -11,15 +11,19 @@ class Normal_Attack:
         self.start_frame = 0
         self.end_frame = 0
         self.cur = 0
+        self.next_combo_requested = False  # 다음 콤보 예약 플래그
 
     def enter(self, e):
+        # 새로운 세그먼트 시작
         self.start_frame, self.end_frame = SEGMENTS[self.combo_index]
         self.cur = self.start_frame
         self.naruto.frame = self.cur
         self.naruto.accum_time = 0.0
         self.naruto.frame_duration = 0.13
+        self.next_combo_requested = False  # 플래그 초기화
 
     def exit(self, e):
+        # SEGMENT_END로 exit되면 콤보 초기화
         if not n_down(e):
             self.combo_index = 0
 
@@ -31,8 +35,20 @@ class Normal_Attack:
                 self.cur += 1
                 self.naruto.frame = self.cur
             else:
-                # 세그먼트 재생 완료 - IDLE로 복귀
-                self.naruto.state_machine.handle_event(('SEGMENT_END', None))
+                # 세그먼트 재생 완료
+                if self.next_combo_requested:
+                    # 다음 콤보 요청이 있으면 콤보 증가 후 재시작
+                    self.combo_index = (self.combo_index + 1) % 3
+                    self.next_combo_requested = False
+                    # 다시 enter 호출 (새 세그먼트 시작)
+                    self.enter(('COMBO_CONTINUE', None))
+                else:
+                    # 아무 입력 없으면 IDLE로 복귀
+                    self.naruto.state_machine.handle_event(('SEGMENT_END', None))
+
+    def request_next_combo(self):
+        """N키가 눌렸을 때 다음 콤보 예약"""
+        self.next_combo_requested = True
 
     def draw(self):
         frame = NORMAL_ATTACK_FRAME[self.naruto.frame]
