@@ -5,10 +5,17 @@ class StateMachine:
         self.cur_state = initial_state
         self.rules = rules
         self.cur_state.enter(('START', None))
+
     def update(self, dt):
         self.cur_state.do(dt)
+
     def draw(self):
         self.cur_state.draw()
+
+    def add_event(self, state_event):
+        """내부적으로 이벤트를 추가하는 메서드"""
+        self.handle_event(state_event)
+
     def handle_event(self, state_event):
         for check_event in self.rules[self.cur_state].keys():
             if check_event(state_event):

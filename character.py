@@ -1,10 +1,10 @@
-from pico2d import load_image
+from pico2d import load_image, SDL_KEYDOWN, SDLK_n
 from idle import Idle
 from run import Run
 from normal_attack import Normal_Attack
 from jump import Jump
 from state_machine import StateMachine
-from event_to_string import right_down, right_up, left_down, left_up, n_down, n_up, up_down
+from event_to_string import right_down, right_up, left_down, left_up, n_down, n_up, up_down, segment_end
 
 class Character:
     def __init__(self):
@@ -29,7 +29,7 @@ class Character:
                 self.RUN: {right_up: self.IDLE, left_up: self.IDLE, right_down: self.IDLE,
                            left_down: self.IDLE, n_down: self.NORMAL_ATTACK, up_down: self.RUN
                            },
-                self.NORMAL_ATTACK: {n_up: self.IDLE, up_down: self.NORMAL_ATTACK},
+                self.NORMAL_ATTACK: {segment_end: self.IDLE, up_down: self.NORMAL_ATTACK},
              }
         )
 
@@ -48,5 +48,9 @@ class Character:
             self.state_machine.draw()
 
     def handle_event(self, event):
-        self.state_machine.handle_event(('INPUT', event))
+        # NORMAL_ATTACK 상태에서 N키를 누르면 handle_n_key 호출
+        if self.state_machine.cur_state == self.NORMAL_ATTACK and event.type == SDL_KEYDOWN and event.key == SDLK_n:
+            self.NORMAL_ATTACK.handle_n_key()
+        else:
+            self.state_machine.handle_event(('INPUT', event))
         self.JUMP.handle_event(event)  # 점프 중 좌우 이동 처리
