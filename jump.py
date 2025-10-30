@@ -1,55 +1,44 @@
 from characters_naruto_frames import FRAMES
-from event_to_string import up_down, left_down, right_down, left_up, right_up
 
-JUMP1_IDX = [33, 34]
-JUMP2_IDX = [35, 36]
+JUMP_IDX = [33, 34]
 
 class Jump:
     def __init__(self, naruto):
         self.naruto = naruto
-        self.phase = 0          # 0: 초기화, 1: 1단 점프 중, 2: 2단 점프 중
-        self.seq = []           # 현재 애니 프레임 인덱스 시퀀스
-        self.cur = 0            # seq 안에서 현재 위치
+        self.jump_count = 0     # 0: 지상, 1: 1단 점프, 2: 2단 점프
+        self.cur = 0            # 애니메이션 프레임 인덱스
         self.accum_time = 0.0
         self.frame_duration = 0.08
 
         self.vy = 0.0           # 수직 속도
         self.vx = 0.0           # 수평 속도 (포물선 점프용)
         self.g = -800.0         # 중력 가속도
-        self.ground_y = 0.0     # 착지할 y
+        self.ground_y = 0.0     # 착지할 y (1단 점프 시작 지점으로 고정)
 
         self.dir = 0  # 이동 방향 (-1: 왼쪽, 0: 정지, 1: 오른쪽)
 
     def enter(self, e):
-        # 이전 상태에 따라 점프 초기화
-        if self.phase == 0:
-            self.phase = 1
-            self.seq = JUMP1_IDX[:]
-            self.cur = 0
-            self.accum_time = 0.0
-            self.naruto.frame = self.seq[self.cur]
-            self.vy = 400.0
-            self.ground_y = self.naruto.y
+        # 지상에서 첫 점프만 초기화
+        self.jump_count = 1
+        self.cur = 0
+        self.accum_time = 0.0
+        self.naruto.frame = JUMP_IDX[self.cur]
+        self.vy = 400.0
+        self.ground_y = self.naruto.y  # 최초 점프 시작 지점을 착지점으로 기억
 
-            # RUN 상태에서 점프했으면 수평 속도 유지
-            if hasattr(self.naruto, 'dir'):
-                self.vx = self.naruto.dir * 200.0
-            else:
-                self.vx = 0.0
-            self.dir = 0
-
-        elif self.phase == 1 and up_down(e):  # 공중에서 2단 점프
-            self.phase = 2
-            self.seq = JUMP2_IDX[:]
-            self.cur = 0
-            self.accum_time = 0.0
-            self.naruto.frame = self.seq[self.cur]
-            self.vy = 400.0
+        # 이전 상태가 RUN이었으면 수평 속도 유지, IDLE에서는 수직 점프
+        prev_state = self.naruto.state_machine.prev_state
+        if prev_state == self.naruto.RUN:
+            self.vx = self.naruto.dir * 200.0
+        else:
+            self.vx = 0.0
+        self.dir = 0
 
     def exit(self, e):
         # 착지 시 초기화
-        self.phase = 0
+        self.jump_count = 0
         self.dir = 0
+        self.vx = 0.0
 
     def do(self, dt):
         # 좌우 이동 처리
@@ -68,9 +57,9 @@ class Jump:
         self.accum_time += dt
         if self.accum_time >= self.frame_duration:
             self.accum_time -= self.frame_duration
-            if self.cur < len(self.seq) - 1:
+            if self.cur < len(JUMP_IDX) - 1:
                 self.cur += 1
-                self.naruto.frame = self.seq[self.cur]
+                self.naruto.frame = JUMP_IDX[self.cur]
 
         # 수평 이동 적용
         self.naruto.x += self.vx * dt
@@ -84,11 +73,20 @@ class Jump:
             self.naruto.y = self.ground_y
             self.naruto.frame = 0
             # IDLE 상태로 전환하기 위한 이벤트 발생
-            from event_to_string import landed
             self.naruto.state_machine.handle_event(('LANDED', None))
 
+    def handle_double_jump(self):
+        """2단 점프 처리 - do()에서 호출"""
+        if self.jump_count == 1:
+            self.jump_count = 2
+            self.cur = 0
+            self.accum_time = 0.0
+            self.naruto.frame = JUMP_IDX[self.cur]
+            self.vy = 400.0
+            # ground_y는 변경하지 않음 - 1단 점프 시작점이 최종 착지점
+
     def draw(self):
-        frame = FRAMES[self.seq[self.cur]]
+        frame = FRAMES[JUMP_IDX[self.cur]]
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
 
         if self.naruto.face_dir == 1:
