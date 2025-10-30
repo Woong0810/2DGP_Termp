@@ -33,9 +33,8 @@ class Character:
              }
         )
 
-    def jump_action(self, move_dir=0):
-        """점프 액션을 수행. 상황에 따라 1단 또는 2단 점프"""
-        self.JUMP.start_or_double_jump(move_dir)
+    def jump_action(self):
+        self.JUMP.start_or_double_jump()
 
     def update(self, dt):
         self.state_machine.update(dt)
@@ -50,3 +49,4 @@ class Character:
 
     def handle_event(self, event):
         self.state_machine.handle_event(('INPUT', event))
+        self.JUMP.handle_event(event)  # 점프 중 좌우 이동 처리

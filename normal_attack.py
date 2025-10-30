@@ -21,7 +21,7 @@ class Normal_Attack:
 
     def exit(self, e):
         if up_down(e):
-            self.naruto.jump_action(move_dir=0)  # 공격 중 점프 시 이동 없이 점프
+            self.naruto.jump_action()
 
     def do(self, dt):
         if self.naruto.JUMP.active:

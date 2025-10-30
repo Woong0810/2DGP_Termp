@@ -1,4 +1,5 @@
 from characters_naruto_frames import FRAMES
+from sdl2 import SDL_KEYDOWN, SDL_KEYUP, SDLK_LEFT, SDLK_RIGHT
 
 JUMP1_IDX = [33, 34]
 JUMP2_IDX = [35, 36]
@@ -18,10 +19,11 @@ class Jump:
         self.ground_y = 0.0     # 착지할 y
 
         # 공중 이동 관련
-        self.move_dir = 0       # 0: 정지, -1: 왼쪽, 1: 오른쪽
-        self.air_speed = 5      # 공중 이동 속도
+        self.move_left = False
+        self.move_right = False
+        self.air_speed = 1      # 공중 이동 속도
 
-    def start_or_double_jump(self, move_dir=0):
+    def start_or_double_jump(self):
         if not self.active:
             # 지상에서 처음 점프
             self.active = True
@@ -35,9 +37,6 @@ class Jump:
 
             self.vy = 400.0
             self.ground_y = self.naruto.y  # 지금 y를 착지 기준으로 기억
-
-            # 점프 시작 시 이동 방향 설정
-            self.move_dir = move_dir
 
         elif self.phase == 1:
             # 공중에서 2단 점프
@@ -56,6 +55,23 @@ class Jump:
             # 이미 phase==2면 더 이상 점프 안 늘어난다
             pass
 
+    def handle_event(self, event):
+        if not self.active:
+            return
+
+        if event.type == SDL_KEYDOWN:
+            if event.key == SDLK_LEFT:
+                self.move_left = True
+                self.naruto.face_dir = -1
+            elif event.key == SDLK_RIGHT:
+                self.move_right = True
+                self.naruto.face_dir = 1
+        elif event.type == SDL_KEYUP:
+            if event.key == SDLK_LEFT:
+                self.move_left = False
+            elif event.key == SDLK_RIGHT:
+                self.move_right = False
+
     def update(self, dt):
         if not self.active:
             return
@@ -70,8 +86,10 @@ class Jump:
             # 마지막 프레임이면 그냥 유지
 
         # 공중 좌우 이동
-        if self.move_dir != 0:
-            self.naruto.x += self.air_speed * self.move_dir
+        if self.move_left:
+            self.naruto.x -= self.air_speed
+        if self.move_right:
+            self.naruto.x += self.air_speed
 
         # 중력 적용
         self.vy += self.g * dt
@@ -83,7 +101,8 @@ class Jump:
             self.active = False
             self.phase = 0
             self.naruto.frame = 0  # 착지 시 프레임 초기화
-            self.move_dir = 0      # 이동 방향 초기화
+            self.move_left = False
+            self.move_right = False
 
     def draw(self):
         if not self.active:
