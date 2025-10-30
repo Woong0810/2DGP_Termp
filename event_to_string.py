@@ -1,4 +1,4 @@
-from sdl2 import SDL_KEYDOWN, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_n, SDLK_UP, SDLK_DOWN
+from sdl2 import SDL_KEYDOWN, SDLK_RIGHT, SDL_KEYUP, SDLK_LEFT, SDLK_n, SDLK_UP, SDLK_DOWN, SDLK_v
 
 def right_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
@@ -30,11 +30,17 @@ def down_down(e):
 def down_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_DOWN
 
+def v_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_v
+
 def segment_end(e):
     return e[0] == 'SEGMENT_END'
 
 def landed(e):
     return e[0] == 'LANDED'
+
+def special_attack_end(e):
+    return e[0] == 'SPECIAL_ATTACK_END'
 
 def event_to_string(state_event):
     """이벤트의 모든 상세 정보를 문자열로 반환 (모든 키 자동 처리)"""
