@@ -1,8 +1,8 @@
 from characters_naruto_frames import FRAMES
 
-SPECIAL_ATTACK_FRAMES = [FRAMES[i] for i in range(98, 136)]
+RANGED_ATTACK_FRAMES = [FRAMES[i] for i in range(67, 71)]
 
-class Special_Attack:
+class Ranged_Attack:
     def __init__(self, naruto):
         self.naruto = naruto
 
@@ -25,7 +25,7 @@ class Special_Attack:
                 self.naruto.state_machine.handle_event(('SPECIAL_ATTACK_END', None))
 
     def draw(self):
-        frame = SPECIAL_ATTACK_FRAMES[self.naruto.frame]
+        frame = RANGED_ATTACK_FRAMES[self.naruto.frame]
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
 
         if self.naruto.face_dir == 1:
