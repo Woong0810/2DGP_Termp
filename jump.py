@@ -68,6 +68,7 @@ class Jump:
             self.naruto.y = self.ground_y
             self.active = False
             self.phase = 0
+            self.naruto.frame = 0  # 착지 시 프레임 초기화
 
     def draw(self):
         if not self.active:
