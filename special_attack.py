@@ -1,8 +1,8 @@
 from characters_naruto_frames import FRAMES
 
-IDLE_FRAMES = [FRAMES[i] for i in range(98, 136)]
+SPECIAL_ATTACK_FRAMES = [FRAMES[i] for i in range(98, 136)]  # 118-135 프레임
 
-class Idle:
+class Special_Attack:
     def __init__(self, naruto):
         self.naruto = naruto
 
@@ -18,10 +18,14 @@ class Idle:
         self.naruto.accum_time += dt
         if self.naruto.accum_time >= self.naruto.frame_duration:
             self.naruto.accum_time -= self.naruto.frame_duration
-            self.naruto.frame = (self.naruto.frame + 1) % len(IDLE_FRAMES)
+            if self.naruto.frame < len(SPECIAL_ATTACK_FRAMES) - 1:
+                self.naruto.frame += 1
+            else:
+                # 애니메이션이 끝나면 IDLE로 복귀
+                self.naruto.state_machine.handle_event(('SPECIAL_ATTACK_END', None))
 
     def draw(self):
-        frame = IDLE_FRAMES[self.naruto.frame]
+        frame = SPECIAL_ATTACK_FRAMES[self.naruto.frame]
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
 
         if self.naruto.face_dir == 1:
