@@ -27,6 +27,9 @@ def up_up(e):
 def segment_end(e):
     return e[0] == 'SEGMENT_END'
 
+def landed(e):
+    return e[0] == 'LANDED'
+
 def event_to_string(state_event):
     """이벤트의 모든 상세 정보를 문자열로 반환 (모든 키 자동 처리)"""
     from pico2d import SDL_KEYDOWN, SDL_KEYUP, SDL_MOUSEMOTION, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP
