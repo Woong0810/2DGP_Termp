@@ -57,9 +57,10 @@ class Character:
         self.state_machine.draw()
 
     def handle_event(self, event):
-        # NORMAL_ATTACK 상태에서 N키를 누르면 다음 콤보로
+        # NORMAL_ATTACK 상태에서 N키를 누르면 다음 콤보 예약
         if self.state_machine.cur_state == self.NORMAL_ATTACK and event.type == SDL_KEYDOWN and event.key == SDLK_n:
-            self.NORMAL_ATTACK.combo_index = (self.NORMAL_ATTACK.combo_index + 1) % 3
+            self.NORMAL_ATTACK.request_next_combo()
+            return  # 상태 머신에 이벤트 전달하지 않음 (상태 전환 방지)
 
         # JUMP 상태에서 처리
         if self.state_machine.cur_state == self.JUMP:
