@@ -15,10 +15,10 @@ def remove_object(o):
     raise Exception("World 에 존재하지 않는 오브젝트를 지우려고 시도함")
 
 
-def update():
+def update(dt):
     for layer in world:
         for o in layer:
-            o.update()
+            o.update(dt)
 
 def render():
     for layer in world:

@@ -24,7 +24,7 @@ def init():
     game_world.add_object(character, 0)
 
 def update(dt):
-    game_world.update()
+    game_world.update(dt)
 
 def draw():
     clear_canvas()
