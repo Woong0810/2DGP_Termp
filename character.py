@@ -4,9 +4,11 @@ from run import Run
 from normal_attack import Normal_Attack
 from jump import Jump
 from defense import Defense
+from special_attack import Special_Attack
 from state_machine import StateMachine
 from event_to_string import (right_down, right_up, left_down, left_up,
-                              n_down, up_down, down_down, down_up, segment_end, landed)
+                              n_down, up_down, down_down, down_up, v_down,
+                              segment_end, landed, special_attack_end)
 
 class Character:
     def __init__(self):
@@ -24,6 +26,7 @@ class Character:
         self.NORMAL_ATTACK = Normal_Attack(self)
         self.JUMP = Jump(self)
         self.DEFENSE = Defense(self)
+        self.SPECIAL_ATTACK = Special_Attack(self)
 
         self.state_machine = StateMachine(
             self.IDLE,
@@ -33,25 +36,34 @@ class Character:
                     right_down: self.RUN,
                     left_down: self.RUN,
                     up_down: self.JUMP,
-                    down_down: self.DEFENSE
+                    down_down: self.DEFENSE,
+                    v_down: self.SPECIAL_ATTACK
                 },
                 self.RUN: {
                     right_up: self.IDLE,
                     left_up: self.IDLE,
                     n_down: self.NORMAL_ATTACK,
                     up_down: self.JUMP,
-                    down_down: self.DEFENSE
+                    down_down: self.DEFENSE,
+                    v_down: self.SPECIAL_ATTACK
                 },
                 self.NORMAL_ATTACK: {
                     segment_end: self.IDLE,
                     up_down: self.JUMP,
-                    down_down: self.DEFENSE
+                    down_down: self.DEFENSE,
+                    v_down: self.SPECIAL_ATTACK
                 },
                 self.JUMP: {
-                    landed: self.IDLE,
+                    landed: self.IDLE
+                    # 점프 중에는 방어, 스페셜 공격 불가
                 },
                 self.DEFENSE: {
-                    down_up: self.IDLE
+                    down_up: self.IDLE,
+                    v_down: self.SPECIAL_ATTACK
+                },
+                self.SPECIAL_ATTACK: {
+                    special_attack_end: self.IDLE
+                    # 스페셜 공격 중에는 모든 입력 무시
                 }
             }
         )
@@ -63,6 +75,10 @@ class Character:
         self.state_machine.draw()
 
     def handle_event(self, event):
+        # SPECIAL_ATTACK 상태에서는 모든 입력 무시
+        if self.state_machine.cur_state == self.SPECIAL_ATTACK:
+            return
+
         # NORMAL_ATTACK 상태에서 N키 DOWN/UP 추적
         if self.state_machine.cur_state == self.NORMAL_ATTACK:
             if event.type == SDL_KEYDOWN and event.key == SDLK_n:
