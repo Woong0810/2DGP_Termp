@@ -1,4 +1,4 @@
-from pico2d import load_image, SDL_KEYDOWN, SDL_KEYUP, SDLK_n, SDLK_LEFT, SDLK_RIGHT
+from pico2d import load_image, SDL_KEYDOWN, SDL_KEYUP, SDLK_n, SDLK_LEFT, SDLK_RIGHT, SDLK_UP
 from idle import Idle
 from run import Run
 from normal_attack import Normal_Attack
@@ -44,8 +44,8 @@ class Character:
                     up_down: self.JUMP
                 },
                 self.JUMP: {
-                    landed: self.IDLE,
-                    up_down: self.JUMP  # 2단 점프
+                    landed: self.IDLE
+                    # up_down은 제거 - handle_event에서 처리
                 }
             }
         )
@@ -61,9 +61,13 @@ class Character:
         if self.state_machine.cur_state == self.NORMAL_ATTACK and event.type == SDL_KEYDOWN and event.key == SDLK_n:
             self.NORMAL_ATTACK.combo_index = (self.NORMAL_ATTACK.combo_index + 1) % 3
 
-        # JUMP 상태에서 좌우 방향키 처리
+        # JUMP 상태에서 처리
         if self.state_machine.cur_state == self.JUMP:
-            if event.type == SDL_KEYDOWN:
+            # 윗 방향키 - 2단 점프
+            if event.type == SDL_KEYDOWN and event.key == SDLK_UP:
+                self.JUMP.handle_double_jump()
+            # 좌우 방향키
+            elif event.type == SDL_KEYDOWN:
                 if event.key == SDLK_LEFT:
                     self.JUMP.dir = -1
                 elif event.key == SDLK_RIGHT:
