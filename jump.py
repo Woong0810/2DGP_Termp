@@ -1,5 +1,5 @@
 from characters_naruto_frames import FRAMES
-from sdl2 import SDL_KEYDOWN, SDL_KEYUP, SDLK_LEFT, SDLK_RIGHT
+from event_to_string import up_down, left_down, right_down, left_up, right_up
 
 JUMP1_IDX = [33, 34]
 JUMP2_IDX = [35, 36]
@@ -7,8 +7,7 @@ JUMP2_IDX = [35, 36]
 class Jump:
     def __init__(self, naruto):
         self.naruto = naruto
-        self.active = False     # 지금 공중에 떠있는 중인지
-        self.phase = 0          # 0=지상, 1=1단 점프 중, 2=2단 점프 중
+        self.phase = 0          # 0: 초기화, 1: 1단 점프 중, 2: 2단 점프 중
         self.seq = []           # 현재 애니 프레임 인덱스 시퀀스
         self.cur = 0            # seq 안에서 현재 위치
         self.accum_time = 0.0
@@ -19,70 +18,51 @@ class Jump:
         self.g = -800.0         # 중력 가속도
         self.ground_y = 0.0     # 착지할 y
 
-        # 공중 이동 관련
-        self.move_left = False
-        self.move_right = False
-        self.air_accel = 300.0  # 공중 가속도
-        self.max_air_speed = 400.0  # 공중 최대 속도
+        self.dir = 0  # 이동 방향 (-1: 왼쪽, 0: 정지, 1: 오른쪽)
 
-    def start_or_double_jump(self):
-        if not self.active:
-            # 지상에서 처음 점프
-            self.active = True
+    def enter(self, e):
+        # 이전 상태에 따라 점프 초기화
+        if self.phase == 0:
             self.phase = 1
-            self.seq = JUMP1_IDX[:]   # [33,34]
+            self.seq = JUMP1_IDX[:]
             self.cur = 0
-
             self.accum_time = 0.0
-            self.frame_duration = 0.08
             self.naruto.frame = self.seq[self.cur]
-
             self.vy = 400.0
-            self.ground_y = self.naruto.y  # 지금 y를 착지 기준으로 기억
+            self.ground_y = self.naruto.y
 
-            # RUN 상태에서 점프했을 때만 수평 속도 설정
-            if self.naruto.state_machine.cur_state == self.naruto.RUN:
-                self.vx = self.naruto.dir * 200.0  # 달리는 방향으로 수평 속도 설정
+            # RUN 상태에서 점프했으면 수평 속도 유지
+            if hasattr(self.naruto, 'dir'):
+                self.vx = self.naruto.dir * 200.0
             else:
-                self.vx = 0.0  # IDLE이나 다른 상태에서는 수직 점프
+                self.vx = 0.0
+            self.dir = 0
 
-        elif self.phase == 1:
-            # 공중에서 2단 점프
+        elif self.phase == 1 and up_down(e):  # 공중에서 2단 점프
             self.phase = 2
-            self.seq = JUMP2_IDX[:]   # [35,36]
+            self.seq = JUMP2_IDX[:]
             self.cur = 0
-
             self.accum_time = 0.0
-            self.frame_duration = 0.08
             self.naruto.frame = self.seq[self.cur]
-
             self.vy = 400.0
-            # ground_y와 vx는 건드리지 않는다. 수평 속도 유지.
 
-        else:
-            # 이미 phase==2면 더 이상 점프 안 늘어난다
-            pass
+    def exit(self, e):
+        # 착지 시 초기화
+        self.phase = 0
+        self.dir = 0
 
-    def handle_event(self, event):
-        if not self.active:
-            return
-
-        if event.type == SDL_KEYDOWN:
-            if event.key == SDLK_LEFT:
-                self.move_left = True
-                self.naruto.face_dir = -1
-            elif event.key == SDLK_RIGHT:
-                self.move_right = True
-                self.naruto.face_dir = 1
-        elif event.type == SDL_KEYUP:
-            if event.key == SDLK_LEFT:
-                self.move_left = False
-            elif event.key == SDLK_RIGHT:
-                self.move_right = False
-
-    def update(self, dt):
-        if not self.active:
-            return
+    def do(self, dt):
+        # 좌우 이동 처리
+        if self.dir == -1:
+            self.vx -= 300.0 * dt
+            if self.vx < -400.0:
+                self.vx = -400.0
+            self.naruto.face_dir = -1
+        elif self.dir == 1:
+            self.vx += 300.0 * dt
+            if self.vx > 400.0:
+                self.vx = 400.0
+            self.naruto.face_dir = 1
 
         # 애니메이션 프레임 진행
         self.accum_time += dt
@@ -91,19 +71,6 @@ class Jump:
             if self.cur < len(self.seq) - 1:
                 self.cur += 1
                 self.naruto.frame = self.seq[self.cur]
-            # 마지막 프레임이면 그냥 유지
-
-        # 공중 좌우 이동 (키 입력으로 vx 조절)
-        if self.move_left:
-            self.vx -= self.air_accel * dt
-            # 최대 속도 제한
-            if self.vx < -self.max_air_speed:
-                self.vx = -self.max_air_speed
-        elif self.move_right:
-            self.vx += self.air_accel * dt
-            # 최대 속도 제한
-            if self.vx > self.max_air_speed:
-                self.vx = self.max_air_speed
 
         # 수평 이동 적용
         self.naruto.x += self.vx * dt
@@ -115,17 +82,12 @@ class Jump:
         # 착지 체크
         if self.naruto.y <= self.ground_y:
             self.naruto.y = self.ground_y
-            self.active = False
-            self.phase = 0
-            self.naruto.frame = 0  # 착지 시 프레임 초기화
-            self.move_left = False
-            self.move_right = False
-            self.vx = 0.0  # 수평 속도 초기화
+            self.naruto.frame = 0
+            # IDLE 상태로 전환하기 위한 이벤트 발생
+            from event_to_string import landed
+            self.naruto.state_machine.handle_event(('LANDED', None))
 
     def draw(self):
-        if not self.active:
-            return
-
         frame = FRAMES[self.seq[self.cur]]
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
 
