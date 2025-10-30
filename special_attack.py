@@ -1,6 +1,6 @@
 from characters_naruto_frames import FRAMES
 
-SPECIAL_ATTACK_FRAMES = [FRAMES[i] for i in range(98, 136)]  # 118-135 프레임
+SPECIAL_ATTACK_FRAMES = [FRAMES[i] for i in range(98, 136)]ㅁㄴ
 
 class Special_Attack:
     def __init__(self, naruto):
@@ -8,7 +8,7 @@ class Special_Attack:
 
     def enter(self, e):
         self.naruto.accum_time = 0.0
-        self.naruto.frame_duration = 0.1
+        self.naruto.frame_duration = 0.15
         self.naruto.frame = 0
 
     def exit(self, e):
