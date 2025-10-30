@@ -3,9 +3,10 @@ from idle import Idle
 from run import Run
 from normal_attack import Normal_Attack
 from jump import Jump
+from defense import Defense
 from state_machine import StateMachine
 from event_to_string import (right_down, right_up, left_down, left_up,
-                              n_down, up_down, segment_end, landed)
+                              n_down, up_down, down_down, down_up, segment_end, landed)
 
 class Character:
     def __init__(self):
@@ -22,6 +23,7 @@ class Character:
         self.RUN = Run(self)
         self.NORMAL_ATTACK = Normal_Attack(self)
         self.JUMP = Jump(self)
+        self.DEFENSE = Defense(self)
 
         self.state_machine = StateMachine(
             self.IDLE,
@@ -30,20 +32,26 @@ class Character:
                     n_down: self.NORMAL_ATTACK,
                     right_down: self.RUN,
                     left_down: self.RUN,
-                    up_down: self.JUMP
+                    up_down: self.JUMP,
+                    down_down: self.DEFENSE
                 },
                 self.RUN: {
                     right_up: self.IDLE,
                     left_up: self.IDLE,
                     n_down: self.NORMAL_ATTACK,
-                    up_down: self.JUMP
+                    up_down: self.JUMP,
+                    down_down: self.DEFENSE
                 },
                 self.NORMAL_ATTACK: {
                     segment_end: self.IDLE,
-                    up_down: self.JUMP
+                    up_down: self.JUMP,
+                    down_down: self.DEFENSE
                 },
                 self.JUMP: {
-                    landed: self.IDLE
+                    landed: self.IDLE,
+                },
+                self.DEFENSE: {
+                    down_up: self.IDLE
                 }
             }
         )
