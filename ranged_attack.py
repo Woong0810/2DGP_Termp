@@ -1,7 +1,7 @@
 from characters_naruto_frames import FRAMES
 
-CHARACTER_RANGED_FRAMES = [FRAMES[i] for i in range(91, 98)]  # 91-97 프레임
-EFFECT_RANGED_FRAMES = [FRAMES[i] for i in range(67, 72)]  # 67-71 프레임
+CHARACTER_RANGED_FRAMES = [FRAMES[i] for i in range(91, 97)]
+EFFECT_RANGED_FRAMES = [FRAMES[i] for i in range(67, 71)]
 
 class Ranged_Attack:
     def __init__(self, naruto):
@@ -26,7 +26,7 @@ class Ranged_Attack:
 
         # 이펙트 위치 설정 (목표 위치에서 약간 위)
         self.effect_x = self.target_x
-        self.effect_y = self.target_y - 30
+        self.effect_y = self.target_y - 20
         self.effect_frame = 0
         self.effect_accum_time = 0.0
 
@@ -54,6 +54,7 @@ class Ranged_Attack:
                 self.effect_accum_time -= 0.1
                 if self.effect_frame < len(EFFECT_RANGED_FRAMES) - 1:
                     self.effect_frame += 1
+                    self.effect_y += 5  # 프레임이 증가할 때마다 y값 5씩 증가
                 else:
                     # 이펙트 애니메이션 끝 -> 이동 페이즈로
                     self.phase = 2
