@@ -1,3 +1,5 @@
+import time
+
 running = None
 stack = None
 
@@ -45,9 +47,14 @@ def run(start_mode):
     stack = [start_mode]
     start_mode.init()
 
+    last_time = time.time()
     while running:
+        current_time = time.time()
+        dt = current_time - last_time
+        last_time = current_time
+
         stack[-1].handle_events()
-        stack[-1].update()
+        stack[-1].update(dt)
         stack[-1].draw()
 
     # repeatedly delete the top of the stack
