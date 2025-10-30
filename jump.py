@@ -22,9 +22,8 @@ class Jump:
         # 공중 이동 관련
         self.move_left = False
         self.move_right = False
-        self.air_speed = 1      # 공중 추가 이동 속도
-        self.air_accel = 200.0  # 공중 가속도
-        self.max_air_speed = 300.0  # 공중 최대 속도
+        self.air_accel = 300.0  # 공중 가속도
+        self.max_air_speed = 400.0  # 공중 최대 속도
 
     def start_or_double_jump(self):
         if not self.active:
