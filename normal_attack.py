@@ -1,4 +1,4 @@
-from event_to_string import right_down, right_up, left_down, left_up, up_down
+from event_to_string import up_down
 from characters_naruto_frames import FRAMES
 
 NORMAL_ATTACK_FRAME = [FRAMES[i] for i in range(0, 12)]
@@ -21,7 +21,7 @@ class Normal_Attack:
 
     def exit(self, e):
         if up_down(e):
-            self.naruto.jump_action()
+            self.naruto.jump_action(move_dir=0)  # 공격 중 점프 시 이동 없이 점프
 
     def do(self, dt):
         if self.naruto.JUMP.active:

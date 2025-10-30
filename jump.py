@@ -17,7 +17,11 @@ class Jump:
         self.g = -800.0         # 중력 가속도
         self.ground_y = 0.0     # 착지할 y
 
-    def start_or_double_jump(self):
+        # 공중 이동 관련
+        self.move_dir = 0       # 0: 정지, -1: 왼쪽, 1: 오른쪽
+        self.air_speed = 5      # 공중 이동 속도
+
+    def start_or_double_jump(self, move_dir=0):
         if not self.active:
             # 지상에서 처음 점프
             self.active = True
@@ -31,6 +35,9 @@ class Jump:
 
             self.vy = 400.0
             self.ground_y = self.naruto.y  # 지금 y를 착지 기준으로 기억
+
+            # 점프 시작 시 이동 방향 설정
+            self.move_dir = move_dir
 
         elif self.phase == 1:
             # 공중에서 2단 점프
@@ -53,6 +60,7 @@ class Jump:
         if not self.active:
             return
 
+        # 애니메이션 프레임 진행
         self.accum_time += dt
         if self.accum_time >= self.frame_duration:
             self.accum_time -= self.frame_duration
@@ -61,14 +69,21 @@ class Jump:
                 self.naruto.frame = self.seq[self.cur]
             # 마지막 프레임이면 그냥 유지
 
+        # 공중 좌우 이동
+        if self.move_dir != 0:
+            self.naruto.x += self.air_speed * self.move_dir
+
+        # 중력 적용
         self.vy += self.g * dt
         self.naruto.y += self.vy * dt
 
+        # 착지 체크
         if self.naruto.y <= self.ground_y:
             self.naruto.y = self.ground_y
             self.active = False
             self.phase = 0
             self.naruto.frame = 0  # 착지 시 프레임 초기화
+            self.move_dir = 0      # 이동 방향 초기화
 
     def draw(self):
         if not self.active:

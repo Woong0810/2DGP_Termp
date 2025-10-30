@@ -14,7 +14,7 @@ class Idle:
 
     def exit(self, e):
         if up_down(e):
-            self.naruto.jump_action()
+            self.naruto.jump_action(move_dir=0)  # IDLE에서는 이동 없이 점프
 
     def do(self, dt):
         if self.naruto.JUMP.active:

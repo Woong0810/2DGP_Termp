@@ -33,9 +33,9 @@ class Character:
              }
         )
 
-    def jump_action(self):
+    def jump_action(self, move_dir=0):
         """점프 액션을 수행. 상황에 따라 1단 또는 2단 점프"""
-        self.JUMP.start_or_double_jump()
+        self.JUMP.start_or_double_jump(move_dir)
 
     def update(self, dt):
         self.state_machine.update(dt)

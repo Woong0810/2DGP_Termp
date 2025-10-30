@@ -18,7 +18,7 @@ class Run:
 
     def exit(self, e):
         if up_down(e):
-            self.naruto.jump_action()
+            self.naruto.jump_action(move_dir=self.naruto.dir)  # RUN 중 점프 시 이동 방향 전달
 
     def do(self, dt):
         if self.naruto.JUMP.active:
