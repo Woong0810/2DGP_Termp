@@ -1,4 +1,4 @@
-from event_to_string import right_down, right_up, left_down, left_up, up_down
+from event_to_string import right_down, right_up, left_down, left_up
 from characters_naruto_frames import FRAMES
 
 RUN_FRAMES = [FRAMES[i] for i in range(26, 32)]
@@ -17,13 +17,9 @@ class Run:
             self.naruto.dir = self.naruto.face_dir = -1
 
     def exit(self, e):
-        if up_down(e):
-            self.naruto.jump_action()
+        pass
 
     def do(self, dt):
-        if self.naruto.JUMP.active:
-            return
-
         self.naruto.accum_time += dt
         if self.naruto.accum_time >= self.naruto.frame_duration:
             self.naruto.accum_time -= self.naruto.frame_duration
