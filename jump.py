@@ -15,13 +15,14 @@ class Jump:
         self.frame_duration = 0.08
 
         self.vy = 0.0           # 수직 속도
+        self.vx = 0.0           # 수평 속도 (포물선 점프용)
         self.g = -800.0         # 중력 가속도
         self.ground_y = 0.0     # 착지할 y
 
         # 공중 이동 관련
         self.move_left = False
         self.move_right = False
-        self.air_speed = 1      # 공중 이동 속도
+        self.air_speed = 1      # 공중 추가 이동 속도
 
     def start_or_double_jump(self):
         if not self.active:
@@ -38,6 +39,12 @@ class Jump:
             self.vy = 400.0
             self.ground_y = self.naruto.y  # 지금 y를 착지 기준으로 기억
 
+            # RUN 상태에서 점프했을 때만 수평 속도 설정
+            if self.naruto.state_machine.cur_state == self.naruto.RUN:
+                self.vx = self.naruto.dir * 200.0  # 달리는 방향으로 수평 속도 설정
+            else:
+                self.vx = 0.0  # IDLE이나 다른 상태에서는 수직 점프
+
         elif self.phase == 1:
             # 공중에서 2단 점프
             self.phase = 2
@@ -49,7 +56,7 @@ class Jump:
             self.naruto.frame = self.seq[self.cur]
 
             self.vy = 400.0
-            # ground_y는 건드리지 않는다. 착지는 여전히 첫 점프 시작 y로.
+            # ground_y와 vx는 건드리지 않는다. 수평 속도 유지.
 
         else:
             # 이미 phase==2면 더 이상 점프 안 늘어난다
@@ -85,7 +92,10 @@ class Jump:
                 self.naruto.frame = self.seq[self.cur]
             # 마지막 프레임이면 그냥 유지
 
-        # 공중 좌우 이동
+        # 기본 수평 이동 (점프 시작 시 받은 vx)
+        self.naruto.x += self.vx * dt
+
+        # 공중 추가 좌우 이동 (키 입력)
         if self.move_left:
             self.naruto.x -= self.air_speed
         if self.move_right:
@@ -103,6 +113,7 @@ class Jump:
             self.naruto.frame = 0  # 착지 시 프레임 초기화
             self.move_left = False
             self.move_right = False
+            self.vx = 0.0  # 수평 속도 초기화
 
     def draw(self):
         if not self.active:
