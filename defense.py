@@ -1,10 +1,10 @@
 from characters_naruto_frames import FRAMES
 
-IDLE_FRAMES = [FRAMES[i] for i in range(12, 16)]
+DEFENSE_FRAMES = [FRAMES[i] for i in range(12, 17)]
 
 class Defense:
     def __init__(self, naruto):
-        pass
+        self.naruto = naruto
 
     def enter(self, e):
         self.naruto.accum_time = 0.0
@@ -18,10 +18,12 @@ class Defense:
         self.naruto.accum_time += dt
         if self.naruto.accum_time >= self.naruto.frame_duration:
             self.naruto.accum_time -= self.naruto.frame_duration
-            self.naruto.frame = (self.naruto.frame + 1) % len(IDLE_FRAMES)
+            # 마지막 프레임에 도달하면 유지
+            if self.naruto.frame < len(DEFENSE_FRAMES) - 1:
+                self.naruto.frame += 1
 
     def draw(self):
-        frame = IDLE_FRAMES[self.naruto.frame]
+        frame = DEFENSE_FRAMES[self.naruto.frame]
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
 
         if self.naruto.face_dir == 1:
