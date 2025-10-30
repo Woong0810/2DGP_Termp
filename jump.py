@@ -23,6 +23,8 @@ class Jump:
         self.move_left = False
         self.move_right = False
         self.air_speed = 1      # 공중 추가 이동 속도
+        self.air_accel = 200.0  # 공중 가속도
+        self.max_air_speed = 300.0  # 공중 최대 속도
 
     def start_or_double_jump(self):
         if not self.active:
@@ -92,14 +94,20 @@ class Jump:
                 self.naruto.frame = self.seq[self.cur]
             # 마지막 프레임이면 그냥 유지
 
-        # 기본 수평 이동 (점프 시작 시 받은 vx)
-        self.naruto.x += self.vx * dt
-
-        # 공중 추가 좌우 이동 (키 입력)
+        # 공중 좌우 이동 (키 입력으로 vx 조절)
         if self.move_left:
-            self.naruto.x -= self.air_speed
-        if self.move_right:
-            self.naruto.x += self.air_speed
+            self.vx -= self.air_accel * dt
+            # 최대 속도 제한
+            if self.vx < -self.max_air_speed:
+                self.vx = -self.max_air_speed
+        elif self.move_right:
+            self.vx += self.air_accel * dt
+            # 최대 속도 제한
+            if self.vx > self.max_air_speed:
+                self.vx = self.max_air_speed
+
+        # 수평 이동 적용
+        self.naruto.x += self.vx * dt
 
         # 중력 적용
         self.vy += self.g * dt
