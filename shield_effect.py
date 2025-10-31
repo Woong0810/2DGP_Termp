@@ -10,7 +10,6 @@ class ShieldEffect:
         self.frame = 0
         self.accum = 0.0
         self.frame_duration = 0.06
-        self.y_offset = 10
 
     def update(self, dt):
         self.accum += dt
@@ -22,10 +21,11 @@ class ShieldEffect:
         l = self.frame * self.frame_w
         b = 0
         x = self.target.x
-        y = self.target.y + self.y_offset
+        y = self.target.y
+        draw_w = int(self.frame_w * 2 / 3)
+        draw_h = int(self.frame_h * 2 / 3)
 
-        # draw behind the character; flipping handled so effect faces same dir
         if self.target.face_dir == 1:
-            self.image.clip_draw(l, b, self.frame_w, self.frame_h, x, y)
+            self.image.clip_draw(l, b, self.frame_w, self.frame_h, x, y, draw_w, draw_h)
         else:
-            self.image.clip_composite_draw(l, b, self.frame_w, self.frame_h, 0.0, 'h', x, y, self.frame_w, self.frame_h)
+            self.image.clip_composite_draw(l, b, self.frame_w, self.frame_h, 0.0, 'h', x, y, draw_w, draw_h)
