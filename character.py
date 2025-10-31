@@ -19,6 +19,7 @@ class Character:
 
         self.accum_time = 0.0
         self.frame_duration = 0.1  # 기본값, 상태별로 변경 가능
+        self.debug_draw = True  # 디버그 모드: 바운딩 박스 표시
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)
@@ -81,6 +82,16 @@ class Character:
 
     def draw(self):
         self.state_machine.draw()
+        if self.debug_draw:
+            self.draw_bb()
+
+    def get_bb(self):
+        # 현재 상태의 바운딩 박스 반환
+        return self.state_machine.get_bb()
+
+    def draw_bb(self):
+        # 디버그용: 바운딩 박스 그리기
+        self.state_machine.draw_bb()
 
     def handle_event(self, event):
         # SPECIAL_ATTACK, RANGED_ATTACK 상태에서는 모든 입력 무시
