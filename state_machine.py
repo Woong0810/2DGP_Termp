@@ -13,6 +13,17 @@ class StateMachine:
     def draw(self):
         self.cur_state.draw()
 
+    def get_bb(self):
+        # 현재 상태의 바운딩 박스 반환
+        if hasattr(self.cur_state, 'get_bb'):
+            return self.cur_state.get_bb()
+        return None
+
+    def draw_bb(self):
+        # 현재 상태의 바운딩 박스 그리기
+        if hasattr(self.cur_state, 'draw_bb'):
+            self.cur_state.draw_bb()
+
     def add_event(self, state_event):
         self.handle_event(state_event)
 
