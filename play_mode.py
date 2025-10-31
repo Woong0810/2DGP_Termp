@@ -1,4 +1,3 @@
-import time
 from pico2d import *
 
 import game_world
@@ -21,7 +20,7 @@ def init():
     global character
 
     character = Character()
-    game_world.add_object(character, 0)
+    game_world.add_object(character, 1)
 
 def update(dt):
     game_world.update(dt)
