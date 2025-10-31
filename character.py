@@ -1,15 +1,13 @@
 from pico2d import load_image, SDL_KEYDOWN, SDL_KEYUP, SDLK_n, SDLK_LEFT, SDLK_RIGHT, SDLK_UP
 from idle import Idle
 from run import Run
-from normal_attack import Normal_Attack
+from normal_attack import NormalAttack
 from jump import Jump
 from defense import Defense
 from special_attack import Special_Attack
-from ranged_attack import Ranged_Attack
+from ranged_attack import RangedAttack
 from state_machine import StateMachine
-from event_to_string import (right_down, right_up, left_down, left_up,
-                              n_down, up_down, down_down, down_up, v_down, b_down,
-                              segment_end, landed, special_attack_end, ranged_attack_end)
+from event_to_string import *
 
 class Character:
     def __init__(self):
@@ -24,11 +22,11 @@ class Character:
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)
-        self.NORMAL_ATTACK = Normal_Attack(self)
+        self.NORMAL_ATTACK = NormalAttack(self)
         self.JUMP = Jump(self)
         self.DEFENSE = Defense(self)
         self.SPECIAL_ATTACK = Special_Attack(self)
-        self.RANGED_ATTACK = Ranged_Attack(self)
+        self.RANGED_ATTACK = RangedAttack(self)
 
         self.state_machine = StateMachine(
             self.IDLE,

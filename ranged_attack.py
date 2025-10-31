@@ -3,7 +3,7 @@ from characters_naruto_frames import FRAMES
 CHARACTER_RANGED_FRAMES = [FRAMES[i] for i in range(91, 97)]
 EFFECT_RANGED_FRAMES = [FRAMES[i] for i in range(67, 71)]
 
-class Ranged_Attack:
+class RangedAttack:
     def __init__(self, naruto):
         self.naruto = naruto
         self.phase = 0  # 0: 캐릭터 애니메이션, 1: 이펙트 애니메이션, 2: 이동
