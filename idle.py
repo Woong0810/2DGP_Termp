@@ -1,4 +1,5 @@
 from characters_naruto_frames import FRAMES
+from pico2d import draw_rectangle
 
 IDLE_FRAMES = [FRAMES[i] for i in range(41, 47)]
 
@@ -29,3 +30,18 @@ class Idle:
         else:
             self.naruto.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
                                                   self.naruto.x, self.naruto.y, w, h)
+
+    def get_bb(self):
+        # IDLE 상태의 허트박스 (피격 판정)
+        # 캐릭터 중심 기준으로 적절한 크기의 박스 반환
+        return (
+            self.naruto.x - 20,  # left
+            self.naruto.y - 24,  # bottom
+            self.naruto.x + 20,  # right
+            self.naruto.y + 24   # top
+        )
+
+    def draw_bb(self):
+        # 디버그용: 바운딩 박스를 화면에 그리기
+        left, bottom, right, top = self.get_bb()
+        draw_rectangle(left, bottom, right, top)
