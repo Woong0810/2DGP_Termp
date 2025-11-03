@@ -52,6 +52,9 @@ class Special_Attack:
                                                   self.naruto.x, self.naruto.y, w, h)
 
     def get_bb(self, scale_x=1.2, scale_y=1.2, x_offset=0, y_offset=0):
+        if self.naruto.frame < 21:
+            return (0, 0, 0, 0)  # 히트박스 없음
+
         frame = SPECIAL_ATTACK_FRAMES[self.naruto.frame]
         hw = frame['width'] * scale_x / 2
         hh = frame['height'] * scale_y / 2
