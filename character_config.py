@@ -1,11 +1,13 @@
-# 캐릭터별 프레임 설정 정보
-# 각 캐릭터마다 어떤 동작이 몇 번째 프레임에 있는지 정의
+"""
+캐릭터별 프레임 설정 정보
+각 캐릭터마다 어떤 동작이 몇 번째 프레임에 있는지 정의
+"""
 from characters_naruto_frames import FRAMES as NARUTO_FRAMES
 from characters_itachi_frames import FRAMES as ITACHI_FRAMES
 from characters_jiraiya_frames import FRAMES as JIRAIYA_FRAMES
 
 class CharacterConfig:
-    # 캐릭터 설정 베이스 클래스
+    """캐릭터 설정 베이스 클래스"""
     def __init__(self):
         self.name = ""
         self.image_path = ""
@@ -21,6 +23,15 @@ class CharacterConfig:
         self.special_attack_frames = []
         self.ranged_attack_char_frames = []
         self.ranged_attack_effect_frames = []
+
+        # 히트박스 설정 (각 상태별 scale_x, scale_y, x_offset, y_offset)
+        self.hitbox_idle = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_run = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_jump = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_normal_attack = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_defense = {'scale_x': 1.0, 'scale_y': 1.0, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_special_attack = {'scale_x': 1.2, 'scale_y': 1.2, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_ranged_attack = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
 
 class NarutoConfig(CharacterConfig):
     def __init__(self):
@@ -40,6 +51,15 @@ class NarutoConfig(CharacterConfig):
         self.ranged_attack_char_frames = list(range(91, 97))
         self.ranged_attack_effect_frames = list(range(67, 71))
 
+        # 나루토 전용 히트박스 설정 (기본값 사용)
+        self.hitbox_idle = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_run = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_jump = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_normal_attack = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_defense = {'scale_x': 1.0, 'scale_y': 1.0, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_special_attack = {'scale_x': 1.2, 'scale_y': 1.2, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_ranged_attack = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
+
 class ItachiConfig(CharacterConfig):
     def __init__(self):
         super().__init__()
@@ -47,10 +67,19 @@ class ItachiConfig(CharacterConfig):
         self.image_path = "Characters_Itachi_clean.png"
         self.frames = ITACHI_FRAMES
 
-        # Itachi의 프레임 인덱스 설정 (나중에 추가)
-        self.idle_frames = list(range(0, 6))  # 임시
+        # TODO: Itachi의 프레임 인덱스 설정 (나중에 추가)
+        self.idle_frames = list(range(42, 45))
         self.run_frames = list(range(6, 12))  # 임시
         # ... 나머지 동작들도 추가 필요
+
+        # 이타치 전용 히트박스 설정
+        self.hitbox_idle = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': -4}
+        self.hitbox_run = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}
+        self.hitbox_jump = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}
+        self.hitbox_normal_attack = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}
+        self.hitbox_defense = {'scale_x': 1.0, 'scale_y': 0.95, 'x_offset': 0, 'y_offset': 5}
+        self.hitbox_special_attack = {'scale_x': 1.1, 'scale_y': 1.05, 'x_offset': 0, 'y_offset': 5}
+        self.hitbox_ranged_attack = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}
 
 class JiraiyaConfig(CharacterConfig):
     def __init__(self):
@@ -59,10 +88,19 @@ class JiraiyaConfig(CharacterConfig):
         self.image_path = "Characters_Jiraiya_clean.png"
         self.frames = JIRAIYA_FRAMES
 
-        # Jiraiya의 프레임 인덱스 설정 (나중에 추가)
-        self.idle_frames = list(range(0, 6))  # 임시
+        # TODO: Jiraiya의 프레임 인덱스 설정 (나중에 추가)
+        self.idle_frames = list(range(42, 45))  # 임시
         self.run_frames = list(range(6, 12))  # 임시
         # ... 나머지 동작들도 추가 필요
+
+        # 지라이야 전용 히트박스 설정
+        self.hitbox_idle = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 3}
+        self.hitbox_run = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 3}
+        self.hitbox_jump = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 3}
+        self.hitbox_normal_attack = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 3}
+        self.hitbox_defense = {'scale_x': 1.0, 'scale_y': 1.0, 'x_offset': 0, 'y_offset': 3}
+        self.hitbox_special_attack = {'scale_x': 1.15, 'scale_y': 1.15, 'x_offset': 0, 'y_offset': 3}
+        self.hitbox_ranged_attack = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 3}
 
 # 캐릭터 설정 딕셔너리
 CHARACTER_CONFIGS = {
@@ -70,4 +108,3 @@ CHARACTER_CONFIGS = {
     "Itachi": ItachiConfig,
     "Jiraiya": JiraiyaConfig
 }
-
