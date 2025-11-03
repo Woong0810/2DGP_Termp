@@ -24,8 +24,8 @@ def init():
     player1 = Character(NarutoConfig(), x=200, y=90)
     game_world.add_object(player1, 1)
 
-    # 2P: 이타치 (오른쪽) - 일단 IDLE만 동작
-    player2 = Character(ItachiConfig(), x=600, y=90)
+    # 2P: 이타치 (오른쪽) - y 좌표를 조정하여 발 끝 맞춤
+    player2 = Character(ItachiConfig(), x=600, y=97)
     player2.face_dir = -1  # 왼쪽을 향하도록
     game_world.add_object(player2, 1)
 
