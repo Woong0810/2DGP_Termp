@@ -94,18 +94,33 @@ class RangedAttack:
 
     def get_bb(self, scale_x=0.7, scale_y=0.8, x_offset=0, y_offset=0):
         if self.phase == 0:
-            frame = CHARACTER_RANGED_FRAMES[self.naruto.frame]
-        else:
-            frame = CHARACTER_RANGED_FRAMES[-1]
+            if self.naruto.frame == 0:
+                frame = CHARACTER_RANGED_FRAMES[0]
+                hw = frame['width'] * scale_x / 2
+                hh = frame['height'] * scale_y / 2
+                return (
+                    self.naruto.x - hw + x_offset,  # left
+                    self.naruto.y - hh + y_offset,  # bottom
+                    self.naruto.x + hw + x_offset,  # right
+                    self.naruto.y + hh + y_offset   # top
+                )
+            else:
+                return (0, 0, 0, 0)
 
-        hw = frame['width'] * scale_x / 2
-        hh = frame['height'] * scale_y / 2
-        return (
-            self.naruto.x - hw + x_offset,  # left
-            self.naruto.y - hh + y_offset,  # bottom
-            self.naruto.x + hw + x_offset,  # right
-            self.naruto.y + hh + y_offset   # top
-        )
+        elif self.phase == 1:
+            frame = EFFECT_RANGED_FRAMES[self.effect_frame]
+            hw = frame['width'] * scale_x / 2
+            hh = frame['height'] * scale_y / 2
+            return (
+                self.effect_x - hw + x_offset,  # left
+                self.effect_y - hh + y_offset,  # bottom
+                self.effect_x + hw + x_offset,  # right
+                self.effect_y + hh + y_offset   # top
+            )
+
+        else:
+            # phase 2: 히트박스 없음
+            return (0, 0, 0, 0)
 
     def draw_bb(self):
         # 디버그용: 바운딩 박스를 화면에 그리기
