@@ -1,4 +1,5 @@
 from characters_naruto_frames import FRAMES
+from pico2d import draw_rectangle
 
 SPECIAL_ATTACK_FRAMES = [FRAMES[i] for i in range(98, 136)]
 
@@ -33,3 +34,19 @@ class Special_Attack:
         else:
             self.naruto.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
                                                   self.naruto.x, self.naruto.y, w, h)
+
+    def get_bb(self, scale_x=1.2, scale_y=1.2, x_offset=0, y_offset=0):
+        frame = SPECIAL_ATTACK_FRAMES[self.naruto.frame]
+        hw = frame['width'] * scale_x / 2
+        hh = frame['height'] * scale_y / 2
+        return (
+            self.naruto.x - hw + x_offset,  # left
+            self.naruto.y - hh + y_offset,  # bottom
+            self.naruto.x + hw + x_offset,  # right
+            self.naruto.y + hh + y_offset   # top
+        )
+
+    def draw_bb(self):
+        # 디버그용: 바운딩 박스를 화면에 그리기
+        left, bottom, right, top = self.get_bb()
+        draw_rectangle(left, bottom, right, top)
