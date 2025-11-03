@@ -32,13 +32,13 @@ class Idle:
                                                   self.naruto.x, self.naruto.y, w, h)
 
     def get_bb(self):
-        # IDLE 상태의 허트박스 (피격 판정)
-        # 캐릭터 중심 기준으로 적절한 크기의 박스 반환
+        frame = IDLE_FRAMES[self.naruto.frame]
+        hw, hh = frame['width'] / 2, frame['height'] / 2
         return (
-            self.naruto.x - 20,  # left
-            self.naruto.y - 24,  # bottom
-            self.naruto.x + 20,  # right
-            self.naruto.y + 24   # top
+            self.naruto.x - hw,  # left
+            self.naruto.y - hh,  # bottom
+            self.naruto.x + hw,  # right
+            self.naruto.y + hh   # top
         )
 
     def draw_bb(self):
