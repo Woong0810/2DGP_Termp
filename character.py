@@ -8,14 +8,17 @@ from special_attack import Special_Attack
 from ranged_attack import RangedAttack
 from state_machine import StateMachine
 from event_to_string import *
+from character_config import NarutoConfig
 
 class Character:
-    def __init__(self):
-        self.x, self.y = 400, 90
+    def __init__(self, character_config=None, x=400, y=90):
+        self.config = character_config if character_config else NarutoConfig()
+
+        self.x, self.y = x, y
         self.frame = 0
         self.face_dir = 1
-        self.dir = 0  # RUN 상태에서 사용할 방향
-        self.image = load_image('Characters_Naruto_clean.png')
+        self.dir = 0
+        self.image = load_image(self.config.image_path)
 
         self.accum_time = 0.0
         self.frame_duration = 0.1  # 기본값, 상태별로 변경 가능
@@ -59,7 +62,6 @@ class Character:
                 },
                 self.JUMP: {
                     landed: self.IDLE
-                    # 점프 중에는 방어, 스페셜 공격, 원거리 공격 불가
                 },
                 self.DEFENSE: {
                     down_up: self.IDLE,
@@ -68,11 +70,9 @@ class Character:
                 },
                 self.SPECIAL_ATTACK: {
                     special_attack_end: self.IDLE
-                    # 스페셜 공격 중에는 모든 입력 무시
                 },
                 self.RANGED_ATTACK: {
                     ranged_attack_end: self.IDLE
-                    # 원거리 공격 중에는 모든 입력 무시
                 }
             }
         )
