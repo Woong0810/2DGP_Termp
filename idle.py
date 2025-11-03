@@ -1,45 +1,51 @@
-from characters_naruto_frames import FRAMES
 from pico2d import draw_rectangle
 
-IDLE_FRAMES = [FRAMES[i] for i in range(41, 47)]
-
 class Idle:
-    def __init__(self, naruto):
-        self.naruto = naruto
+    def __init__(self, character):
+        self.character = character
 
     def enter(self, e):
-        self.naruto.accum_time = 0.0
-        self.naruto.frame_duration = 0.1
-        self.naruto.frame = 0
+        self.character.accum_time = 0.0
+        self.character.frame_duration = 0.1
+        self.character.frame = 0
 
     def exit(self, e):
         pass
 
     def do(self, dt):
-        self.naruto.accum_time += dt
-        if self.naruto.accum_time >= self.naruto.frame_duration:
-            self.naruto.accum_time -= self.naruto.frame_duration
-            self.naruto.frame = (self.naruto.frame + 1) % len(IDLE_FRAMES)
+        self.character.accum_time += dt
+        if self.character.accum_time >= self.character.frame_duration:
+            self.character.accum_time -= self.character.frame_duration
+            idle_frames = self.character.config.idle_frames
+            self.character.frame = (self.character.frame + 1) % len(idle_frames)
 
     def draw(self):
-        frame = IDLE_FRAMES[self.naruto.frame]
+        idle_frames = self.character.config.idle_frames
+        all_frames = self.character.config.frames
+        frame_idx = idle_frames[self.character.frame]
+        frame = all_frames[frame_idx]
+
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
 
-        if self.naruto.face_dir == 1:
-            self.naruto.image.clip_draw(l, b, w, h, self.naruto.x, self.naruto.y)
+        if self.character.face_dir == 1:
+            self.character.image.clip_draw(l, b, w, h, self.character.x, self.character.y)
         else:
-            self.naruto.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
-                                                  self.naruto.x, self.naruto.y, w, h)
+            self.character.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
+                                                  self.character.x, self.character.y, w, h)
 
     def get_bb(self, scale_x=0.7, scale_y=0.8, x_offset=0, y_offset=0):
-        frame = IDLE_FRAMES[self.naruto.frame]
+        idle_frames = self.character.config.idle_frames
+        all_frames = self.character.config.frames
+        frame_idx = idle_frames[self.character.frame]
+        frame = all_frames[frame_idx]
+
         hw = frame['width'] * scale_x / 2
         hh = frame['height'] * scale_y / 2
         return (
-            self.naruto.x - hw + x_offset,  # left
-            self.naruto.y - hh + y_offset,  # bottom
-            self.naruto.x + hw + x_offset,  # right
-            self.naruto.y + hh + y_offset   # top
+            self.character.x - hw + x_offset,  # left
+            self.character.y - hh + y_offset,  # bottom
+            self.character.x + hw + x_offset,  # right
+            self.character.y + hh + y_offset   # top
         )
 
     def draw_bb(self):
