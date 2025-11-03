@@ -39,19 +39,21 @@ class Run:
             self.character.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
                                                   self.character.x, self.character.y, w, h)
 
-    def get_bb(self, scale_x=0.7, scale_y=0.8, x_offset=0, y_offset=0):
+    def get_bb(self):
         run_frames = self.character.config.run_frames
         all_frames = self.character.config.frames
         frame_idx = run_frames[self.character.frame]
         frame = all_frames[frame_idx]
 
-        hw = frame['width'] * scale_x / 2
-        hh = frame['height'] * scale_y / 2
+        # 캐릭터 설정에서 히트박스 정보 가져오기
+        hb = self.character.config.hitbox_run
+        hw = frame['width'] * hb['scale_x'] / 2
+        hh = frame['height'] * hb['scale_y'] / 2
         return (
-            self.character.x - hw + x_offset,  # left
-            self.character.y - hh + y_offset,  # bottom
-            self.character.x + hw + x_offset,  # right
-            self.character.y + hh + y_offset   # top
+            self.character.x - hw + hb['x_offset'],
+            self.character.y - hh + hb['y_offset'],
+            self.character.x + hw + hb['x_offset'],
+            self.character.y + hh + hb['y_offset']
         )
 
     def draw_bb(self):
