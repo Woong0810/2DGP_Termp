@@ -29,6 +29,10 @@ def init():
     player2.face_dir = -1  # 왼쪽을 향하도록
     game_world.add_object(player2, 1)
 
+    # 서로를 상대로 설정
+    player1.set_opponent(player2)
+    player2.set_opponent(player1)
+
 def update(dt):
     game_world.update(dt)
 
