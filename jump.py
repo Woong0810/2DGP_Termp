@@ -1,11 +1,8 @@
-from characters_naruto_frames import FRAMES
 from pico2d import draw_rectangle
 
-JUMP_IDX = [33, 34]
-
 class Jump:
-    def __init__(self, naruto):
-        self.naruto = naruto
+    def __init__(self, character):
+        self.character = character
         self.jump_count = 0     # 0: 지상, 1: 1단 점프, 2: 2단 점프
         self.cur = 0            # 애니메이션 프레임 인덱스
         self.accum_time = 0.0
@@ -23,14 +20,17 @@ class Jump:
         self.jump_count = 1
         self.cur = 0
         self.accum_time = 0.0
-        self.naruto.frame = JUMP_IDX[self.cur]
+
+        jump_frames = self.character.config.jump_frames
+        self.character.frame = jump_frames[self.cur]
+
         self.vy = 400.0
-        self.ground_y = self.naruto.y  # 최초 점프 시작 지점을 착지점으로 기억
+        self.ground_y = self.character.y  # 최초 점프 시작 지점을 착지점으로 기억
 
         # 이전 상태가 RUN이었으면 수평 속도 유지, IDLE에서는 수직 점프
-        prev_state = self.naruto.state_machine.prev_state
-        if prev_state == self.naruto.RUN:
-            self.vx = self.naruto.dir * 200.0
+        prev_state = self.character.state_machine.prev_state
+        if prev_state == self.character.RUN:
+            self.vx = self.character.dir * 200.0
         else:
             self.vx = 0.0
         self.dir = 0
@@ -47,64 +47,71 @@ class Jump:
             self.vx -= 300.0 * dt
             if self.vx < -400.0:
                 self.vx = -400.0
-            self.naruto.face_dir = -1
+            self.character.face_dir = -1
         elif self.dir == 1:
             self.vx += 300.0 * dt
             if self.vx > 400.0:
                 self.vx = 400.0
-            self.naruto.face_dir = 1
+            self.character.face_dir = 1
 
-        # 애니메이션 프레임 진행
         self.accum_time += dt
         if self.accum_time >= self.frame_duration:
             self.accum_time -= self.frame_duration
-            if self.cur < len(JUMP_IDX) - 1:
+            jump_frames = self.character.config.jump_frames
+            if self.cur < len(jump_frames) - 1:
                 self.cur += 1
-                self.naruto.frame = JUMP_IDX[self.cur]
+                self.character.frame = jump_frames[self.cur]
 
         # 수평 이동 적용
-        self.naruto.x += self.vx * dt
+        self.character.x += self.vx * dt
 
         # 중력 적용
         self.vy += self.g * dt
-        self.naruto.y += self.vy * dt
+        self.character.y += self.vy * dt
 
         # 착지 체크
-        if self.naruto.y <= self.ground_y:
-            self.naruto.y = self.ground_y
-            self.naruto.frame = 0
+        if self.character.y <= self.ground_y:
+            self.character.y = self.ground_y
+            self.character.frame = 0
             # IDLE 상태로 전환하기 위한 이벤트 발생
-            self.naruto.state_machine.handle_event(('LANDED', None))
+            self.character.state_machine.handle_event(('LANDED', None))
 
     def handle_double_jump(self):
-        """2단 점프 처리 - do()에서 호출"""
         if self.jump_count == 1:
             self.jump_count = 2
             self.cur = 0
             self.accum_time = 0.0
-            self.naruto.frame = JUMP_IDX[self.cur]
+            jump_frames = self.character.config.jump_frames
+            self.character.frame = jump_frames[self.cur]
             self.vy = 400.0
-            # ground_y는 변경하지 않음 - 1단 점프 시작점이 최종 착지점
 
     def draw(self):
-        frame = FRAMES[JUMP_IDX[self.cur]]
+        jump_frames = self.character.config.jump_frames
+        all_frames = self.character.config.frames
+        frame_idx = jump_frames[self.cur]
+        frame = all_frames[frame_idx]
+
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
 
-        if self.naruto.face_dir == 1:
-            self.naruto.image.clip_draw(l, b, w, h, self.naruto.x, self.naruto.y)
+        if self.character.face_dir == 1:
+            self.character.image.clip_draw(l, b, w, h, self.character.x, self.character.y)
         else:
-            self.naruto.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
-                                                  self.naruto.x, self.naruto.y, w, h)
+            self.character.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
+                                                  self.character.x, self.character.y, w, h)
 
     def get_bb(self, scale_x=0.7, scale_y=0.8, x_offset=0, y_offset=0):
-        frame = FRAMES[JUMP_IDX[self.cur]]
+        jump_frames = self.character.config.jump_frames
+        all_frames = self.character.config.frames
+        frame_idx = jump_frames[self.cur]
+        frame = all_frames[frame_idx]
+
         hw = frame['width'] * scale_x / 2
         hh = frame['height'] * scale_y / 2
         return (
-            self.naruto.x - hw + x_offset,  # left
-            self.naruto.y - hh + y_offset,  # bottom
-            self.naruto.x + hw + x_offset,  # right
-            self.naruto.y + hh + y_offset   # top
+            self.character.x - hw + x_offset,  # left
+            self.character.y - hh + y_offset,  # bottom
+            self.character.x + hw + x_offset,  # right
+            self.character.y + hh + y_offset   # top
         )
 
     def draw_bb(self):
