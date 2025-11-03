@@ -12,17 +12,20 @@ from character_config import NarutoConfig
 
 class Character:
     def __init__(self, character_config=None, x=400, y=90):
+        # 캐릭터 설정 (기본값: Naruto)
         self.config = character_config if character_config else NarutoConfig()
 
         self.x, self.y = x, y
         self.frame = 0
         self.face_dir = 1
-        self.dir = 0
+        self.dir = 0  # RUN 상태에서 사용할 방향
         self.image = load_image(self.config.image_path)
 
         self.accum_time = 0.0
         self.frame_duration = 0.1  # 기본값, 상태별로 변경 가능
         self.debug_draw = True  # 디버그 모드: 바운딩 박스 표시
+
+        self.opponent = None  # 상대 캐릭터 참조
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)
@@ -123,3 +126,6 @@ class Character:
                     self.JUMP.dir = 0
 
         self.state_machine.handle_event(('INPUT', event))
+
+    def set_opponent(self, opponent):
+        self.opponent = opponent
