@@ -6,11 +6,13 @@ SPECIAL_ATTACK_FRAMES = [FRAMES[i] for i in range(98, 136)]
 class Special_Attack:
     def __init__(self, naruto):
         self.naruto = naruto
+        self.loop_count = 0  # 마지막 4프레임 반복 횟수
 
     def enter(self, e):
         self.naruto.accum_time = 0.0
         self.naruto.frame_duration = 0.15
         self.naruto.frame = 0
+        self.loop_count = 0
 
     def exit(self, e):
         pass
@@ -19,11 +21,25 @@ class Special_Attack:
         self.naruto.accum_time += dt
         if self.naruto.accum_time >= self.naruto.frame_duration:
             self.naruto.accum_time -= self.naruto.frame_duration
-            if self.naruto.frame < len(SPECIAL_ATTACK_FRAMES) - 1:
+
+            last_4_start = len(SPECIAL_ATTACK_FRAMES) - 4
+            skip_before_last_4 = last_4_start - 3 # 프레임 3개 안쓰고 싶음
+
+            if self.naruto.frame < skip_before_last_4 - 1:
+                self.naruto.frame += 1
+            elif self.naruto.frame == skip_before_last_4 - 1:
+                self.naruto.frame = last_4_start
+            elif self.naruto.frame < len(SPECIAL_ATTACK_FRAMES) - 1:
+                # 마지막 4프레임 구간: 진행
                 self.naruto.frame += 1
             else:
-                # 애니메이션이 끝나면 IDLE로 복귀
-                self.naruto.state_machine.handle_event(('SPECIAL_ATTACK_END', None))
+                # 마지막 프레임에 도달
+                if self.loop_count < 3:
+                    self.naruto.frame = last_4_start
+                    self.loop_count += 1
+                else:
+                    # 반복 완료: IDLE로 복귀
+                    self.naruto.state_machine.handle_event(('SPECIAL_ATTACK_END', None))
 
     def draw(self):
         frame = SPECIAL_ATTACK_FRAMES[self.naruto.frame]
