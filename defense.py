@@ -1,21 +1,18 @@
-from characters_naruto_frames import FRAMES
 from pico2d import draw_rectangle
 import game_world
 from shield_effect import ShieldEffect
 
-DEFENSE_FRAMES = [FRAMES[i] for i in range(12, 17)]
-
 class Defense:
-    def __init__(self, naruto):
-        self.naruto = naruto
+    def __init__(self, character):
+        self.character = character
         self.shield_effect = None
 
     def enter(self, e):
-        self.naruto.accum_time = 0.0
-        self.naruto.frame_duration = 0.1
-        self.naruto.frame = 0
+        self.character.accum_time = 0.0
+        self.character.frame_duration = 0.1
+        self.character.frame = 0
         # create and add shield effect behind the character (layer 0)
-        self.shield_effect = ShieldEffect(self.naruto)
+        self.shield_effect = ShieldEffect(self.character)
         game_world.add_object(self.shield_effect, 0)
 
     def exit(self, e):
@@ -24,22 +21,27 @@ class Defense:
             self.shield_effect = None
 
     def do(self, dt):
-        self.naruto.accum_time += dt
-        if self.naruto.accum_time >= self.naruto.frame_duration:
-            self.naruto.accum_time -= self.naruto.frame_duration
+        self.character.accum_time += dt
+        if self.character.accum_time >= self.character.frame_duration:
+            self.character.accum_time -= self.character.frame_duration
+            defense_frames = self.character.config.defense_frames
             # 마지막 프레임에 도달하면 유지
-            if self.naruto.frame < len(DEFENSE_FRAMES) - 1:
-                self.naruto.frame += 1
+            if self.character.frame < len(defense_frames) - 1:
+                self.character.frame += 1
 
     def draw(self):
-        frame = DEFENSE_FRAMES[self.naruto.frame]
+        defense_frames = self.character.config.defense_frames
+        all_frames = self.character.config.frames
+        frame_idx = defense_frames[self.character.frame]
+        frame = all_frames[frame_idx]
+
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
 
-        if self.naruto.face_dir == 1:
-            self.naruto.image.clip_draw(l, b, w, h, self.naruto.x, self.naruto.y)
+        if self.character.face_dir == 1:
+            self.character.image.clip_draw(l, b, w, h, self.character.x, self.character.y)
         else:
-            self.naruto.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
-                                                  self.naruto.x, self.naruto.y, w, h)
+            self.character.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
+                                                  self.character.x, self.character.y, w, h)
 
     def get_bb(self, scale_x=1.0, scale_y=1.0, x_offset=0, y_offset=0):
         if self.shield_effect is None:
@@ -54,10 +56,10 @@ class Defense:
         hw = draw_w * scale_x / 2
         hh = draw_h * scale_y / 2
         return (
-            self.naruto.x - hw + x_offset,  # left
-            self.naruto.y - hh + y_offset,  # bottom
-            self.naruto.x + hw + x_offset,  # right
-            self.naruto.y + hh + y_offset   # top
+            self.character.x - hw + x_offset,  # left
+            self.character.y - hh + y_offset,  # bottom
+            self.character.x + hw + x_offset,  # right
+            self.character.y + hh + y_offset   # top
         )
 
     def draw_bb(self):

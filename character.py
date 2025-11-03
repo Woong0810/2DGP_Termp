@@ -4,7 +4,7 @@ from run import Run
 from normal_attack import NormalAttack
 from jump import Jump
 from defense import Defense
-from special_attack import Special_Attack
+from special_attack import SpecialAttack
 from ranged_attack import RangedAttack
 from state_machine import StateMachine
 from event_to_string import *
@@ -29,7 +29,7 @@ class Character:
         self.NORMAL_ATTACK = NormalAttack(self)
         self.JUMP = Jump(self)
         self.DEFENSE = Defense(self)
-        self.SPECIAL_ATTACK = Special_Attack(self)
+        self.SPECIAL_ATTACK = SpecialAttack(self)
         self.RANGED_ATTACK = RangedAttack(self)
 
         self.state_machine = StateMachine(
