@@ -103,23 +103,24 @@ class RangedAttack:
                 self.character.image.clip_composite_draw(el, eb, ew, eh, 0.0, 'h',
                                                       self.effect_x, self.effect_y, ew, eh)
 
-    def get_bb(self, scale_x=0.7, scale_y=0.8, x_offset=0, y_offset=0):
+    def get_bb(self):
         char_frames = self.character.config.ranged_attack_char_frames
         effect_frames = self.character.config.ranged_attack_effect_frames
         all_frames = self.character.config.frames
+        hb = self.character.config.hitbox_ranged_attack
 
         if self.phase == 0:
             # phase 0: 첫 번째 프레임만 히트박스 있음
             if self.character.frame == 0:
                 frame_idx = char_frames[0]
                 frame = all_frames[frame_idx]
-                hw = frame['width'] * scale_x / 2
-                hh = frame['height'] * scale_y / 2
+                hw = frame['width'] * hb['scale_x'] / 2
+                hh = frame['height'] * hb['scale_y'] / 2
                 return (
-                    self.character.x - hw + x_offset,
-                    self.character.y - hh + y_offset,
-                    self.character.x + hw + x_offset,
-                    self.character.y + hh + y_offset
+                    self.character.x - hw + hb['x_offset'],
+                    self.character.y - hh + hb['y_offset'],
+                    self.character.x + hw + hb['x_offset'],
+                    self.character.y + hh + hb['y_offset']
                 )
             else:
                 return (0, 0, 0, 0)
@@ -128,13 +129,13 @@ class RangedAttack:
             # phase 1: 이펙트의 히트박스
             frame_idx = effect_frames[self.effect_frame]
             frame = all_frames[frame_idx]
-            hw = frame['width'] * scale_x / 2
-            hh = frame['height'] * scale_y / 2
+            hw = frame['width'] * hb['scale_x'] / 2
+            hh = frame['height'] * hb['scale_y'] / 2
             return (
-                self.effect_x - hw + x_offset,
-                self.effect_y - hh + y_offset,
-                self.effect_x + hw + x_offset,
-                self.effect_y + hh + y_offset
+                self.effect_x - hw + hb['x_offset'],
+                self.effect_y - hh + hb['y_offset'],
+                self.effect_x + hw + hb['x_offset'],
+                self.effect_y + hh + hb['y_offset']
             )
 
         else:
