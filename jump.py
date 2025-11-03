@@ -1,4 +1,5 @@
 from characters_naruto_frames import FRAMES
+from pico2d import draw_rectangle
 
 JUMP_IDX = [33, 34]
 
@@ -94,3 +95,19 @@ class Jump:
         else:
             self.naruto.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
                                                   self.naruto.x, self.naruto.y, w, h)
+
+    def get_bb(self, scale_x=0.7, scale_y=0.8, x_offset=0, y_offset=0):
+        frame = FRAMES[JUMP_IDX[self.cur]]
+        hw = frame['width'] * scale_x / 2
+        hh = frame['height'] * scale_y / 2
+        return (
+            self.naruto.x - hw + x_offset,  # left
+            self.naruto.y - hh + y_offset,  # bottom
+            self.naruto.x + hw + x_offset,  # right
+            self.naruto.y + hh + y_offset   # top
+        )
+
+    def draw_bb(self):
+        # 디버그용: 바운딩 박스를 화면에 그리기
+        left, bottom, right, top = self.get_bb()
+        draw_rectangle(left, bottom, right, top)
