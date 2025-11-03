@@ -12,18 +12,22 @@ class RangedAttack:
         self.target_y = 0
 
     def enter(self, e):
+        # 상대 캐릭터가 없으면 attack이 안됨
+        if not self.character.opponent:
+            self.character.state_machine.handle_event(('RANGED_ATTACK_END', None))
+            return
+
         self.character.accum_time = 0.0
         self.character.frame_duration = 0.15
         self.character.frame = 0
         self.phase = 0
 
-        # 목표 위치 설정 (일단 오른쪽으로 300픽셀 떨어진 곳)
-        self.target_x = self.character.x + (300 if self.character.face_dir == 1 else -300)
-        self.target_y = self.character.y
+        self.target_x = self.character.opponent.x
+        self.target_y = self.character.opponent.y
 
-        # 이펙트 위치 설정 (목표 위치에서 약간 위)
         self.effect_x = self.target_x
         self.effect_y = self.target_y - 20
+
         self.effect_frame = 0
         self.effect_accum_time = 0.0
 
