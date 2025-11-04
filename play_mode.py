@@ -12,6 +12,10 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_h:
+            player1.take_hit()
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_j:
+            player2.take_hit()
         else:
             # 1P는 player1, 2P는 player2가 처리
             player1.handle_event(event)
