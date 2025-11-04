@@ -26,12 +26,14 @@ class Idle:
         frame = all_frames[frame_idx]
 
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
+        draw_w = int(w * self.character.config.scale_x)
+        draw_h = int(h * self.character.config.scale_y)
 
         if self.character.face_dir == 1:
-            self.character.image.clip_draw(l, b, w, h, self.character.x, self.character.y)
+            self.character.image.clip_draw(l, b, w, h, self.character.x, self.character.y, draw_w, draw_h)
         else:
             self.character.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
-                                                  self.character.x, self.character.y, w, h)
+                                                  self.character.x, self.character.y, draw_w, draw_h)
 
     def get_bb(self):
         idle_frames = self.character.config.idle_frames
@@ -41,8 +43,8 @@ class Idle:
 
         # 캐릭터 설정에서 히트박스 정보 가져오기
         hb = self.character.config.hitbox_idle
-        hw = frame['width'] * hb['scale_x'] / 2
-        hh = frame['height'] * hb['scale_y'] / 2
+        hw = frame['width'] * self.character.config.scale_x * hb['scale_x'] / 2
+        hh = frame['height'] * self.character.config.scale_y * hb['scale_y'] / 2
         return (
             self.character.x - hw + hb['x_offset'],  # left
             self.character.y - hh + hb['y_offset'],  # bottom
