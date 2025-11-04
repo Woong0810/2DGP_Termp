@@ -28,12 +28,13 @@ class Idle:
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
         draw_w = int(w * self.character.config.scale_x)
         draw_h = int(h * self.character.config.scale_y)
+        draw_y = self.character.y + self.character.config.draw_offset_y
 
         if self.character.face_dir == 1:
-            self.character.image.clip_draw(l, b, w, h, self.character.x, self.character.y, draw_w, draw_h)
+            self.character.image.clip_draw(l, b, w, h, self.character.x, draw_y, draw_w, draw_h)
         else:
             self.character.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
-                                                  self.character.x, self.character.y, draw_w, draw_h)
+                                                  self.character.x, draw_y, draw_w, draw_h)
 
     def get_bb(self):
         idle_frames = self.character.config.idle_frames

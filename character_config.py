@@ -83,7 +83,7 @@ class ItachiConfig(CharacterConfig):
         self.scale_y = 0.85  # y축 크기를 줄여서 나루토와 비슷하게
 
         # 이타치 피벗 보정
-        self.draw_offset_y = -8
+        self.draw_offset_y = 5
 
         # TODO: Itachi의 프레임 인덱스 설정 (나중에 추가)
         self.idle_frames = list(range(42, 46))
@@ -92,7 +92,7 @@ class ItachiConfig(CharacterConfig):
         # ... 나머지 동작들도 추가 필요
 
         # 이타치 전용 히트박스 설정
-        self.hitbox_idle = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': -4}
+        self.hitbox_idle = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_run = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}
         self.hitbox_jump = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}
         self.hitbox_normal_attack = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}
