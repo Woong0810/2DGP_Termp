@@ -38,14 +38,14 @@ class Hit:
         else:
             self.character.image.clip_composite_draw(
                 frame['left'], frame['bottom'], frame['width'], frame['height'],
-                0, 'h', self.character.x, self.character.y)
+                0, 'h', self.character.x, self.character.y, frame['width'], frame['height'])
 
     def get_bb(self):
         frame = self.character.config.frames[self.character.config.hit_frames[self.character.frame]]
         hitbox = self.character.config.hitbox_hit
 
-        width = frame['width'] * 2 * hitbox['scale_x']
-        height = frame['height'] * 2 * hitbox['scale_y']
+        width = frame['width'] * hitbox['scale_x']
+        height = frame['height'] * hitbox['scale_y']
         x_offset = hitbox['x_offset'] * self.character.face_dir
         y_offset = hitbox['y_offset']
 
