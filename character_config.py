@@ -72,8 +72,9 @@ class ItachiConfig(CharacterConfig):
         self.frames = ITACHI_FRAMES
 
         # TODO: Itachi의 프레임 인덱스 설정 (나중에 추가)
-        self.idle_frames = list(range(42, 45))
-        self.run_frames = list(range(6, 12))  # 임시
+        self.idle_frames = list(range(42, 46))
+        self.run_frames = list(range(6, 12))
+        self.hit_frames = [46, 47]
         # ... 나머지 동작들도 추가 필요
 
         # 이타치 전용 히트박스 설정
@@ -84,7 +85,7 @@ class ItachiConfig(CharacterConfig):
         self.hitbox_defense = {'scale_x': 1.0, 'scale_y': 0.95, 'x_offset': 0, 'y_offset': 5}
         self.hitbox_special_attack = {'scale_x': 1.1, 'scale_y': 1.05, 'x_offset': 0, 'y_offset': 5}
         self.hitbox_ranged_attack = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}
-        self.hitbox_hit = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}  # 피격 히트박스
+        self.hitbox_hit = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': -5}  # 피격 히트박스
 
 class JiraiyaConfig(CharacterConfig):
     def __init__(self):
