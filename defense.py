@@ -36,31 +36,34 @@ class Defense:
         frame = all_frames[frame_idx]
 
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
+        draw_w = int(w * self.character.config.scale_x)
+        draw_h = int(h * self.character.config.scale_y)
+        draw_y = self.character.y + self.character.config.draw_offset_y
 
         if self.character.face_dir == 1:
-            self.character.image.clip_draw(l, b, w, h, self.character.x, self.character.y)
+            self.character.image.clip_draw(l, b, w, h, self.character.x, draw_y, draw_w, draw_h)
         else:
             self.character.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
-                                                  self.character.x, self.character.y, w, h)
+                                                  self.character.x, draw_y, draw_w, draw_h)
 
-    def get_bb(self, scale_x=1.0, scale_y=1.0, x_offset=0, y_offset=0):
-        if self.shield_effect is None:
+    def get_bb(self):
+        if self.shield_effect is not None:
+            draw_w = int(self.shield_effect.frame_w * 2 / 3)
+            draw_h = int(self.shield_effect.frame_h * 2 / 3)
+
+            hb = self.character.config.hitbox_defense
+            hw = draw_w * hb['scale_x'] / 2
+            hh = draw_h * hb['scale_y'] / 2
+
+            return (
+                self.character.x - hw,
+                self.character.y - hh,
+                self.character.x + hw,
+                self.character.y + hh
+            )
+        else:
+            # 실드가 없으면 히트박스 없음
             return (0, 0, 0, 0)
-
-        frame_w = self.shield_effect.frame_w
-        frame_h = self.shield_effect.frame_h
-
-        draw_w = int(frame_w * 2 / 3)
-        draw_h = int(frame_h * 2 / 3)
-
-        hw = draw_w * scale_x / 2
-        hh = draw_h * scale_y / 2
-        return (
-            self.character.x - hw + x_offset,  # left
-            self.character.y - hh + y_offset,  # bottom
-            self.character.x + hw + x_offset,  # right
-            self.character.y + hh + y_offset   # top
-        )
 
     def draw_bb(self):
         # 디버그용: 바운딩 박스를 화면에 그리기

@@ -31,21 +31,23 @@ class Hit:
         HIT_FRAMES = [self.character.config.frames[idx] for idx in self.character.config.hit_frames]
         frame = HIT_FRAMES[self.character.frame]
 
+        l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
+        draw_w = int(w * self.character.config.scale_x)
+        draw_h = int(h * self.character.config.scale_y)
+        draw_y = self.character.y + self.character.config.draw_offset_y
+
         if self.character.face_dir == 1:
-            self.character.image.clip_draw(
-                frame['left'], frame['bottom'], frame['width'], frame['height'],
-                self.character.x, self.character.y)
+            self.character.image.clip_draw(l, b, w, h, self.character.x, draw_y, draw_w, draw_h)
         else:
-            self.character.image.clip_composite_draw(
-                frame['left'], frame['bottom'], frame['width'], frame['height'],
-                0, 'h', self.character.x, self.character.y, frame['width'], frame['height'])
+            self.character.image.clip_composite_draw(l, b, w, h, 0, 'h',
+                                                      self.character.x, draw_y, draw_w, draw_h)
 
     def get_bb(self):
         frame = self.character.config.frames[self.character.config.hit_frames[self.character.frame]]
         hitbox = self.character.config.hitbox_hit
 
-        width = frame['width'] * hitbox['scale_x']
-        height = frame['height'] * hitbox['scale_y']
+        width = frame['width'] * self.character.config.scale_x * hitbox['scale_x']
+        height = frame['height'] * self.character.config.scale_y * hitbox['scale_y']
         x_offset = hitbox['x_offset'] * self.character.face_dir
         y_offset = hitbox['y_offset']
 
