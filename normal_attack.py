@@ -52,29 +52,33 @@ class NormalAttack:
         self.n_key_pressed = False
 
     def draw(self):
-        attack_frames = self.character.config.normal_attack_frames
         all_frames = self.character.config.frames
-        frame_idx = attack_frames[self.character.frame]
+        normal_attack_frames = self.character.config.normal_attack_frames
+
+        frame_idx = normal_attack_frames[self.character.frame]
         frame = all_frames[frame_idx]
 
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
+        draw_w = int(w * self.character.config.scale_x)
+        draw_h = int(h * self.character.config.scale_y)
+        draw_y = self.character.y + self.character.config.draw_offset_y
 
         if self.character.face_dir == 1:
-            self.character.image.clip_draw(l, b, w, h, self.character.x, self.character.y)
+            self.character.image.clip_draw(l, b, w, h, self.character.x, draw_y, draw_w, draw_h)
         else:
             self.character.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
-                                                  self.character.x, self.character.y, w, h)
+                                                  self.character.x, draw_y, draw_w, draw_h)
 
     def get_bb(self):
-        attack_frames = self.character.config.normal_attack_frames
         all_frames = self.character.config.frames
-        frame_idx = attack_frames[self.character.frame]
+        normal_attack_frames = self.character.config.normal_attack_frames
+
+        frame_idx = normal_attack_frames[self.character.frame]
         frame = all_frames[frame_idx]
 
-        # 캐릭터 설정에서 히트박스 정보 가져오기
         hb = self.character.config.hitbox_normal_attack
-        hw = frame['width'] * hb['scale_x'] / 2
-        hh = frame['height'] * hb['scale_y'] / 2
+        hw = frame['width'] * self.character.config.scale_x * hb['scale_x'] / 2
+        hh = frame['height'] * self.character.config.scale_y * hb['scale_y'] / 2
         return (
             self.character.x - hw + hb['x_offset'],
             self.character.y - hh + hb['y_offset'],
