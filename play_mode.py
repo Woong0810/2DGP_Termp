@@ -24,12 +24,12 @@ def handle_events():
 def init():
     global player1, player2
 
-    # 1P: 나루토 (왼쪽)
+    # 1P: 나루토 (왼쪽) - 공통 y좌표 사용
     player1 = Character(NarutoConfig(), x=200, y=90)
     game_world.add_object(player1, 1)
 
-    # 2P: 이타치 (오른쪽) - y 좌표를 조정하여 발 끝 맞춤
-    player2 = Character(ItachiConfig(), x=600, y=97)
+    # 2P: 이타치 (오른쪽) - 나루토와 같은 y좌표
+    player2 = Character(ItachiConfig(), x=600, y=90)
     player2.face_dir = -1  # 왼쪽을 향하도록
     game_world.add_object(player2, 1)
 
