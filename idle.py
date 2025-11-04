@@ -42,7 +42,6 @@ class Idle:
         frame_idx = idle_frames[self.character.frame]
         frame = all_frames[frame_idx]
 
-        # 캐릭터 설정에서 히트박스 정보 가져오기
         hb = self.character.config.hitbox_idle
         hw = frame['width'] * self.character.config.scale_x * hb['scale_x'] / 2
         hh = frame['height'] * self.character.config.scale_y * hb['scale_y'] / 2
