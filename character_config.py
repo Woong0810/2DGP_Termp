@@ -13,6 +13,10 @@ class CharacterConfig:
         self.image_path = ""
         self.frames = []  # 전체 프레임 정보
 
+        # 캐릭터 스케일 (출력 크기 조정)
+        self.scale_x = 1.0
+        self.scale_y = 1.0
+
         # 각 동작의 프레임 인덱스 범위
         self.idle_frames = []
         self.run_frames = []
@@ -70,6 +74,10 @@ class ItachiConfig(CharacterConfig):
         self.name = "Itachi"
         self.image_path = "Characters_Itachi_clean.png"
         self.frames = ITACHI_FRAMES
+
+        # 이타치 스케일 조정 (나루토와 같은 크기로)
+        self.scale_x = 1.0
+        self.scale_y = 0.85  # y축 크기를 줄여서 나루토와 비슷하게
 
         # TODO: Itachi의 프레임 인덱스 설정 (나중에 추가)
         self.idle_frames = list(range(42, 46))
