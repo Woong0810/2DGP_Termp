@@ -6,6 +6,7 @@ from jump import Jump
 from defense import Defense
 from special_attack import SpecialAttack
 from ranged_attack import RangedAttack
+from hit import Hit
 from state_machine import StateMachine
 from event_to_string import *
 from character_config import NarutoConfig
@@ -34,6 +35,7 @@ class Character:
         self.DEFENSE = Defense(self)
         self.SPECIAL_ATTACK = SpecialAttack(self)
         self.RANGED_ATTACK = RangedAttack(self)
+        self.HIT = Hit(self)
 
         self.state_machine = StateMachine(
             self.IDLE,
@@ -45,7 +47,8 @@ class Character:
                     up_down: self.JUMP,
                     down_down: self.DEFENSE,
                     v_down: self.SPECIAL_ATTACK,
-                    b_down: self.RANGED_ATTACK
+                    b_down: self.RANGED_ATTACK,
+                    take_hit: self.HIT
                 },
                 self.RUN: {
                     right_up: self.IDLE,
@@ -54,31 +57,41 @@ class Character:
                     up_down: self.JUMP,
                     down_down: self.DEFENSE,
                     v_down: self.SPECIAL_ATTACK,
-                    b_down: self.RANGED_ATTACK
+                    b_down: self.RANGED_ATTACK,
+                    take_hit: self.HIT
                 },
                 self.NORMAL_ATTACK: {
                     segment_end: self.IDLE,
                     up_down: self.JUMP,
                     down_down: self.DEFENSE,
                     v_down: self.SPECIAL_ATTACK,
-                    b_down: self.RANGED_ATTACK
+                    b_down: self.RANGED_ATTACK,
+                    take_hit: self.HIT
                 },
                 self.JUMP: {
-                    landed: self.IDLE
+                    landed: self.IDLE,
+                    take_hit: self.HIT
                 },
                 self.DEFENSE: {
                     down_up: self.IDLE,
                     v_down: self.SPECIAL_ATTACK,
-                    b_down: self.RANGED_ATTACK
+                    b_down: self.RANGED_ATTACK,
+                    take_hit: self.HIT
                 },
                 self.SPECIAL_ATTACK: {
                     special_attack_end: self.IDLE
                 },
                 self.RANGED_ATTACK: {
                     ranged_attack_end: self.IDLE
+                },
+                self.HIT: {
+                    hit_end: self.IDLE
                 }
             }
         )
+
+    def take_hit(self):
+        self.state_machine.add_event(('TAKE_HIT', 0))
 
     def update(self, dt):
         self.state_machine.update(dt)
@@ -97,6 +110,10 @@ class Character:
         self.state_machine.draw_bb()
 
     def handle_event(self, event):
+        # HIT 상태에서는 모든 입력 무시
+        if self.state_machine.cur_state == self.HIT:
+            return
+
         # SPECIAL_ATTACK, RANGED_ATTACK 상태에서는 모든 입력 무시
         if self.state_machine.cur_state == self.SPECIAL_ATTACK or self.state_machine.cur_state == self.RANGED_ATTACK:
             return
