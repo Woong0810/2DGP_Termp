@@ -1,35 +1,32 @@
 from pico2d import draw_rectangle
+from character_config import ACTION_PER_TIME, HIT_ANIMATION_SPEED, HIT_DURATION
+import game_framework
 
 class Hit:
     def __init__(self, character):
         self.character = character
-        self.hit_duration = 0.3
         self.elapsed_time = 0.0
 
     def enter(self, event):
         self.character.frame = 0
         self.elapsed_time = 0.0
-        self.character.frame_duration = 0.15
-        self.character.accum_time = 0.0
 
     def exit(self, event):
         pass
 
-    def do(self, dt):
-        self.elapsed_time += dt
-        self.character.accum_time += dt
+    def do(self):
+        self.elapsed_time += game_framework.frame_time
 
-        if self.character.accum_time >= self.character.frame_duration:
-            self.character.accum_time = 0.0
-            self.character.frame = (self.character.frame + 1) % 2  # 47, 48 프레임 2개만 반복
+        # 수업 방식: game_framework.frame_time 사용
+        self.character.frame = (self.character.frame + 2 * ACTION_PER_TIME * HIT_ANIMATION_SPEED * game_framework.frame_time) % 2
 
-        if self.elapsed_time >= self.hit_duration:
+        if self.elapsed_time >= HIT_DURATION:
             from event_to_string import hit_end
             self.character.state_machine.add_event(('HIT_END', 0))
 
     def draw(self):
         HIT_FRAMES = [self.character.config.frames[idx] for idx in self.character.config.hit_frames]
-        frame = HIT_FRAMES[self.character.frame]
+        frame = HIT_FRAMES[int(self.character.frame)]
 
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
         draw_w = int(w * self.character.config.scale_x)
@@ -43,7 +40,7 @@ class Hit:
                                                       self.character.x, draw_y, draw_w, draw_h)
 
     def get_bb(self):
-        frame = self.character.config.frames[self.character.config.hit_frames[self.character.frame]]
+        frame = self.character.config.frames[self.character.config.hit_frames[int(self.character.frame)]]  # int로 변환
         hitbox = self.character.config.hitbox_hit
 
         width = frame['width'] * self.character.config.scale_x * hitbox['scale_x']
