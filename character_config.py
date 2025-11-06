@@ -6,32 +6,64 @@ from characters_naruto_frames import FRAMES as NARUTO_FRAMES
 from characters_itachi_frames import FRAMES as ITACHI_FRAMES
 from characters_jiraiya_frames import FRAMES as JIRAIYA_FRAMES
 
-# 물리 기반 상수 설정
+# ===== 물리 기반 상수 설정 =====
 PIXEL_PER_METER = (10.0 / 0.4)  # 10 pixel = 40 cm
 
+# Run Speed
 RUN_SPEED_KMPH = 20.0  # Km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)  # Pixel Per Second
 
-JUMP_SPEED_KMPH = 15.0  # Km / Hour (수평 이동)
+# Jump Physics
+JUMP_SPEED_KMPH = 15.0  # Km / Hour (공중에서 수평 이동)
 JUMP_SPEED_MPM = (JUMP_SPEED_KMPH * 1000.0 / 60.0)
 JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
 JUMP_SPEED_PPS = (JUMP_SPEED_MPS * PIXEL_PER_METER)
 
-JUMP_HEIGHT_METER = 2.0  # 2m 높이
+JUMP_HEIGHT_METER = 3.0  # 2m 높이
 JUMP_HEIGHT_PIXEL = (JUMP_HEIGHT_METER * PIXEL_PER_METER)
 
-GRAVITY_MPS2 = 9.8
-GRAVITY_PPS2 = (GRAVITY_MPS2 * PIXEL_PER_METER)
+# Gravity
+GRAVITY_MPS2 = 9.8  # m/s^2
+GRAVITY_PPS2 = (GRAVITY_MPS2 * PIXEL_PER_METER)  # pixel/s^2
 
-ANIMATION_SPEED_IDLE = 10.0  # frames per second
-ANIMATION_SPEED_RUN = 15.0
-ANIMATION_SPEED_ATTACK = 7.0
-ANIMATION_SPEED_JUMP = 12.0
-ANIMATION_SPEED_DEFENSE = 15.0
-ANIMATION_SPEED_SPECIAL = 5.0
-ANIMATION_SPEED_HIT = 5.0
+# ===== 애니메이션 속도 설정 =====
+# 기본 애니메이션 시간
+TIME_PER_ACTION = 1.0  # 한 사이클 애니메이션 재생 시간 (초)
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION  # 초당 사이클 수
+
+# 각 동작별 애니메이션 속도 배수 (ACTION_PER_TIME에 곱해서 사용)
+IDLE_ANIMATION_SPEED = 1.0      # 기본 속도
+RUN_ANIMATION_SPEED = 1.0       # 기본 속도 (이동 속도와 동기화)
+JUMP_ANIMATION_SPEED = 1.0      # 기본 속도
+DEFENSE_ANIMATION_SPEED = 1.5   # 1.5배 빠르게
+NORMAL_ATTACK_ANIMATION_SPEED = 2.0    # 2배 빠르게
+SPECIAL_ATTACK_ANIMATION_SPEED = 2.5   # 2.5배 빠르게
+RANGED_ATTACK_CHAR_ANIMATION_SPEED = 2.0   # 2배 빠르게
+RANGED_ATTACK_EFFECT_ANIMATION_SPEED = 3.0  # 3배 빠르게
+HIT_ANIMATION_SPEED = 1.5       # 1.5배 빠르게
+
+# ===== 공격 설정 =====
+# Normal Attack
+NORMAL_ATTACK_DAMAGE = 10       # 기본 공격 데미지
+NORMAL_ATTACK_KNOCKBACK = 50    # 넉백 거리 (pixel)
+
+# Special Attack
+SPECIAL_ATTACK_DAMAGE = 30      # 스페셜 공격 데미지
+SPECIAL_ATTACK_KNOCKBACK = 100  # 넉백 거리
+SPECIAL_ATTACK_LOOP_COUNT = 3   # 마지막 프레임 반복 횟수
+
+# Ranged Attack
+RANGED_ATTACK_DAMAGE = 20       # 원거리 공격 데미지
+RANGED_ATTACK_EFFECT_Y_OFFSET = -20  # 이펙트 초기 y 오프셋
+
+# ===== 방어 설정 =====
+DEFENSE_DAMAGE_REDUCTION = 0.5  # 방어 시 데미지 감소율 (50%)
+
+# ===== 피격 설정 =====
+HIT_DURATION = 0.3              # 피격 애니메이션 지속 시간 (초)
+HIT_INVINCIBILITY_TIME = 0.5    # 피격 후 무적 시간 (초)
 
 class CharacterConfig:
     """캐릭터 설정 베이스 클래스"""
