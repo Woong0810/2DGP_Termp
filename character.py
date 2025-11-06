@@ -94,7 +94,7 @@ class Character:
         self.state_machine.add_event(('TAKE_HIT', 0))
 
     def update(self, dt):
-        self.state_machine.update(dt)
+        self.state_machine.update()
 
     def draw(self):
         self.state_machine.draw()
