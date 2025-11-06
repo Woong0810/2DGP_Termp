@@ -1,6 +1,8 @@
 from pico2d import draw_rectangle
 import game_world
 from shield_effect import ShieldEffect
+from character_config import ACTION_PER_TIME, DEFENSE_ANIMATION_SPEED
+import game_framework
 
 class Defense:
     def __init__(self, character):
@@ -8,8 +10,6 @@ class Defense:
         self.shield_effect = None
 
     def enter(self, e):
-        self.character.accum_time = 0.0
-        self.character.frame_duration = 0.1
         self.character.frame = 0
         # create and add shield effect behind the character (layer 0)
         self.shield_effect = ShieldEffect(self.character)
@@ -20,19 +20,20 @@ class Defense:
             game_world.remove_object(self.shield_effect)
             self.shield_effect = None
 
-    def do(self, dt):
-        self.character.accum_time += dt
-        if self.character.accum_time >= self.character.frame_duration:
-            self.character.accum_time -= self.character.frame_duration
-            defense_frames = self.character.config.defense_frames
-            # 마지막 프레임에 도달하면 유지
-            if self.character.frame < len(defense_frames) - 1:
-                self.character.frame += 1
+    def do(self):
+        defense_frames = self.character.config.defense_frames
+        frames_per_action = len(defense_frames)
+
+        self.character.frame += frames_per_action * ACTION_PER_TIME * DEFENSE_ANIMATION_SPEED * game_framework.frame_time
+
+        # 마지막 프레임에 도달하면 유지
+        if self.character.frame >= frames_per_action - 1:
+            self.character.frame = frames_per_action - 1
 
     def draw(self):
         defense_frames = self.character.config.defense_frames
         all_frames = self.character.config.frames
-        frame_idx = defense_frames[self.character.frame]
+        frame_idx = defense_frames[int(self.character.frame)]  # int로 변환
         frame = all_frames[frame_idx]
 
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
