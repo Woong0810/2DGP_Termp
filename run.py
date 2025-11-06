@@ -1,13 +1,13 @@
 from event_to_string import right_down, right_up, left_down, left_up
 from pico2d import draw_rectangle
+from character_config import RUN_SPEED_PPS, ACTION_PER_TIME, RUN_ANIMATION_SPEED
+import game_framework
 
 class Run:
     def __init__(self, character):
         self.character = character
 
     def enter(self, e):
-        self.character.accum_time = 0.0
-        self.character.frame_duration = 0.04
         self.character.frame = 0
         if right_down(e) or left_up(e):
             self.character.dir = self.character.face_dir = 1
@@ -17,18 +17,17 @@ class Run:
     def exit(self, e):
         pass
 
-    def do(self, dt):
-        self.character.accum_time += dt
-        if self.character.accum_time >= self.character.frame_duration:
-            self.character.accum_time -= self.character.frame_duration
-            run_frames = self.character.config.run_frames
-            self.character.frame = (self.character.frame + 1) % len(run_frames)
-            self.character.x += 10 * self.character.dir
+    def do(self):
+        self.character.x += RUN_SPEED_PPS * game_framework.frame_time * self.character.dir
+
+        run_frames = self.character.config.run_frames
+        frames_per_action = len(run_frames)
+        self.character.frame = (self.character.frame + frames_per_action * ACTION_PER_TIME * RUN_ANIMATION_SPEED * game_framework.frame_time) % frames_per_action
 
     def draw(self):
         run_frames = self.character.config.run_frames
         all_frames = self.character.config.frames
-        frame_idx = run_frames[self.character.frame]
+        frame_idx = run_frames[int(self.character.frame)]  # int로 변환
         frame = all_frames[frame_idx]
 
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
@@ -45,7 +44,7 @@ class Run:
     def get_bb(self):
         run_frames = self.character.config.run_frames
         all_frames = self.character.config.frames
-        frame_idx = run_frames[self.character.frame]
+        frame_idx = run_frames[int(self.character.frame)]  # int로 변환
         frame = all_frames[frame_idx]
 
         hb = self.character.config.hitbox_run
