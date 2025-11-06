@@ -1,28 +1,26 @@
 from pico2d import draw_rectangle
+from character_config import ACTION_PER_TIME, IDLE_ANIMATION_SPEED
+import game_framework
 
 class Idle:
     def __init__(self, character):
         self.character = character
 
     def enter(self, e):
-        self.character.accum_time = 0.0
-        self.character.frame_duration = 0.1
         self.character.frame = 0
 
     def exit(self, e):
         pass
 
-    def do(self, dt):
-        self.character.accum_time += dt
-        if self.character.accum_time >= self.character.frame_duration:
-            self.character.accum_time -= self.character.frame_duration
-            idle_frames = self.character.config.idle_frames
-            self.character.frame = (self.character.frame + 1) % len(idle_frames)
+    def do(self):
+        idle_frames = self.character.config.idle_frames
+        frames_per_action = len(idle_frames)
+        self.character.frame = (self.character.frame + frames_per_action * ACTION_PER_TIME * IDLE_ANIMATION_SPEED * game_framework.frame_time) % frames_per_action
 
     def draw(self):
         idle_frames = self.character.config.idle_frames
         all_frames = self.character.config.frames
-        frame_idx = idle_frames[self.character.frame]
+        frame_idx = idle_frames[int(self.character.frame)]  # int로 변환
         frame = all_frames[frame_idx]
 
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
@@ -39,7 +37,7 @@ class Idle:
     def get_bb(self):
         idle_frames = self.character.config.idle_frames
         all_frames = self.character.config.frames
-        frame_idx = idle_frames[self.character.frame]
+        frame_idx = idle_frames[int(self.character.frame)]  # int로 변환
         frame = all_frames[frame_idx]
 
         hb = self.character.config.hitbox_idle

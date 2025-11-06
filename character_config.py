@@ -10,13 +10,13 @@ from characters_jiraiya_frames import FRAMES as JIRAIYA_FRAMES
 PIXEL_PER_METER = (10.0 / 0.4)  # 10 pixel = 40 cm
 
 # Run Speed
-RUN_SPEED_KMPH = 20.0  # Km / Hour
+RUN_SPEED_KMPH = 25.0  # Km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)  # Pixel Per Second
 
 # Jump Physics
-JUMP_SPEED_KMPH = 15.0  # Km / Hour (공중에서 수평 이동)
+JUMP_SPEED_KMPH = 20.0  # Km / Hour (공중에서 수평 이동)
 JUMP_SPEED_MPM = (JUMP_SPEED_KMPH * 1000.0 / 60.0)
 JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
 JUMP_SPEED_PPS = (JUMP_SPEED_MPS * PIXEL_PER_METER)
