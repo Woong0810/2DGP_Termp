@@ -6,6 +6,33 @@ from characters_naruto_frames import FRAMES as NARUTO_FRAMES
 from characters_itachi_frames import FRAMES as ITACHI_FRAMES
 from characters_jiraiya_frames import FRAMES as JIRAIYA_FRAMES
 
+# 물리 기반 상수 설정
+PIXEL_PER_METER = (10.0 / 0.4)  # 10 pixel = 40 cm
+
+RUN_SPEED_KMPH = 20.0  # Km / Hour
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)  # Pixel Per Second
+
+JUMP_SPEED_KMPH = 15.0  # Km / Hour (수평 이동)
+JUMP_SPEED_MPM = (JUMP_SPEED_KMPH * 1000.0 / 60.0)
+JUMP_SPEED_MPS = (JUMP_SPEED_MPM / 60.0)
+JUMP_SPEED_PPS = (JUMP_SPEED_MPS * PIXEL_PER_METER)
+
+JUMP_HEIGHT_METER = 2.0  # 2m 높이
+JUMP_HEIGHT_PIXEL = (JUMP_HEIGHT_METER * PIXEL_PER_METER)
+
+GRAVITY_MPS2 = 9.8
+GRAVITY_PPS2 = (GRAVITY_MPS2 * PIXEL_PER_METER)
+
+ANIMATION_SPEED_IDLE = 10.0  # frames per second
+ANIMATION_SPEED_RUN = 15.0
+ANIMATION_SPEED_ATTACK = 7.0
+ANIMATION_SPEED_JUMP = 12.0
+ANIMATION_SPEED_DEFENSE = 15.0
+ANIMATION_SPEED_SPECIAL = 5.0
+ANIMATION_SPEED_HIT = 5.0
+
 class CharacterConfig:
     """캐릭터 설정 베이스 클래스"""
     def __init__(self):
