@@ -2,6 +2,7 @@ from pico2d import draw_rectangle
 from character_config import (GRAVITY_PPS2, JUMP_HEIGHT_PIXEL, JUMP_SPEED_PPS,
                               RUN_SPEED_PPS, ACTION_PER_TIME, JUMP_ANIMATION_SPEED)
 import game_framework
+import game_world
 import math
 
 class Jump:
@@ -29,10 +30,15 @@ class Jump:
             self.vx = 0.0
         self.dir = 0
 
+        game_world.add_collision_pairs('normal_attack:character', None, self.character)
+        game_world.add_collision_pairs('special_attack:character', None, self.character)
+        game_world.add_collision_pairs('ranged_attack:character', None, self.character)
+
     def exit(self, e):
         self.jump_count = 0
         self.dir = 0
         self.vx = 0.0
+        game_world.remove_collision_object(self.character)
 
     def do(self):
         # 좌우 이동 처리
@@ -104,3 +110,4 @@ class Jump:
     def draw_bb(self):
         left, bottom, right, top = self.get_bb()
         draw_rectangle(left, bottom, right, top)
+
