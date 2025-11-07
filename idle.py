@@ -1,4 +1,6 @@
 from pico2d import draw_rectangle
+
+import game_world
 from character_config import ACTION_PER_TIME, IDLE_ANIMATION_SPEED
 import game_framework
 
@@ -8,9 +10,12 @@ class Idle:
 
     def enter(self, e):
         self.character.frame = 0
+        game_world.add_collision_pairs('normal_attack:character', None, self.character)
+        game_world.add_collision_pairs('special_attack:character', None, self.character)
+        game_world.add_collision_pairs('ranged_attack:character', None, self.character)
 
     def exit(self, e):
-        pass
+        game_world.remove_collision_object(self.character)
 
     def do(self):
         idle_frames = self.character.config.idle_frames
@@ -33,6 +38,7 @@ class Idle:
         else:
             self.character.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
                                                   self.character.x, draw_y, draw_w, draw_h)
+        draw_rectangle(*self.get_bb())
 
     def get_bb(self):
         idle_frames = self.character.config.idle_frames
@@ -50,7 +56,3 @@ class Idle:
             self.character.y + hh + hb['y_offset']   # top
         )
 
-    def draw_bb(self):
-        # 디버그용: 바운딩 박스를 화면에 그리기
-        left, bottom, right, top = self.get_bb()
-        draw_rectangle(left, bottom, right, top)
