@@ -2,6 +2,7 @@ from event_to_string import right_down, right_up, left_down, left_up
 from pico2d import draw_rectangle
 from character_config import RUN_SPEED_PPS, ACTION_PER_TIME, RUN_ANIMATION_SPEED
 import game_framework
+import game_world
 
 class Run:
     def __init__(self, character):
@@ -14,8 +15,12 @@ class Run:
         elif left_down(e) or right_up(e):
             self.character.dir = self.character.face_dir = -1
 
+        game_world.add_collision_pairs('normal_attack:character', None, self.character)
+        game_world.add_collision_pairs('special_attack:character', None, self.character)
+        game_world.add_collision_pairs('ranged_attack:character', None, self.character)
+
     def exit(self, e):
-        pass
+        game_world.remove_collision_object(self.character)
 
     def do(self):
         self.character.x += RUN_SPEED_PPS * game_framework.frame_time * self.character.dir
@@ -61,3 +66,4 @@ class Run:
         # 디버그용: 바운딩 박스를 화면에 그리기
         left, bottom, right, top = self.get_bb()
         draw_rectangle(left, bottom, right, top)
+
