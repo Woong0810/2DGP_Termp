@@ -37,8 +37,8 @@ def init():
     player1.set_opponent(player2)
     player2.set_opponent(player1)
 
-def update(dt):
-    game_world.update(dt)
+def update():
+    game_world.update()
 
 def draw():
     clear_canvas()
