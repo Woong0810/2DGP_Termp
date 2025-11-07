@@ -2,6 +2,7 @@ from event_to_string import up_down, n_down, n_up
 from pico2d import draw_rectangle
 from character_config import ACTION_PER_TIME, NORMAL_ATTACK_ANIMATION_SPEED
 import game_framework
+import game_world
 
 class NormalAttack:
     def __init__(self, character):
@@ -20,10 +21,14 @@ class NormalAttack:
         if n_down(e):
             self.n_key_pressed = True
 
+        game_world.add_collision_pairs('normal_attack:character', self, None)
+
     def exit(self, e):
         if not n_down(e):
             self.combo_index = 0
         self.n_key_pressed = False
+
+        game_world.remove_collision_object(self)
 
     def do(self):
         segment_length = self.end_frame - self.start_frame + 1
@@ -82,3 +87,7 @@ class NormalAttack:
     def draw_bb(self):
         left, bottom, right, top = self.get_bb()
         draw_rectangle(left, bottom, right, top)
+
+    def handle_collision(self, group, other):
+        pass
+

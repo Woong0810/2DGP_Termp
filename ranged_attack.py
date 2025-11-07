@@ -2,6 +2,7 @@ from pico2d import draw_rectangle
 from character_config import (ACTION_PER_TIME, RANGED_ATTACK_CHAR_ANIMATION_SPEED,
                               RANGED_ATTACK_EFFECT_ANIMATION_SPEED, RANGED_ATTACK_EFFECT_Y_OFFSET)
 import game_framework
+import game_world
 
 class RangedAttack:
     def __init__(self, character):
@@ -28,7 +29,10 @@ class RangedAttack:
         self.effect_y = self.target_y + RANGED_ATTACK_EFFECT_Y_OFFSET
         self.effect_frame = 0
 
+        game_world.add_collision_pairs('ranged_attack:character', self, None)
+
     def exit(self, e):
+        game_world.remove_collision_object(self)
         pass
 
     def do(self):
@@ -128,3 +132,7 @@ class RangedAttack:
     def draw_bb(self):
         left, bottom, right, top = self.get_bb()
         draw_rectangle(left, bottom, right, top)
+
+    def handle_collision(self, group, other):
+        pass
+

@@ -1,6 +1,7 @@
 from pico2d import draw_rectangle
 from character_config import ACTION_PER_TIME, SPECIAL_ATTACK_ANIMATION_SPEED, SPECIAL_ATTACK_LOOP_COUNT
 import game_framework
+import game_world
 
 class SpecialAttack:
     def __init__(self, character):
@@ -11,8 +12,10 @@ class SpecialAttack:
         self.character.frame = 0
         self.loop_count = 0
 
+        game_world.add_collision_pairs('special_attack:character', self, None)
+
     def exit(self, e):
-        pass
+        game_world.remove_collision_object(self)
 
     def do(self):
         special_frames = self.character.config.special_attack_frames
@@ -71,3 +74,7 @@ class SpecialAttack:
     def draw_bb(self):
         left, bottom, right, top = self.get_bb()
         draw_rectangle(left, bottom, right, top)
+
+    def handle_collision(self, group, other):
+        pass
+
