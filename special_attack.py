@@ -52,6 +52,7 @@ class SpecialAttack:
         else:
             self.character.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
                                                   self.character.x, draw_y, draw_w, draw_h)
+        draw_rectangle(*self.get_bb())
 
     def get_bb(self):
         if self.character.frame >= 120:
@@ -70,10 +71,6 @@ class SpecialAttack:
                 self.character.y + hh + hb['y_offset']
             )
         return (0, 0, 0, 0)
-
-    def draw_bb(self):
-        left, bottom, right, top = self.get_bb()
-        draw_rectangle(left, bottom, right, top)
 
     def handle_collision(self, group, other):
         pass

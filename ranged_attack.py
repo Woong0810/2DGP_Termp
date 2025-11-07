@@ -93,6 +93,8 @@ class RangedAttack:
                 self.character.image.clip_composite_draw(el, eb, ew, eh, 0.0, 'h',
                                                       self.effect_x, self.effect_y, effect_draw_w, effect_draw_h)
 
+        draw_rectangle(*self.get_bb())
+
     def get_bb(self):
         char_frames = self.character.config.ranged_attack_char_frames
         effect_frames = self.character.config.ranged_attack_effect_frames
@@ -128,10 +130,6 @@ class RangedAttack:
                 self.effect_y + hh + hb['y_offset']
             )
         return (0, 0, 0, 0)
-
-    def draw_bb(self):
-        left, bottom, right, top = self.get_bb()
-        draw_rectangle(left, bottom, right, top)
 
     def handle_collision(self, group, other):
         pass

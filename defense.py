@@ -52,6 +52,7 @@ class Defense:
         else:
             self.character.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
                                                   self.character.x, draw_y, draw_w, draw_h)
+        draw_rectangle(*self.get_bb())
 
     def get_bb(self):
         if self.shield_effect is not None:
@@ -72,8 +73,4 @@ class Defense:
             # 실드가 없으면 히트박스 없음
             return (0, 0, 0, 0)
 
-    def draw_bb(self):
-        # 디버그용: 바운딩 박스를 화면에 그리기
-        left, bottom, right, top = self.get_bb()
-        draw_rectangle(left, bottom, right, top)
 

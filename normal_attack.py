@@ -66,6 +66,7 @@ class NormalAttack:
         else:
             self.character.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
                                                   self.character.x, draw_y, draw_w, draw_h)
+        draw_rectangle(*self.get_bb())
 
     def get_bb(self):
         all_frames = self.character.config.frames
@@ -83,10 +84,6 @@ class NormalAttack:
             self.character.x + hw + hb['x_offset'],
             self.character.y + hh + hb['y_offset']
         )
-
-    def draw_bb(self):
-        left, bottom, right, top = self.get_bb()
-        draw_rectangle(left, bottom, right, top)
 
     def handle_collision(self, group, other):
         pass
