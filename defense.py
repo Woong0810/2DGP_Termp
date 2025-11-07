@@ -15,10 +15,16 @@ class Defense:
         self.shield_effect = ShieldEffect(self.character)
         game_world.add_object(self.shield_effect, 0)
 
+        game_world.add_collision_pairs('normal_attack:character', None, self.character)
+        game_world.add_collision_pairs('special_attack:character', None, self.character)
+        game_world.add_collision_pairs('ranged_attack:character', None, self.character)
+
     def exit(self, e):
         if self.shield_effect is not None:
             game_world.remove_object(self.shield_effect)
             self.shield_effect = None
+
+        game_world.remove_collision_object(self.character)
 
     def do(self):
         defense_frames = self.character.config.defense_frames
@@ -70,3 +76,4 @@ class Defense:
         # 디버그용: 바운딩 박스를 화면에 그리기
         left, bottom, right, top = self.get_bb()
         draw_rectangle(left, bottom, right, top)
+
