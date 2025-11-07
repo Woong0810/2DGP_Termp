@@ -146,3 +146,26 @@ class Character:
 
     def set_opponent(self, opponent):
         self.opponent = opponent
+
+    def handle_collision(self, group, other):
+        if group == 'normal_attack:character':
+            if self.state_machine.cur_state == self.DEFENSE:
+                return
+            if self.state_machine.cur_state == self.HIT:    # 이미 Hit 상태면 무시
+                return
+            self.take_hit()
+
+        elif group == 'special_attack:character':
+            if self.state_machine.cur_state == self.DEFENSE:
+                return
+            if self.state_machine.cur_state == self.HIT:
+                return
+            self.take_hit()
+
+        elif group == 'ranged_attack:character':
+            if self.state_machine.cur_state == self.DEFENSE:
+                return
+            if self.state_machine.cur_state == self.HIT:
+                return
+            self.take_hit()
+
