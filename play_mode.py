@@ -4,6 +4,7 @@ import game_world
 from character import Character
 from character_config import NarutoConfig, ItachiConfig
 import game_framework
+import title_mode
 
 def handle_events():
     event_list = get_events()
@@ -11,7 +12,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.quit()
+            game_framework.change_mode(title_mode)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_h:
             player1.take_hit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_j:
@@ -47,4 +48,7 @@ def draw():
     update_canvas()
 
 def finish():
-    pass
+    game_world.clear()
+
+def pause(): pass
+def resume(): pass
