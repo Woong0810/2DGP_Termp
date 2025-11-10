@@ -98,7 +98,7 @@ FRAMES = [
     {'left': 0, 'bottom': 1080, 'width': 48, 'height': 64},
     {'left': 50, 'bottom': 1080, 'width': 48, 'height': 64},
     {'left': 100, 'bottom': 1080, 'width': 48, 'height': 64},
-    {'left': 0, 'bottom': 926, 'width': 168, 'height': 152},
+    {'left': 0, 'bottom': 926, 'width': 168, 'height': 152},    # 여기서부터
     {'left': 170, 'bottom': 926, 'width': 168, 'height': 152},
     {'left': 340, 'bottom': 926, 'width': 168, 'height': 152},
     {'left': 510, 'bottom': 926, 'width': 168, 'height': 152},

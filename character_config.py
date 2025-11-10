@@ -153,8 +153,7 @@ class ItachiConfig(CharacterConfig):
         self.jump_frames = [36, 37]
         self.defense_frames = [85]
         self.special_attack_frames = list(range(98, 136))
-        self.ranged_attack_char_frames = list(range(91, 97))
-        self.ranged_attack_effect_frames = list(range(67, 71))
+        self.ranged_attack_effect_frames = list(range(100, 125))
         self.hit_frames = [46, 47]
         # ... 나머지 동작들도 추가 필요
 
