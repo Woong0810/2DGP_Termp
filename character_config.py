@@ -89,6 +89,8 @@ class ItachiConfig(CharacterConfig):
         self.idle_frames = list(range(42, 46))
         self.run_frames = list(range(6, 12))
         self.hit_frames = [46, 47]
+        # 스페셜 공격 프레임 (98-122: 25프레임, 5x5 그리드)
+        self.special_attack_frames = list(range(98, 123))
         # ... 나머지 동작들도 추가 필요
 
         # 이타치 전용 히트박스 설정
