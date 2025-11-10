@@ -66,6 +66,17 @@ def hit_end(e):
 def take_hit(e):
     return e[0] == 'TAKE_HIT'
 
+# 키 바인딩을 받아서 체크
+def key_down(key_code):
+    def check(e):
+        return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == key_code
+    return check
+
+def key_up(key_code):
+    def check(e):
+        return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == key_code
+    return check
+
 def event_to_string(state_event):
     """이벤트의 모든 상세 정보를 문자열로 반환 (모든 키 자동 처리)"""
     from pico2d import SDL_KEYDOWN, SDL_KEYUP, SDL_MOUSEMOTION, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP
