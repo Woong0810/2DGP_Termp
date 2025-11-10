@@ -5,7 +5,7 @@
 from sdl2 import SDLK_LEFT, SDLK_RIGHT, SDLK_UP, SDLK_DOWN
 from sdl2 import SDLK_p, SDLK_i, SDLK_o
 from sdl2 import SDLK_a, SDLK_d, SDLK_w, SDLK_s
-from sdl2 import SDLK_u, SDLK_f, SDLK_g
+from sdl2 import SDLK_b, SDLK_c, SDLK_v
 
 # Player 1 키 바인딩 (방향키 + P, I, O)
 PLAYER1_KEY_BINDINGS = {
@@ -18,15 +18,15 @@ PLAYER1_KEY_BINDINGS = {
     'ranged': SDLK_o
 }
 
-# Player 2 키 바인딩 (WASD + U, F, G)
+# Player 2 키 바인딩 (WASD + B, C, V)
 PLAYER2_KEY_BINDINGS = {
     'left': SDLK_a,
     'right': SDLK_d,
     'up': SDLK_w,
     'down': SDLK_s,
-    'attack': SDLK_u,
-    'special': SDLK_f,
-    'ranged': SDLK_g
+    'attack': SDLK_b,      # 일반공격
+    'special': SDLK_c,     # 특수공격
+    'ranged': SDLK_v       # 원거리공격
 }
 
 def get_player_key_bindings(player_number):
