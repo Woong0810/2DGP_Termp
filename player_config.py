@@ -3,19 +3,19 @@
 캐릭터와 독립적으로 플레이어 번호에 따라 키 바인딩을 제공
 """
 from sdl2 import SDLK_LEFT, SDLK_RIGHT, SDLK_UP, SDLK_DOWN
-from sdl2 import SDLK_n, SDLK_v, SDLK_b
+from sdl2 import SDLK_p, SDLK_i, SDLK_o
 from sdl2 import SDLK_a, SDLK_d, SDLK_w, SDLK_s
 from sdl2 import SDLK_u, SDLK_f, SDLK_g
 
-# Player 1 키 바인딩 (방향키 + N, V, B)
+# Player 1 키 바인딩 (방향키 + P, I, O)
 PLAYER1_KEY_BINDINGS = {
     'left': SDLK_LEFT,
     'right': SDLK_RIGHT,
     'up': SDLK_UP,
     'down': SDLK_DOWN,
-    'attack': SDLK_n,
-    'special': SDLK_v,
-    'ranged': SDLK_b
+    'attack': SDLK_p,
+    'special': SDLK_i,
+    'ranged': SDLK_o
 }
 
 # Player 2 키 바인딩 (WASD + U, F, G)
@@ -36,4 +36,5 @@ def get_player_key_bindings(player_number):
         return PLAYER2_KEY_BINDINGS
     else:
         raise ValueError(f"Invalid player number: {player_number}")
+
 

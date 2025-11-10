@@ -1,4 +1,4 @@
-from event_to_string import up_down, n_down, n_up
+from event_to_string import up_down
 from pico2d import draw_rectangle
 from character_config import ACTION_PER_TIME, NORMAL_ATTACK_ANIMATION_SPEED
 import game_framework
@@ -18,13 +18,17 @@ class NormalAttack:
         self.start_frame, self.end_frame = segments[self.combo_index]
         self.character.frame = self.start_frame
 
-        if n_down(e):
+        # 동적으로 attack 키 체크
+        from sdl2 import SDL_KEYDOWN
+        if e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == self.character.key_bindings['attack']:
             self.n_key_pressed = True
 
         game_world.add_collision_pairs('normal_attack:character', self, None)
 
     def exit(self, e):
-        if not n_down(e):
+        # 동적으로 attack 키 체크
+        from sdl2 import SDL_KEYDOWN
+        if not (e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == self.character.key_bindings['attack']):
             self.combo_index = 0
         self.n_key_pressed = False
 
