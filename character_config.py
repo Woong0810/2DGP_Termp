@@ -4,6 +4,7 @@
 """
 from characters_naruto_frames import FRAMES as NARUTO_FRAMES
 from characters_itachi_frames import FRAMES as ITACHI_FRAMES
+from characters_itachi_special_attack_frames import FRAMES as ITACHI_SPECIAL_FRAMES
 from characters_jiraiya_frames import FRAMES as JIRAIYA_FRAMES
 
 # ===== 물리 기반 상수 설정 =====
@@ -138,6 +139,10 @@ class ItachiConfig(CharacterConfig):
         self.image_path = "Characters_Itachi_clean.png"
         self.frames = ITACHI_FRAMES
 
+        # 스페셜 공격 전용 이미지 및 프레임 데이터
+        self.special_attack_image_path = "Itachi_special_attack_clean.png"
+        self.special_attack_frames_data = ITACHI_SPECIAL_FRAMES
+
         # 이타치 스케일 조정 (나루토와 같은 크기로)
         self.scale_x = 1.0
         self.scale_y = 0.85  # y축 크기를 줄여서 나루토와 비슷하게
@@ -152,7 +157,7 @@ class ItachiConfig(CharacterConfig):
         self.normal_attack_segments = [(4, 7), (8, 12), (19, 23)]
         self.jump_frames = [36, 37]
         self.defense_frames = [85]
-        self.special_attack_frames = list(range(98, 136))
+        self.special_attack_frames = list(range(0, 43))  # 스페셜 이미지의 전체 프레임 (0~42)
         self.ranged_attack_effect_frames = list(range(100, 125))
         self.hit_frames = [46, 47]
         # ... 나머지 동작들도 추가 필요

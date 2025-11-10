@@ -1,4 +1,4 @@
-from pico2d import draw_rectangle
+from pico2d import draw_rectangle, load_image
 from character_config import ACTION_PER_TIME, SPECIAL_ATTACK_ANIMATION_SPEED, SPECIAL_ATTACK_LOOP_COUNT
 import game_framework
 import game_world
@@ -7,6 +7,11 @@ class SpecialAttack:
     def __init__(self, character):
         self.character = character
         self.loop_count = 0
+
+        # 이타치의 경우 스페셜 공격 전용 이미지 로드
+        self.special_image = None
+        if hasattr(self.character.config, 'special_attack_image_path') and self.character.config.special_attack_image_path:
+            self.special_image = load_image(self.character.config.special_attack_image_path)
 
     def enter(self, e):
         self.character.frame = 0
@@ -38,8 +43,15 @@ class SpecialAttack:
 
     def draw(self):
         special_attack_frames = self.character.config.special_attack_frames
-        all_frames = self.character.config.frames
-        frame_idx = special_attack_frames[int(self.character.frame)]  # int로 변환
+
+        # 이타치의 경우 스페셜 프레임 데이터 사용, 아니면 기본 프레임 데이터 사용
+        if hasattr(self.character.config, 'special_attack_frames_data') and self.character.config.special_attack_frames_data:
+            all_frames = self.character.config.special_attack_frames_data
+            frame_idx = int(self.character.frame)  # 직접 인덱스 사용
+        else:
+            all_frames = self.character.config.frames
+            frame_idx = special_attack_frames[int(self.character.frame)]  # 매핑 사용
+
         frame = all_frames[frame_idx]
 
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
@@ -47,18 +59,31 @@ class SpecialAttack:
         draw_h = int(h * self.character.config.scale_y)
         draw_y = self.character.y + self.character.config.draw_offset_y
 
+        # 이타치의 경우 스페셜 이미지 사용, 아니면 기본 이미지 사용
+        image_to_use = self.special_image if self.special_image else self.character.image
+
         if self.character.face_dir == 1:
-            self.character.image.clip_draw(l, b, w, h, self.character.x, draw_y, draw_w, draw_h)
+            image_to_use.clip_draw(l, b, w, h, self.character.x, draw_y, draw_w, draw_h)
         else:
-            self.character.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
+            image_to_use.clip_composite_draw(l, b, w, h, 0.0, 'h',
                                                   self.character.x, draw_y, draw_w, draw_h)
         draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        if self.character.frame >= 120:
+        # 나루토는 120프레임부터, 이타치는 처음부터 히트박스 활성화
+        threshold = 0 if self.special_image else 120
+
+        if self.character.frame >= threshold:
             special_attack_frames = self.character.config.special_attack_frames
-            all_frames = self.character.config.frames
-            frame_idx = special_attack_frames[int(self.character.frame)]  # int로 변환
+
+            # 이타치의 경우 스페셜 프레임 데이터 사용
+            if hasattr(self.character.config, 'special_attack_frames_data') and self.character.config.special_attack_frames_data:
+                all_frames = self.character.config.special_attack_frames_data
+                frame_idx = int(self.character.frame)
+            else:
+                all_frames = self.character.config.frames
+                frame_idx = special_attack_frames[int(self.character.frame)]
+
             frame = all_frames[frame_idx]
 
             hb = self.character.config.hitbox_special_attack
