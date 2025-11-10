@@ -1,4 +1,3 @@
-from event_to_string import right_down, right_up, left_down, left_up
 from pico2d import draw_rectangle
 from character_config import RUN_SPEED_PPS, ACTION_PER_TIME, RUN_ANIMATION_SPEED
 import game_framework
@@ -10,10 +9,20 @@ class Run:
 
     def enter(self, e):
         self.character.frame = 0
-        if right_down(e) or left_up(e):
-            self.character.dir = self.character.face_dir = 1
-        elif left_down(e) or right_up(e):
-            self.character.dir = self.character.face_dir = -1
+        kb = self.character.key_bindings
+
+        if e[0] == 'INPUT':
+            from sdl2 import SDL_KEYDOWN, SDL_KEYUP
+            if e[1].type == SDL_KEYDOWN:
+                if e[1].key == kb['right']:
+                    self.character.dir = self.character.face_dir = 1
+                elif e[1].key == kb['left']:
+                    self.character.dir = self.character.face_dir = -1
+            elif e[1].type == SDL_KEYUP:
+                if e[1].key == kb['left']:
+                    self.character.dir = self.character.face_dir = 1
+                elif e[1].key == kb['right']:
+                    self.character.dir = self.character.face_dir = -1
 
         game_world.add_collision_pairs('normal_attack:character', None, self.character)
         game_world.add_collision_pairs('special_attack:character', None, self.character)
