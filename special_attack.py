@@ -47,10 +47,14 @@ class SpecialAttack:
         # 이타치의 경우 스페셜 프레임 데이터 사용, 아니면 기본 프레임 데이터 사용
         if hasattr(self.character.config, 'special_attack_frames_data') and self.character.config.special_attack_frames_data:
             all_frames = self.character.config.special_attack_frames_data
-            frame_idx = int(self.character.frame)  # 직접 인덱스 사용
+            # 프레임 인덱스를 범위 내로 제한
+            current_frame = max(0, min(int(self.character.frame), len(all_frames) - 1))
+            frame_idx = current_frame
         else:
             all_frames = self.character.config.frames
-            frame_idx = special_attack_frames[int(self.character.frame)]  # 매핑 사용
+            # 프레임 인덱스를 범위 내로 제한
+            current_frame = max(0, min(int(self.character.frame), len(special_attack_frames) - 1))
+            frame_idx = special_attack_frames[current_frame]
 
         frame = all_frames[frame_idx]
 
@@ -79,10 +83,14 @@ class SpecialAttack:
             # 이타치의 경우 스페셜 프레임 데이터 사용
             if hasattr(self.character.config, 'special_attack_frames_data') and self.character.config.special_attack_frames_data:
                 all_frames = self.character.config.special_attack_frames_data
-                frame_idx = int(self.character.frame)
+                # 프레임 인덱스를 범위 내로 제한
+                current_frame = max(0, min(int(self.character.frame), len(all_frames) - 1))
+                frame_idx = current_frame
             else:
                 all_frames = self.character.config.frames
-                frame_idx = special_attack_frames[int(self.character.frame)]
+                # 프레임 인덱스를 범위 내로 제한
+                current_frame = max(0, min(int(self.character.frame), len(special_attack_frames) - 1))
+                frame_idx = special_attack_frames[current_frame]
 
             frame = all_frames[frame_idx]
 
