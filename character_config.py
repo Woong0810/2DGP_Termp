@@ -147,9 +147,15 @@ class ItachiConfig(CharacterConfig):
 
         # TODO: Itachi의 프레임 인덱스 설정 (나중에 추가)
         self.idle_frames = list(range(42, 46))
-        self.run_frames = list(range(6, 12))
-        self.hit_frames = [46, 47]
         self.run_frames = list(range(27, 33))
+        self.normal_attack_frames = list(range(4, 24))
+        self.normal_attack_segments = [(4, 7), (8, 12), (19, 23)]
+        self.jump_frames = [36, 37]
+        self.defense_frames = [85]
+        self.special_attack_frames = list(range(98, 136))
+        self.ranged_attack_char_frames = list(range(91, 97))
+        self.ranged_attack_effect_frames = list(range(67, 71))
+        self.hit_frames = [46, 47]
         # ... 나머지 동작들도 추가 필요
 
         # 이타치 전용 히트박스 설정
