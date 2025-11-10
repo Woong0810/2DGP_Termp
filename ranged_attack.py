@@ -39,13 +39,22 @@ class RangedAttack:
         char_frames = self.character.config.ranged_attack_char_frames
         effect_frames = self.character.config.ranged_attack_effect_frames
 
+        # char_frames가 비어있으면 즉시 종료
+        if not char_frames:
+            self.character.state_machine.handle_event(('RANGED_ATTACK_END', None))
+            return
+
         if self.phase == 0:
             # 캐릭터 애니메이션
             self.character.frame += len(char_frames) * ACTION_PER_TIME * RANGED_ATTACK_CHAR_ANIMATION_SPEED * game_framework.frame_time
 
             if self.character.frame >= len(char_frames):
-                self.phase = 1
-                self.effect_frame = 0
+                # effect_frames가 없으면 바로 종료
+                if not effect_frames:
+                    self.character.state_machine.handle_event(('RANGED_ATTACK_END', None))
+                else:
+                    self.phase = 1
+                    self.effect_frame = 0
 
         elif self.phase == 1:
             # 이펙트 애니메이션 (y좌표 고정)
@@ -61,9 +70,14 @@ class RangedAttack:
         effect_frames = self.character.config.ranged_attack_effect_frames
         all_frames = self.character.config.frames
 
+        # char_frames가 비어있으면 그리지 않음
+        if not char_frames:
+            return
+
         # 캐릭터 그리기
         if self.phase == 0:
-            frame_idx = char_frames[int(self.character.frame)]  # int로 변환
+            current_frame = max(0, min(int(self.character.frame), len(char_frames) - 1))
+            frame_idx = char_frames[current_frame]
         else:
             frame_idx = char_frames[-1]
 
@@ -79,8 +93,8 @@ class RangedAttack:
             self.character.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
                                                   self.character.x, draw_y, draw_w, draw_h)
 
-        # 이펙트 그리기 (phase 1일 때만)
-        if self.phase == 1:
+        # 이펙트 그리기 (phase 1이고 effect_frames가 있을 때만)
+        if self.phase == 1 and effect_frames:
             effect_frame_idx = effect_frames[int(self.effect_frame)]  # int로 변환
             effect_frame = all_frames[effect_frame_idx]
             el, eb, ew, eh = effect_frame['left'], effect_frame['bottom'], effect_frame['width'], effect_frame['height']
@@ -101,6 +115,10 @@ class RangedAttack:
         all_frames = self.character.config.frames
         hb = self.character.config.hitbox_ranged_attack
 
+        # char_frames가 비어있으면 빈 히트박스 반환
+        if not char_frames:
+            return (0, 0, 0, 0)
+
         if self.phase == 0:
             # phase 0: 첫 번째 프레임만 히트박스 있음
             if int(self.character.frame) == 0:  # int로 변환
@@ -118,6 +136,10 @@ class RangedAttack:
                 return (0, 0, 0, 0)
 
         elif self.phase == 1:
+            # effect_frames가 비어있으면 빈 히트박스 반환
+            if not effect_frames or int(self.effect_frame) >= len(effect_frames):
+                return (0, 0, 0, 0)
+
             # phase 1: 이펙트의 히트박스
             frame_idx = effect_frames[int(self.effect_frame)]  # int로 변환
             frame = all_frames[frame_idx]

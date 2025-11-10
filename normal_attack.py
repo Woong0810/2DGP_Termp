@@ -57,7 +57,14 @@ class NormalAttack:
         all_frames = self.character.config.frames
         normal_attack_frames = self.character.config.normal_attack_frames
 
-        frame_idx = normal_attack_frames[int(self.character.frame)]  # int로 변환
+        # 현재 프레임을 세그먼트 범위 내로 제한
+        current_frame = max(self.start_frame, min(int(self.character.frame), self.end_frame))
+
+        # normal_attack_frames 범위 체크
+        if current_frame >= len(normal_attack_frames):
+            current_frame = len(normal_attack_frames) - 1
+
+        frame_idx = normal_attack_frames[current_frame]
         frame = all_frames[frame_idx]
 
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
@@ -76,18 +83,26 @@ class NormalAttack:
         all_frames = self.character.config.frames
         normal_attack_frames = self.character.config.normal_attack_frames
 
-        frame_idx = normal_attack_frames[int(self.character.frame)]  # int로 변환
-        frame = all_frames[frame_idx]
+        # 현재 프레임을 세그먼트 범위 내로 제한
+        current_frame = max(self.start_frame, min(int(self.character.frame), self.end_frame))
 
-        hb = self.character.config.hitbox_normal_attack
-        hw = frame['width'] * self.character.config.scale_x * hb['scale_x'] / 2
-        hh = frame['height'] * self.character.config.scale_y * hb['scale_y'] / 2
-        return (
-            self.character.x - hw + hb['x_offset'],
-            self.character.y - hh + hb['y_offset'],
-            self.character.x + hw + hb['x_offset'],
-            self.character.y + hh + hb['y_offset']
-        )
+        # normal_attack_frames 범위 체크
+        if current_frame < len(normal_attack_frames):
+            frame_idx = normal_attack_frames[current_frame]
+            frame = all_frames[frame_idx]
+
+            hb = self.character.config.hitbox_normal_attack
+            hw = frame['width'] * self.character.config.scale_x * hb['scale_x'] / 2
+            hh = frame['height'] * self.character.config.scale_y * hb['scale_y'] / 2
+            return (
+                self.character.x - hw + hb['x_offset'],
+                self.character.y - hh + hb['y_offset'],
+                self.character.x + hw + hb['x_offset'],
+                self.character.y + hh + hb['y_offset']
+            )
+
+        # 범위를 벗어나면 빈 히트박스 반환
+        return (0, 0, 0, 0)
 
     def handle_collision(self, group, other):
         pass
