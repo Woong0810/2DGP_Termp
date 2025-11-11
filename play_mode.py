@@ -25,15 +25,9 @@ def handle_events():
             player2.handle_event(event)
 
 def init():
-    global player1, player2, background
+    global player1, player2, background, player1_hp_bar, player2_hp_bar
     background = Background()
     game_world.add_object(background, 0)
-
-    player1_hp_bar = HPBar(200, 550)
-    game_world.add_object(player1_hp_bar, 1)
-
-    player2_hp_bar = HPBar(600, 550)
-    game_world.add_object(player2_hp_bar, 1)
 
     from player_config import PLAYER1_KEY_BINDINGS, PLAYER2_KEY_BINDINGS
 
@@ -47,6 +41,12 @@ def init():
     # 서로를 상대로 설정
     player1.set_opponent(player2)
     player2.set_opponent(player1)
+
+    player1_hp_bar = HPBar(200, 550, character=player1, is_flipped=False)
+    game_world.add_object(player1_hp_bar, 2)
+
+    player2_hp_bar = HPBar(600, 550, character=player2, is_flipped=True)
+    game_world.add_object(player2_hp_bar, 2)
 
 def update():
     game_world.update()
