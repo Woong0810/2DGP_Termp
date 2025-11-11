@@ -50,7 +50,7 @@ def init():
     player2_hp_bar = HPBar(600, 550, character=player2, is_flipped=True)
     game_world.add_object(player2_hp_bar, 2)
 
-    round_timer = RoundTimer(400, 550, round_time=60)
+    round_timer = RoundTimer(400, 550, round_time=5)
     game_world.add_object(round_timer, 2)
 
 def update():
