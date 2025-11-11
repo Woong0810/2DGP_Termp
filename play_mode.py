@@ -7,6 +7,7 @@ from character_config import NarutoConfig, ItachiConfig
 import game_framework
 import title_mode
 from hp_bar import HPBar
+from round_timer import RoundTimer
 
 
 def handle_events():
@@ -25,7 +26,7 @@ def handle_events():
             player2.handle_event(event)
 
 def init():
-    global player1, player2, background, player1_hp_bar, player2_hp_bar
+    global player1, player2, background, player1_hp_bar, player2_hp_bar, round_timer
     background = Background()
     game_world.add_object(background, 0)
 
@@ -47,6 +48,9 @@ def init():
 
     player2_hp_bar = HPBar(600, 550, character=player2, is_flipped=True)
     game_world.add_object(player2_hp_bar, 2)
+
+    round_timer = RoundTimer(400, 550, round_time=60)
+    game_world.add_object(round_timer, 2)
 
 def update():
     game_world.update()
