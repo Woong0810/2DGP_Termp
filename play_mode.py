@@ -8,6 +8,7 @@ import game_framework
 import title_mode
 from hp_bar import HPBar
 from round_timer import RoundTimer
+import result_mode
 
 
 def handle_events():
@@ -55,6 +56,7 @@ def init():
 def update():
     game_world.update()
     game_world.handle_collision()
+    check_win_condition()
 
 def draw():
     clear_canvas()
@@ -63,6 +65,27 @@ def draw():
 
 def finish():
     game_world.clear()
+
+def check_win_condition():
+    if player2.hp <= 0:
+        result_mode.set_winner('player1')
+        game_framework.change_mode(result_mode)
+        return
+
+    if player1.hp <= 0:
+        result_mode.set_winner('player2')
+        game_framework.change_mode(result_mode)
+        return
+
+    if round_timer.is_time_over():
+        if player1.hp > player2.hp:
+            result_mode.set_winner('player1')
+        elif player2.hp > player1.hp:
+            result_mode.set_winner('player2')
+        else:
+            result_mode.set_winner('draw')  # 무승부
+        game_framework.change_mode(result_mode)
+        return
 
 def pause(): pass
 def resume(): pass
