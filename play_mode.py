@@ -6,6 +6,8 @@ from character import Character
 from character_config import NarutoConfig, ItachiConfig
 import game_framework
 import title_mode
+from hp_bar import HPBar
+
 
 def handle_events():
     event_list = get_events()
@@ -26,6 +28,9 @@ def init():
     global player1, player2, background
     background = Background()
     game_world.add_object(background, 0)
+
+    empty_hp_bar = HPBar(100, 500)
+    game_world.add_object(empty_hp_bar, 1)
 
     from player_config import PLAYER1_KEY_BINDINGS, PLAYER2_KEY_BINDINGS
 
