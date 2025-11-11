@@ -29,8 +29,11 @@ def init():
     background = Background()
     game_world.add_object(background, 0)
 
-    empty_hp_bar = HPBar(100, 500)
-    game_world.add_object(empty_hp_bar, 1)
+    player1_hp_bar = HPBar(200, 550)
+    game_world.add_object(player1_hp_bar, 1)
+
+    player2_hp_bar = HPBar(600, 550)
+    game_world.add_object(player2_hp_bar, 1)
 
     from player_config import PLAYER1_KEY_BINDINGS, PLAYER2_KEY_BINDINGS
 
