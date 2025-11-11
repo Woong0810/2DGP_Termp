@@ -1,6 +1,7 @@
 from pico2d import *
 
 import game_world
+from background import Background
 from character import Character
 from character_config import NarutoConfig, ItachiConfig
 import game_framework
@@ -22,14 +23,16 @@ def handle_events():
             player2.handle_event(event)
 
 def init():
-    global player1, player2
+    global player1, player2, background
+    background = Background()
+    game_world.add_object(background, 0)
 
     from player_config import PLAYER1_KEY_BINDINGS, PLAYER2_KEY_BINDINGS
 
-    player1 = Character(NarutoConfig(), key_bindings=PLAYER1_KEY_BINDINGS, x=200, y=90)
+    player1 = Character(NarutoConfig(), key_bindings=PLAYER1_KEY_BINDINGS, x=200, y=30)
     game_world.add_object(player1, 1)
 
-    player2 = Character(ItachiConfig(), key_bindings=PLAYER2_KEY_BINDINGS, x=600, y=90)
+    player2 = Character(ItachiConfig(), key_bindings=PLAYER2_KEY_BINDINGS, x=600, y=30)
     player2.face_dir = -1  # 왼쪽을 향하도록
     game_world.add_object(player2, 1)
 
