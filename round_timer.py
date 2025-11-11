@@ -41,7 +41,7 @@ class RoundTimer:
 
     def draw(self):
         time_int = int(self.time)
-        self.font.draw(self.x - 25, self.y, f'{time_int:02d}', (255, 255, 0))
+        self.font.draw(self.x - 25, self.y, f'{time_int:02d}', (64, 64, 64))
 
     def is_time_over(self):
         return self.time <= 0
