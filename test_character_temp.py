@@ -3,13 +3,9 @@ from character_temp_frames import FRAMES
 
 open_canvas(800, 600)
 
-# 이미지 로드 (3개의 투명 배경 이미지)
-img1 = load_image('character_temp_1_transparent.png')
-img2 = load_image('character_temp_2_transparent.png')
-img3 = load_image('character_temp_3_transparent.png')
+# 합쳐진 이미지 로드
+img = load_image('character_temp_merged.png')
 
-# 각 이미지의 프레임 범위 (필터링 후)
-# 정확한 범위는 필터링 후 재계산 필요
 current_frame = 0
 running = True
 
@@ -24,16 +20,7 @@ while running:
 
     frame = FRAMES[current_frame]
 
-    # 임시로 첫 번째 이미지만 사용 (나중에 범위별로 분리 필요)
-    # 원본 이미지의 bottom 좌표로 판단
-    if frame['bottom'] >= 0:  # character_temp_1
-        img = img1
-    elif frame['bottom'] >= 2905:  # character_temp_2
-        img = img2
-    else:  # character_temp_3
-        img = img3
-
-    # 화면 중앙에 출력 (2배 확대)
+    # 화면 중앙에 출력 (3배 확대)
     x, y = 400, 300
     scale = 3  # 3배 확대
 
