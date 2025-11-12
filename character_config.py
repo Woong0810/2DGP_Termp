@@ -108,7 +108,7 @@ class NarutoConfig(CharacterConfig):
     def __init__(self):
         super().__init__()
         self.name = "Naruto"
-        self.image_path = "character_temp_1_transparent.png"
+        self.image_path = "character_temp_transparent.png"
         self.frames = TEMP_FRAMES
 
         self.idle_frames = list(range(0, 0 + 4))  # 임시

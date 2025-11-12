@@ -38,7 +38,7 @@ merged_image.paste(img3, (0, current_y))
 print(f"Image 3 붙임: y={current_y} ~ {current_y + img3.height}")
 
 # 저장
-output_filename = 'character_temp_merged.png'
+output_filename = 'character_temp_transparent.png'
 merged_image.save(output_filename)
 
 print(f"\n✅ 합친 이미지가 '{output_filename}'로 저장되었습니다.")

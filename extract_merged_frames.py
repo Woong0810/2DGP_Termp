@@ -96,7 +96,7 @@ def extract_frames_from_transparent(image_path):
     return frames
 
 # 합쳐진 이미지에서 프레임 추출
-frames = extract_frames_from_transparent('character_temp_merged.png')
+frames = extract_frames_from_transparent('character_temp_transparent.png')
 print(f"\n추출된 프레임 수: {len(frames)}")
 
 # 노이즈 필터링 (10x10 이하 제거)
@@ -118,7 +118,7 @@ print(f"유효한 프레임 수: {len(filtered_frames)}")
 # 파일로 저장
 output_file = 'character_temp_frames.py'
 with open(output_file, 'w', encoding='utf-8') as f:
-    f.write("# Auto-generated frame data for character_temp_merged.png\n")
+    f.write("# Auto-generated frame data for character_temp_transparent.png\n")
     f.write("# Frames are ordered from top to bottom in the sprite sheet\n")
     f.write("FRAMES = [\n")
     for frame in filtered_frames:
