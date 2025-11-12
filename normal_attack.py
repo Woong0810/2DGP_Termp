@@ -55,17 +55,15 @@ class NormalAttack:
 
     def draw(self):
         all_frames = self.character.config.frames
-        normal_attack_frames = self.character.config.normal_attack_frames
 
         # 현재 프레임을 세그먼트 범위 내로 제한
-        current_frame = max(self.start_frame, min(int(self.character.frame), self.end_frame))
+        current_frame_idx = max(self.start_frame, min(int(self.character.frame), self.end_frame))
 
-        # normal_attack_frames 범위 체크
-        if current_frame >= len(normal_attack_frames):
-            current_frame = len(normal_attack_frames) - 1
+        # 프레임 인덱스 범위 체크
+        if current_frame_idx >= len(all_frames):
+            current_frame_idx = len(all_frames) - 1
 
-        frame_idx = normal_attack_frames[current_frame]
-        frame = all_frames[frame_idx]
+        frame = all_frames[current_frame_idx]
 
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
         draw_w = int(w * self.character.config.scale_x)
@@ -81,15 +79,13 @@ class NormalAttack:
 
     def get_bb(self):
         all_frames = self.character.config.frames
-        normal_attack_frames = self.character.config.normal_attack_frames
 
         # 현재 프레임을 세그먼트 범위 내로 제한
-        current_frame = max(self.start_frame, min(int(self.character.frame), self.end_frame))
+        current_frame_idx = max(self.start_frame, min(int(self.character.frame), self.end_frame))
 
-        # normal_attack_frames 범위 체크
-        if current_frame < len(normal_attack_frames):
-            frame_idx = normal_attack_frames[current_frame]
-            frame = all_frames[frame_idx]
+        # 프레임 인덱스 범위 체크
+        if current_frame_idx < len(all_frames):
+            frame = all_frames[current_frame_idx]
 
             hb = self.character.config.hitbox_normal_attack
             hw = frame['width'] * self.character.config.scale_x * hb['scale_x'] / 2
