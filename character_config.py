@@ -161,6 +161,8 @@ class ItachiConfig(CharacterConfig):
         self.ranged_attack_char_frames = list(range(100, 125))  # 인덱스 100~124 (원거리 공격 전용)
         self.ranged_attack_effect_frames = []  # 이펙트 없음 (캐릭터 프레임만 사용)
         self.hit_frames = [46, 47]
+        # 스페셜 공격 프레임 (98-122: 25프레임, 5x5 그리드)
+        self.special_attack_frames = list(range(98, 123))
         # ... 나머지 동작들도 추가 필요
 
         # 이타치 전용 히트박스 설정
