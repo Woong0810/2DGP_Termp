@@ -6,6 +6,7 @@ from characters_naruto_frames import FRAMES as NARUTO_FRAMES
 from characters_itachi_frames import FRAMES as ITACHI_FRAMES
 from characters_itachi_special_attack_frames import FRAMES as ITACHI_SPECIAL_FRAMES
 from characters_jiraiya_frames import FRAMES as JIRAIYA_FRAMES
+from character_temp_frames import FRAMES as TEMP_FRAMES
 
 # ===== 물리 기반 상수 설정 =====
 PIXEL_PER_METER = (10.0 / 0.4)  # 10 pixel = 40 cm
@@ -107,20 +108,19 @@ class NarutoConfig(CharacterConfig):
     def __init__(self):
         super().__init__()
         self.name = "Naruto"
-        self.image_path = "Characters_Naruto_clean.png"
-        self.frames = NARUTO_FRAMES
+        self.image_path = "character_temp_1_transparent.png"
+        self.frames = TEMP_FRAMES
 
-        # 각 동작의 프레임 인덱스
-        self.idle_frames = list(range(41, 47))
-        self.run_frames = list(range(26, 32))
-        self.normal_attack_frames = list(range(0, 12))
-        self.normal_attack_segments = [(0, 3), (4, 7), (8, 11)]
-        self.jump_frames = [33, 34]
-        self.defense_frames = list(range(12, 17))
-        self.special_attack_frames = list(range(98, 136))
-        self.ranged_attack_char_frames = list(range(91, 97))
-        self.ranged_attack_effect_frames = list(range(67, 71))
-        self.hit_frames = [47, 48]  # 피격 프레임
+        self.idle_frames = list(range(0, 4))  # 임시
+        self.run_frames = list(range(4, 10))  # 임시
+        self.normal_attack_frames = list(range(0, 4))  # 임시
+        self.normal_attack_segments = [(0, 3)]  # 임시
+        self.jump_frames = [0, 1]  # 임시
+        self.defense_frames = [0]  # 임시
+        self.special_attack_frames = list(range(0, 4))  # 임시
+        self.ranged_attack_char_frames = list(range(0, 4))  # 임시
+        self.ranged_attack_effect_frames = []  # 없음
+        self.hit_frames = [0, 1]  # 임시
 
         # 나루토 전용 히트박스 설정 (기본값 사용)
         self.hitbox_idle = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
