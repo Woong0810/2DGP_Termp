@@ -4,7 +4,7 @@ from character_temp_frames import FRAMES
 open_canvas(800, 600)
 
 # 합쳐진 이미지 로드
-img = load_image('character_temp_merged.png')
+img = load_image('character_temp_transparent.png')
 
 current_frame = 0
 running = True
