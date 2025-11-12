@@ -111,12 +111,12 @@ class NarutoConfig(CharacterConfig):
         self.image_path = "character_temp_1_transparent.png"
         self.frames = TEMP_FRAMES
 
-        self.idle_frames = list(range(0, 4))  # 임시
-        self.run_frames = list(range(4, 10))  # 임시
-        self.normal_attack_frames = list(range(0, 4))  # 임시
-        self.normal_attack_segments = [(0, 3)]  # 임시
-        self.jump_frames = [0, 1]  # 임시
-        self.defense_frames = [0]  # 임시
+        self.idle_frames = list(range(0, 0 + 4))  # 임시
+        self.run_frames = list(range(10, 10 + 6))  # 임시
+        self.normal_attack_frames = list(range(35, 35 + 13))  # 임시
+        self.normal_attack_segments = [(35, 38), (39, 42), (43, 47)]  # 임시
+        self.jump_frames = [20, 21]  # 임시
+        self.defense_frames = [19]  # 임시
         self.special_attack_frames = list(range(0, 4))  # 임시
         self.ranged_attack_char_frames = list(range(0, 4))  # 임시
         self.ranged_attack_effect_frames = []  # 없음
