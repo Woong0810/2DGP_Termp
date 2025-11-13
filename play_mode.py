@@ -40,12 +40,18 @@ def init():
     player2.face_dir = -1  # 왼쪽을 향하도록
     game_world.add_object(player2, 1)
 
+    game_world.add_collision_pairs('normal_attack:character', None, player1)
+    game_world.add_collision_pairs('normal_attack:character', None, player2)
+    game_world.add_collision_pairs('special_attack:character', None, player1)
+    game_world.add_collision_pairs('special_attack:character', None, player2)
+    game_world.add_collision_pairs('ranged_attack:character', None, player1)
+    game_world.add_collision_pairs('ranged_attack:character', None, player2)
+    game_world.add_collision_pairs('character:shuriken', player1, None)
+    game_world.add_collision_pairs('character:shuriken', player2, None)
+
     # 서로를 상대로 설정
     player1.set_opponent(player2)
     player2.set_opponent(player1)
-
-    game_world.add_collision_pairs('shuriken:character', None, player1)
-    game_world.add_collision_pairs('shuriken:character', None, player2)
 
     player1_hp_bar = HPBar(200, 550, character=player1, is_flipped=False)
     game_world.add_object(player1_hp_bar, 2)
