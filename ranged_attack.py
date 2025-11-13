@@ -34,11 +34,11 @@ class RangedAttack:
             self.character.state_machine.handle_event(('RANGED_ATTACK_END', None))
 
     def spawn_shuriken(self):
-        offset_x = 30 * self.character.face_dir
+        offset_x = 20 * self.character.face_dir
         self.shuriken = Shuriken(
             self.character,
             self.character.x + offset_x,
-            self.character.y + 20,
+            self.character.y,
             self.character.face_dir
         )
         game_world.add_object(self.shuriken, 1)

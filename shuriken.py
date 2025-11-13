@@ -13,18 +13,22 @@ class Shuriken:
         self.owner = owner
         self.x = x
         self.y = y
+        self.start_x = x
         self.direction = direction
         self.speed = speed
         self.rotation = 0  # 회전 각도
         self.rotation_speed = 720  # 초당 회전 속도 (도)
+        self.max_distance = 400
         game_world.add_collision_pairs('character:shuriken', None, self)
 
     def update(self):
         self.x += self.speed * self.direction * game_framework.frame_time
         self.rotation += self.rotation_speed * game_framework.frame_time
 
-        if self.x < -50 or self.x > 850:
+        distance_traveled = abs(self.x - self.start_x)
+        if distance_traveled >= self.max_distance:
             game_world.remove_object(self)
+            return
 
     def draw(self):
         l, b, w, h = Shuriken.FRAME['left'], Shuriken.FRAME['bottom'], Shuriken.FRAME['width'], Shuriken.FRAME['height']
@@ -40,7 +44,7 @@ class Shuriken:
         draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        size = 25
+        size = 20
         return (
             self.x - size,
             self.y - size,
