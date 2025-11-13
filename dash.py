@@ -1,6 +1,7 @@
 from pico2d import load_image, draw_rectangle
 from character_config import ACTION_PER_TIME, DASH_ANIMATION_SPEED
 import game_framework
+import game_world
 
 DASH_EFFECT_FRAMES = [
     {'left': 0, 'bottom': 0, 'width': 27, 'height': 26},
@@ -31,9 +32,13 @@ class Dash:
         self.character.frame = 0
         self.frame = 0.0
         self.elapsed_time = 0.0
+        game_world.add_collision_pairs('normal_attack:character', None, self.character)
+        game_world.add_collision_pairs('special_attack:character', None, self.character)
+        game_world.add_collision_pairs('ranged_attack:character', None, self.character)
+        game_world.add_collision_pairs('character:shuriken', self.character, None)
 
     def exit(self, e):
-        pass
+        game_world.remove_collision_object(self.character)
 
     def do(self):
         dash_frames = self.character.config.dash_frames
