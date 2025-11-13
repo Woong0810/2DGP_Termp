@@ -11,10 +11,19 @@ class NormalAttack:
         self.start_frame = 0
         self.end_frame = 0
         self.n_key_pressed = False
+        self.from_run = False
 
     def enter(self, e):
-        # 새로운 세그먼트 시작
-        segments = self.character.config.normal_attack_segments
+        from run import Run
+        self.from_run = isinstance(self.character.state_machine.prev_state, Run)
+
+        # RUN 상태에서 온 경우 다른 세그먼트 사용
+        if self.from_run:
+            segments = self.character.config.run_attack_segments
+            self.combo_index = 0
+        else:
+            segments = self.character.config.normal_attack_segments
+
         self.start_frame, self.end_frame = segments[self.combo_index]
         self.character.frame = self.start_frame
 
@@ -30,6 +39,7 @@ class NormalAttack:
         from sdl2 import SDL_KEYDOWN
         if not (e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == self.character.key_bindings['attack']):
             self.combo_index = 0
+            self.from_run = False
         self.n_key_pressed = False
 
         game_world.remove_collision_object(self)
@@ -39,9 +49,12 @@ class NormalAttack:
         self.character.frame += segment_length * ACTION_PER_TIME * NORMAL_ATTACK_ANIMATION_SPEED * game_framework.frame_time
 
         if self.character.frame >= self.end_frame + 1:
-            if self.n_key_pressed:
-                self.combo_index = (self.combo_index + 1) % 3
+            # 달리기 공격은 콤보 없이 바로 종료
+            if self.from_run:
+                self.character.state_machine.handle_event(('SEGMENT_END', None))
+            elif self.n_key_pressed:
                 segments = self.character.config.normal_attack_segments
+                self.combo_index = (self.combo_index + 1) % len(segments)
                 self.start_frame, self.end_frame = segments[self.combo_index]
                 self.character.frame = self.start_frame
             else:
