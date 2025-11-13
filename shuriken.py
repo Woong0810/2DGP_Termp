@@ -54,5 +54,4 @@ class Shuriken:
             return
 
         if group == 'shuriken:character':
-            print(f"Shuriken hit {other.config.name}!")
-            game_world.remove_object(self)
+            pass
