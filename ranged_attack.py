@@ -1,85 +1,56 @@
 from pico2d import draw_rectangle
-from character_config import (ACTION_PER_TIME, RANGED_ATTACK_CHAR_ANIMATION_SPEED,
-                              RANGED_ATTACK_EFFECT_ANIMATION_SPEED, RANGED_ATTACK_EFFECT_Y_OFFSET)
+from character_config import ACTION_PER_TIME, RANGED_ATTACK_CHAR_ANIMATION_SPEED
 import game_framework
+from shuriken import Shuriken
 import game_world
 
 class RangedAttack:
     def __init__(self, character):
         self.character = character
-        self.phase = 0
-        self.effect_x = 0
-        self.effect_y = 0
-        self.effect_frame = 0
-        self.target_x = 0
-        self.target_y = 0
+        self.shuriken_spawned = False
 
     def enter(self, e):
-        if not self.character.opponent:
-            self.character.state_machine.handle_event(('RANGED_ATTACK_END', None))
-            return
-
         self.character.frame = 0
-        self.phase = 0
-
-        self.target_x = self.character.opponent.x
-        self.target_y = self.character.opponent.y
-
-        self.effect_x = self.target_x
-        self.effect_y = self.target_y + RANGED_ATTACK_EFFECT_Y_OFFSET
-        self.effect_frame = 0
-
-        game_world.add_collision_pairs('ranged_attack:character', self, None)
+        self.shuriken_spawned = False
 
     def exit(self, e):
-        game_world.remove_collision_object(self)
         pass
 
     def do(self):
-        char_frames = self.character.config.ranged_attack_char_frames
-        effect_frames = self.character.config.ranged_attack_effect_frames
+        frames = self.character.config.ranged_attack_frames
 
-        # char_frames가 비어있으면 즉시 종료
-        if not char_frames:
+        if not frames:
             self.character.state_machine.handle_event(('RANGED_ATTACK_END', None))
             return
 
-        if self.phase == 0:
-            # 캐릭터 애니메이션
-            self.character.frame += len(char_frames) * ACTION_PER_TIME * RANGED_ATTACK_CHAR_ANIMATION_SPEED * game_framework.frame_time
+        self.character.frame += len(frames) * ACTION_PER_TIME * RANGED_ATTACK_CHAR_ANIMATION_SPEED * game_framework.frame_time
 
-            if self.character.frame >= len(char_frames):
-                # effect_frames가 없으면 바로 종료
-                if not effect_frames:
-                    self.character.state_machine.handle_event(('RANGED_ATTACK_END', None))
-                else:
-                    self.phase = 1
-                    self.effect_frame = 0
+        if not self.shuriken_spawned and self.character.frame >= len(frames) / 2:
+            self.spawn_shuriken()
+            self.shuriken_spawned = True
 
-        elif self.phase == 1:
-            # 이펙트 애니메이션 (y좌표 고정)
-            self.effect_frame += len(effect_frames) * ACTION_PER_TIME * RANGED_ATTACK_EFFECT_ANIMATION_SPEED * game_framework.frame_time
+        if self.character.frame >= len(frames):
+            self.character.state_machine.handle_event(('RANGED_ATTACK_END', None))
 
-            if self.effect_frame >= len(effect_frames):
-                self.character.x = self.target_x
-                self.character.y = self.target_y
-                self.character.state_machine.handle_event(('RANGED_ATTACK_END', None))
+    def spawn_shuriken(self):
+        offset_x = 30 * self.character.face_dir
+        shuriken = Shuriken(
+            self.character,
+            self.character.x + offset_x,
+            self.character.y + 20,
+            self.character.face_dir
+        )
+        game_world.add_object(shuriken, 1)
 
     def draw(self):
-        char_frames = self.character.config.ranged_attack_char_frames
-        effect_frames = self.character.config.ranged_attack_effect_frames
+        frames = self.character.config.ranged_attack_frames
         all_frames = self.character.config.frames
 
-        # char_frames가 비어있으면 그리지 않음
-        if not char_frames:
+        if not frames:
             return
 
-        # 캐릭터 그리기
-        if self.phase == 0:
-            current_frame = max(0, min(int(self.character.frame), len(char_frames) - 1))
-            frame_idx = char_frames[current_frame]
-        else:
-            frame_idx = char_frames[-1]
+        current_frame = max(0, min(int(self.character.frame), len(frames) - 1))
+        frame_idx = frames[current_frame]
 
         frame = all_frames[frame_idx]
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
@@ -93,66 +64,28 @@ class RangedAttack:
             self.character.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
                                                   self.character.x, draw_y, draw_w, draw_h)
 
-        # 이펙트 그리기 (phase 1이고 effect_frames가 있을 때만)
-        if self.phase == 1 and effect_frames:
-            effect_frame_idx = effect_frames[int(self.effect_frame)]  # int로 변환
-            effect_frame = all_frames[effect_frame_idx]
-            el, eb, ew, eh = effect_frame['left'], effect_frame['bottom'], effect_frame['width'], effect_frame['height']
-            effect_draw_w = int(ew * self.character.config.scale_x)
-            effect_draw_h = int(eh * self.character.config.scale_y)
-
-            if self.character.face_dir == 1:
-                self.character.image.clip_draw(el, eb, ew, eh, self.effect_x, self.effect_y, effect_draw_w, effect_draw_h)
-            else:
-                self.character.image.clip_composite_draw(el, eb, ew, eh, 0.0, 'h',
-                                                      self.effect_x, self.effect_y, effect_draw_w, effect_draw_h)
-
         draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        char_frames = self.character.config.ranged_attack_char_frames
-        effect_frames = self.character.config.ranged_attack_effect_frames
+        frames = self.character.config.ranged_attack_frames
         all_frames = self.character.config.frames
-        hb = self.character.config.hitbox_ranged_attack
 
-        # char_frames가 비어있으면 빈 히트박스 반환
-        if not char_frames:
+        if not frames:
             return (0, 0, 0, 0)
 
-        if self.phase == 0:
-            # phase 0: 첫 번째 프레임만 히트박스 있음
-            if int(self.character.frame) == 0:  # int로 변환
-                frame_idx = char_frames[0]
-                frame = all_frames[frame_idx]
-                hw = frame['width'] * self.character.config.scale_x * hb['scale_x'] / 2
-                hh = frame['height'] * self.character.config.scale_y * hb['scale_y'] / 2
-                return (
-                    self.character.x - hw + hb['x_offset'],
-                    self.character.y - hh + hb['y_offset'],
-                    self.character.x + hw + hb['x_offset'],
-                    self.character.y + hh + hb['y_offset']
-                )
-            else:
-                return (0, 0, 0, 0)
+        current_frame = max(0, min(int(self.character.frame), len(frames) - 1))
+        frame_idx = frames[current_frame]
+        frame = all_frames[frame_idx]
 
-        elif self.phase == 1:
-            # effect_frames가 비어있으면 빈 히트박스 반환
-            if not effect_frames or int(self.effect_frame) >= len(effect_frames):
-                return (0, 0, 0, 0)
-
-            # phase 1: 이펙트의 히트박스
-            frame_idx = effect_frames[int(self.effect_frame)]  # int로 변환
-            frame = all_frames[frame_idx]
-            hw = frame['width'] * self.character.config.scale_x * hb['scale_x'] / 2
-            hh = frame['height'] * self.character.config.scale_y * hb['scale_y'] / 2
-            return (
-                self.effect_x - hw + hb['x_offset'],
-                self.effect_y - hh + hb['y_offset'],
-                self.effect_x + hw + hb['x_offset'],
-                self.effect_y + hh + hb['y_offset']
-            )
-        return (0, 0, 0, 0)
+        hb = self.character.config.hitbox_ranged_attack
+        hw = frame['width'] * self.character.config.scale_x * hb['scale_x'] / 2
+        hh = frame['height'] * self.character.config.scale_y * hb['scale_y'] / 2
+        return (
+            self.character.x - hw + hb['x_offset'],
+            self.character.y - hh + hb['y_offset'],
+            self.character.x + hw + hb['x_offset'],
+            self.character.y + hh + hb['y_offset']
+        )
 
     def handle_collision(self, group, other):
         pass
-
