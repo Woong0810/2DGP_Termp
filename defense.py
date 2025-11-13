@@ -57,8 +57,8 @@ class Defense:
 
     def get_bb(self):
         if self.shield_effect is not None:
-            draw_w = int(self.shield_effect.frame_w * 2 / 3)
-            draw_h = int(self.shield_effect.frame_h * 2 / 3)
+            draw_w = int(self.shield_effect.width * 3 / 4)
+            draw_h = int(self.shield_effect.height * 3 / 4)
 
             hb = self.character.config.hitbox_defense
             hw = draw_w * hb['scale_x'] / 2

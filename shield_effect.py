@@ -13,8 +13,8 @@ class ShieldEffect:
     def draw(self):
         x = self.target.x
         y = self.target.y
-        draw_w = int(self.width * 2 / 3)
-        draw_h = int(self.height * 2 / 3)
+        draw_w = int(self.width * 3 / 4)
+        draw_h = int(self.height * 3 / 4)
 
         if self.target.face_dir == 1:
             self.image.clip_draw(0, 0, self.width, self.height, x, y, draw_w, draw_h)
