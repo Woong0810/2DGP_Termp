@@ -3,20 +3,21 @@
 캐릭터와 독립적으로 플레이어 번호에 따라 키 바인딩을 제공
 """
 from sdl2 import SDLK_LEFT, SDLK_RIGHT, SDLK_UP, SDLK_DOWN
-from sdl2 import SDLK_p, SDLK_i, SDLK_o, SDLK_l
+from sdl2 import SDLK_j, SDLK_k, SDLK_l, SDLK_u, SDLK_i
 from sdl2 import SDLK_a, SDLK_d, SDLK_w, SDLK_s
 from sdl2 import SDLK_b, SDLK_c, SDLK_v, SDLK_x
 
-# Player 1 키 바인딩 (방향키 + P, I, O, L)
+# Player 1 키 바인딩 (방향키 + J, K, L, U, I)
 PLAYER1_KEY_BINDINGS = {
     'left': SDLK_LEFT,
     'right': SDLK_RIGHT,
     'up': SDLK_UP,
     'down': SDLK_DOWN,
-    'attack': SDLK_p,
-    'special': SDLK_i,
-    'ranged': SDLK_o,
-    'dash': SDLK_l
+    'attack': SDLK_j,      # 일반공격
+    'jump_key': SDLK_k,    # 점프 (UP키와 별도)
+    'dash': SDLK_l,        # 대쉬
+    'ranged': SDLK_u,      # 원거리공격
+    'special': SDLK_i      # 필살기
 }
 
 # Player 2 키 바인딩 (WASD + B, C, V, X)
