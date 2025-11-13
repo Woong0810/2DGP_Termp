@@ -40,6 +40,7 @@ IDLE_ANIMATION_SPEED = 1.5
 RUN_ANIMATION_SPEED = 1.5
 JUMP_ANIMATION_SPEED = 1.5
 DEFENSE_ANIMATION_SPEED = 1.5
+DASH_ANIMATION_SPEED = 2.0
 SHIELD_EFFECT_ANIMATION_SPEED = 2.0  # 실드 이펙트 2배 빠르게
 NORMAL_ATTACK_ANIMATION_SPEED = 2.0    # 2배 빠르게
 SPECIAL_ATTACK_ANIMATION_SPEED = 0.2   # 0.2배의 속도로 (필살기)
@@ -88,9 +89,9 @@ class CharacterConfig:
         self.jump_frames = []
         self.defense_frames = []
         self.special_attack_frames = []
-        self.ranged_attack_char_frames = []
-        self.ranged_attack_effect_frames = []
-        self.hit_frames = []  # 피격 프레임
+        self.ranged_attack_frames = []
+        self.hit_frames = []
+        self.dash_frames = []
 
         # 히트박스 설정 (각 상태별 scale_x, scale_y, x_offset, y_offset)
         self.hitbox_idle = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
@@ -118,12 +119,13 @@ class NarutoConfig(CharacterConfig):
         self.run_frames = list(range(10, 10 + 6))  # 임시
         self.normal_attack_frames = list(range(35, 35 + 13))  # 임시
         self.normal_attack_segments = [(35, 38), (39, 42), (43, 47)]  # 임시
-        self.run_attack_segments = [(48, 52)]
+        self.run_attack_segments = [(61, 73)]
         self.jump_frames = [20, 21]  # 임시
         self.defense_frames = [19]  # 임시
         self.special_attack_frames = list(range(0, 4))  # 임시
         self.ranged_attack_frames = list(range(30, 30 + 3))  # 원거리 공격 프레임
-        self.hit_frames = [0, 1]  # 임시
+        self.hit_frames = [54, 55]
+        self.dash_frames = list(range(101, 101 + 6))  # 임시
 
         # 나루토 전용 히트박스 설정 (기본값 사용)
         self.hitbox_idle = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
