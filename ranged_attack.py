@@ -8,6 +8,7 @@ class RangedAttack:
     def __init__(self, character):
         self.character = character
         self.shuriken_spawned = False
+        self.shuriken = None
 
     def enter(self, e):
         self.character.frame = 0
@@ -34,13 +35,13 @@ class RangedAttack:
 
     def spawn_shuriken(self):
         offset_x = 30 * self.character.face_dir
-        shuriken = Shuriken(
+        self.shuriken = Shuriken(
             self.character,
             self.character.x + offset_x,
             self.character.y + 20,
             self.character.face_dir
         )
-        game_world.add_object(shuriken, 1)
+        game_world.add_object(self.shuriken, 1)
 
     def draw(self):
         frames = self.character.config.ranged_attack_frames

@@ -33,6 +33,7 @@ class Jump:
         game_world.add_collision_pairs('normal_attack:character', None, self.character)
         game_world.add_collision_pairs('special_attack:character', None, self.character)
         game_world.add_collision_pairs('ranged_attack:character', None, self.character)
+        game_world.add_collision_pairs('character:shuriken', self.character, None)
 
     def exit(self, e):
         self.jump_count = 0

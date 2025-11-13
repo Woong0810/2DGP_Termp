@@ -1,6 +1,7 @@
 from pico2d import draw_rectangle
 from character_config import ACTION_PER_TIME, HIT_ANIMATION_SPEED, HIT_DURATION
 import game_framework
+import game_world
 
 class Hit:
     def __init__(self, character):
@@ -10,9 +11,13 @@ class Hit:
     def enter(self, event):
         self.character.frame = 0
         self.elapsed_time = 0.0
+        game_world.add_collision_pairs('normal_attack:character', None, self.character)
+        game_world.add_collision_pairs('special_attack:character', None, self.character)
+        game_world.add_collision_pairs('ranged_attack:character', None, self.character)
+        game_world.add_collision_pairs('character:shuriken', self.character, None)
 
     def exit(self, event):
-        pass
+        game_world.remove_collision_object(self.character)
 
     def do(self):
         self.elapsed_time += game_framework.frame_time

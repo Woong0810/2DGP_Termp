@@ -7,7 +7,7 @@ def add_objects(ol, depth):
     world[depth] += ol
 
 def remove_collision_object(o):
-    for pairs in collision_pairs.values():
+    for group, pairs in collision_pairs.items():
         if o in pairs[0]:
             pairs[0].remove(o)
         if o in pairs[1]:
@@ -53,8 +53,10 @@ collision_pairs = {}
 def add_collision_pairs(group, a, b):
     if not group in collision_pairs:
         collision_pairs[group] = [[], []]
-    if a: collision_pairs[group][0].append(a)
-    if b: collision_pairs[group][1].append(b)
+    if a and a not in collision_pairs[group][0]:
+        collision_pairs[group][0].append(a)
+    if b and b not in collision_pairs[group][1]:
+        collision_pairs[group][1].append(b)
 
 def handle_collision():
     for group, pairs in collision_pairs.items():
