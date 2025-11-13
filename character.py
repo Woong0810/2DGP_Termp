@@ -193,7 +193,11 @@ class Character:
             self.hp -= 15  # 특수 공격 데미지
             self.take_hit()
 
-        elif group == 'shuriken:character':
+        elif group == 'character:shuriken':
+            # 자신이 발사한 수리검인지 확인
+            if hasattr(other, 'owner') and other.owner == self:
+                return
+            # 방어 중이거나 이미 Hit 상태면 무시
             if self.state_machine.cur_state == self.DEFENSE:
                 return
             if self.state_machine.cur_state == self.HIT:

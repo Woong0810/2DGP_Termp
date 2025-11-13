@@ -9,7 +9,7 @@ class Shuriken:
     def __init__(self, owner, x, y, direction, speed=300):
         if Shuriken.image is None:
             Shuriken.image = load_image('shuriken.png')
-
+        self.damage = 10
         self.owner = owner
         self.x = x
         self.y = y
@@ -17,8 +17,7 @@ class Shuriken:
         self.speed = speed
         self.rotation = 0  # 회전 각도
         self.rotation_speed = 720  # 초당 회전 속도 (도)
-
-        game_world.add_collision_pairs('shuriken:character', self, None)
+        game_world.add_collision_pairs('character:shuriken', None, self)
 
     def update(self):
         self.x += self.speed * self.direction * game_framework.frame_time
@@ -53,5 +52,4 @@ class Shuriken:
         if other == self.owner:
             return
 
-        if group == 'shuriken:character':
-            pass
+        game_world.remove_object(self)
