@@ -43,8 +43,7 @@ DEFENSE_ANIMATION_SPEED = 1.5
 SHIELD_EFFECT_ANIMATION_SPEED = 2.0  # 실드 이펙트 2배 빠르게
 NORMAL_ATTACK_ANIMATION_SPEED = 2.0    # 2배 빠르게
 SPECIAL_ATTACK_ANIMATION_SPEED = 0.2   # 0.2배의 속도로 (필살기)
-RANGED_ATTACK_CHAR_ANIMATION_SPEED = 1.0   # 기본 속도
-RANGED_ATTACK_EFFECT_ANIMATION_SPEED = 3.0  # 3배 빠르게
+RANGED_ATTACK_CHAR_ANIMATION_SPEED = 2.0   # 원거리 공격 애니메이션 속도
 HIT_ANIMATION_SPEED = 1.5       # 1.5배 빠르게
 
 # ===== 공격 설정 =====
@@ -59,7 +58,6 @@ SPECIAL_ATTACK_LOOP_COUNT = 3   # 마지막 프레임 반복 횟수
 
 # Ranged Attack
 RANGED_ATTACK_DAMAGE = 20       # 원거리 공격 데미지
-RANGED_ATTACK_EFFECT_Y_OFFSET = -20  # 이펙트 초기 y 오프셋
 
 # ===== 방어 설정 =====
 DEFENSE_DAMAGE_REDUCTION = 0.5  # 방어 시 데미지 감소율 (50%)
@@ -124,8 +122,7 @@ class NarutoConfig(CharacterConfig):
         self.jump_frames = [20, 21]  # 임시
         self.defense_frames = [19]  # 임시
         self.special_attack_frames = list(range(0, 4))  # 임시
-        self.ranged_attack_char_frames = list(range(0, 4))  # 임시
-        self.ranged_attack_effect_frames = []  # 없음
+        self.ranged_attack_frames = list(range(30, 30 + 3))  # 원거리 공격 프레임
         self.hit_frames = [0, 1]  # 임시
 
         # 나루토 전용 히트박스 설정 (기본값 사용)
@@ -163,8 +160,7 @@ class ItachiConfig(CharacterConfig):
         self.jump_frames = [36, 37]
         self.defense_frames = [85]
         self.special_attack_frames = list(range(0, 43))  # 스페셜 이미지의 전체 프레임 (0~42)
-        self.ranged_attack_char_frames = list(range(100, 125))  # 인덱스 100~124 (원거리 공격 전용)
-        self.ranged_attack_effect_frames = []  # 이펙트 없음 (캐릭터 프레임만 사용)
+        self.ranged_attack_frames = list(range(100, 125))  # 원거리 공격 프레임
         self.hit_frames = [46, 47]
         # ... 나머지 동작들도 추가 필요
 
