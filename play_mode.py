@@ -44,7 +44,6 @@ def init():
     player1.set_opponent(player2)
     player2.set_opponent(player1)
 
-    # 충돌 쌍 등록: 수리검과 캐릭터
     game_world.add_collision_pairs('shuriken:character', None, player1)
     game_world.add_collision_pairs('shuriken:character', None, player2)
 
