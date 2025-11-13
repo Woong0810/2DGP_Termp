@@ -120,6 +120,7 @@ class NarutoConfig(CharacterConfig):
         self.run_frames = list(range(10, 10 + 6))  # 임시
         self.normal_attack_frames = list(range(35, 35 + 13))  # 임시
         self.normal_attack_segments = [(35, 38), (39, 42), (43, 47)]  # 임시
+        self.run_attack_segments = [(48, 52)]
         self.jump_frames = [20, 21]  # 임시
         self.defense_frames = [19]  # 임시
         self.special_attack_frames = list(range(0, 4))  # 임시
@@ -158,6 +159,7 @@ class ItachiConfig(CharacterConfig):
         self.run_frames = list(range(27, 33))
         self.normal_attack_frames = list(range(0, 13))
         self.normal_attack_segments = [(0, 3), (4, 7), (8, 12)]
+        self.run_attack_segments = [(48, 53)]
         self.jump_frames = [36, 37]
         self.defense_frames = [85]
         self.special_attack_frames = list(range(0, 43))  # 스페셜 이미지의 전체 프레임 (0~42)
