@@ -44,6 +44,10 @@ def init():
     player1.set_opponent(player2)
     player2.set_opponent(player1)
 
+    # 충돌 쌍 등록: 수리검과 캐릭터
+    game_world.add_collision_pairs('shuriken:character', None, player1)
+    game_world.add_collision_pairs('shuriken:character', None, player2)
+
     player1_hp_bar = HPBar(200, 550, character=player1, is_flipped=False)
     game_world.add_object(player1_hp_bar, 2)
 
