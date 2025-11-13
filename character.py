@@ -7,6 +7,7 @@ from defense import Defense
 from special_attack import SpecialAttack
 from ranged_attack import RangedAttack
 from hit import Hit
+from dash import Dash
 from state_machine import StateMachine
 from event_to_string import *
 from character_config import NarutoConfig
@@ -46,6 +47,7 @@ class Character:
         self.SPECIAL_ATTACK = SpecialAttack(self)
         self.RANGED_ATTACK = RangedAttack(self)
         self.HIT = Hit(self)
+        self.DASH = Dash(self)
 
         # 키 바인딩 기반 rules 생성
         from event_to_string import key_down, key_up
@@ -62,6 +64,7 @@ class Character:
                     key_down(kb['down']): self.DEFENSE,
                     key_down(kb['special']): self.SPECIAL_ATTACK,
                     key_down(kb['ranged']): self.RANGED_ATTACK,
+                    key_down(kb['dash']): self.DASH,
                     take_hit: self.HIT
                 },
                 self.RUN: {
@@ -72,6 +75,7 @@ class Character:
                     key_down(kb['down']): self.DEFENSE,
                     key_down(kb['special']): self.SPECIAL_ATTACK,
                     key_down(kb['ranged']): self.RANGED_ATTACK,
+                    key_down(kb['dash']): self.DASH,
                     take_hit: self.HIT
                 },
                 self.NORMAL_ATTACK: {
@@ -80,16 +84,19 @@ class Character:
                     key_down(kb['down']): self.DEFENSE,
                     key_down(kb['special']): self.SPECIAL_ATTACK,
                     key_down(kb['ranged']): self.RANGED_ATTACK,
+                    key_down(kb['dash']): self.DASH,
                     take_hit: self.HIT
                 },
                 self.JUMP: {
                     landed: self.IDLE,
+                    key_down(kb['dash']): self.DASH,
                     take_hit: self.HIT
                 },
                 self.DEFENSE: {
                     key_up(kb['down']): self.IDLE,
                     key_down(kb['special']): self.SPECIAL_ATTACK,
                     key_down(kb['ranged']): self.RANGED_ATTACK,
+                    key_down(kb['dash']): self.DASH,
                     take_hit: self.HIT
                 },
                 self.SPECIAL_ATTACK: {
@@ -100,6 +107,9 @@ class Character:
                 },
                 self.HIT: {
                     hit_end: self.IDLE
+                },
+                self.DASH: {
+                    dash_end: self.IDLE
                 }
             }
         )
