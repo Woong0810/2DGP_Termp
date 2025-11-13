@@ -50,5 +50,12 @@ class Shuriken:
         )
 
     def handle_collision(self, group, other):
-        pass
+        # 자신이 발사한 캐릭터와는 충돌하지 않음
+        if other == self.owner:
+            return
 
+        # 상대 캐릭터와 충돌 시 제거
+        if group == 'shuriken:character':
+            print(f"Shuriken hit {other.config.name}!")
+            game_world.remove_object(self)
+            # TODO: 데미지 처리 추가

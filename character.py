@@ -193,12 +193,12 @@ class Character:
             self.hp -= 15  # 특수 공격 데미지
             self.take_hit()
 
-        elif group == 'ranged_attack:character':
+        elif group == 'shuriken:character':
             if self.state_machine.cur_state == self.DEFENSE:
                 return
             if self.state_machine.cur_state == self.HIT:
                 return
-            self.hp -= 10  # 원거리 공격 데미지
+            self.hp -= 10  # 수리검 데미지
             self.take_hit()
 
         if self.hp < 0:
