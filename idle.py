@@ -1,5 +1,4 @@
 from pico2d import draw_rectangle
-
 import game_world
 from character_config import ACTION_PER_TIME, IDLE_ANIMATION_SPEED
 import game_framework

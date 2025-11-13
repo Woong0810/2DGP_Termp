@@ -36,10 +36,10 @@ TIME_PER_ACTION = 1.0  # 한 사이클 애니메이션 재생 시간 (초)
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION  # 초당 사이클 수
 
 # 각 동작별 애니메이션 속도 배수 (ACTION_PER_TIME에 곱해서 사용)
-IDLE_ANIMATION_SPEED = 1.0      # 기본 속도
-RUN_ANIMATION_SPEED = 1.0       # 기본 속도 (이동 속도와 동기화)
-JUMP_ANIMATION_SPEED = 1.0      # 기본 속도
-DEFENSE_ANIMATION_SPEED = 1.5   # 1.5배 빠르게
+IDLE_ANIMATION_SPEED = 1.5
+RUN_ANIMATION_SPEED = 1.5
+JUMP_ANIMATION_SPEED = 1.5
+DEFENSE_ANIMATION_SPEED = 1.5
 SHIELD_EFFECT_ANIMATION_SPEED = 2.0  # 실드 이펙트 2배 빠르게
 NORMAL_ATTACK_ANIMATION_SPEED = 2.0    # 2배 빠르게
 SPECIAL_ATTACK_ANIMATION_SPEED = 0.2   # 0.2배의 속도로 (필살기)
@@ -111,6 +111,11 @@ class NarutoConfig(CharacterConfig):
         self.image_path = "character_temp_transparent.png"
         self.frames = TEMP_FRAMES
 
+        # 원본 크기로 출력
+        self.scale_x = 1.0
+        self.scale_y = 1.0
+        self.draw_offset_y = 0
+
         self.idle_frames = list(range(0, 0 + 4))  # 임시
         self.run_frames = list(range(10, 10 + 6))  # 임시
         self.normal_attack_frames = list(range(35, 35 + 13))  # 임시
@@ -143,12 +148,10 @@ class ItachiConfig(CharacterConfig):
         self.special_attack_image_path = "Itachi_special_attack_clean.png"
         self.special_attack_frames_data = ITACHI_SPECIAL_FRAMES
 
-        # 이타치 스케일 조정 (나루토와 같은 크기로)
+        # 원본 크기로 출력
         self.scale_x = 1.0
-        self.scale_y = 0.85  # y축 크기를 줄여서 나루토와 비슷하게
-
-        # 이타치 피벗 보정
-        self.draw_offset_y = 5
+        self.scale_y = 1.0
+        self.draw_offset_y = 0
 
         # TODO: Itachi의 프레임 인덱스 설정 (나중에 추가)
         self.idle_frames = list(range(42, 46))
@@ -180,20 +183,25 @@ class JiraiyaConfig(CharacterConfig):
         self.image_path = "Characters_Jiraiya_clean.png"
         self.frames = JIRAIYA_FRAMES
 
+        # 원본 크기로 출력
+        self.scale_x = 1.0
+        self.scale_y = 1.0
+        self.draw_offset_y = 0
+
         # TODO: Jiraiya의 프레임 인덱스 설정 (나중에 추가)
         self.idle_frames = list(range(42, 45))  # 임시
         self.run_frames = list(range(6, 12))  # 임시
         # ... 나머지 동작들도 추가 필요
 
         # 지라이야 전용 히트박스 설정
-        self.hitbox_idle = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 3}
-        self.hitbox_run = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 3}
-        self.hitbox_jump = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 3}
-        self.hitbox_normal_attack = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 3}
-        self.hitbox_defense = {'scale_x': 1.0, 'scale_y': 1.0, 'x_offset': 0, 'y_offset': 3}
-        self.hitbox_special_attack = {'scale_x': 1.15, 'scale_y': 1.15, 'x_offset': 0, 'y_offset': 3}
-        self.hitbox_ranged_attack = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 3}
-        self.hitbox_hit = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 3}  # 피격 히트박스
+        self.hitbox_idle = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_run = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_jump = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_normal_attack = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_defense = {'scale_x': 1.0, 'scale_y': 1.0, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_special_attack = {'scale_x': 1.15, 'scale_y': 1.15, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_ranged_attack = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_hit = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}  # 피격 히트박스
 
 # 캐릭터 설정 딕셔너리
 CHARACTER_CONFIGS = {
