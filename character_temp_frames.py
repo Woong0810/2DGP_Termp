@@ -108,39 +108,39 @@ FRAMES = [
     {'left': 192, 'bottom': 12830, 'width': 40, 'height': 49},
     {'left': 250, 'bottom': 12830, 'width': 45, 'height': 49},
     {'left': 312, 'bottom': 12830, 'width': 40, 'height': 49},
-    {'left': 127, 'bottom': 12670, 'width': 36, 'height': 51},
+    {'left': 127, 'bottom': 12670, 'width': 36, 'height': 51},#1
     {'left': 415, 'bottom': 12670, 'width': 36, 'height': 51},
-    {'left': 120, 'bottom': 12445, 'width': 40, 'height': 47},
+    {'left': 120, 'bottom': 12445, 'width': 40, 'height': 47},#2
     {'left': 393, 'bottom': 12445, 'width': 40, 'height': 47},
-    {'left': 89, 'bottom': 12227, 'width': 40, 'height': 35},
+    {'left': 89, 'bottom': 12227, 'width': 40, 'height': 35},#3
     {'left': 361, 'bottom': 12227, 'width': 40, 'height': 35},
-    {'left': 57, 'bottom': 11973, 'width': 40, 'height': 47},
+    {'left': 57, 'bottom': 11973, 'width': 40, 'height': 47},#4
     {'left': 328, 'bottom': 11973, 'width': 40, 'height': 47},
-    {'left': 37, 'bottom': 11726, 'width': 33, 'height': 51},
+    {'left': 37, 'bottom': 11726, 'width': 33, 'height': 51},#5
     {'left': 323, 'bottom': 11726, 'width': 36, 'height': 51},
-    {'left': 35, 'bottom': 11490, 'width': 36, 'height': 50},
+    {'left': 35, 'bottom': 11490, 'width': 36, 'height': 50},#6
     {'left': 323, 'bottom': 11490, 'width': 35, 'height': 50},
-    {'left': 34, 'bottom': 11254, 'width': 36, 'height': 50},
+    {'left': 34, 'bottom': 11254, 'width': 36, 'height': 50},#7
     {'left': 322, 'bottom': 11254, 'width': 51, 'height': 50},
-    {'left': 34, 'bottom': 11018, 'width': 67, 'height': 50},
+    {'left': 34, 'bottom': 11018, 'width': 67, 'height': 50},#8
     {'left': 322, 'bottom': 11018, 'width': 82, 'height': 50},
-    {'left': 34, 'bottom': 10782, 'width': 99, 'height': 50},
+    {'left': 34, 'bottom': 10782, 'width': 99, 'height': 50},#9
     {'left': 322, 'bottom': 10782, 'width': 115, 'height': 50},
-    {'left': 34, 'bottom': 10546, 'width': 131, 'height': 50},
+    {'left': 34, 'bottom': 10546, 'width': 131, 'height': 50},#10
     {'left': 322, 'bottom': 10546, 'width': 147, 'height': 50},
-    {'left': 34, 'bottom': 10310, 'width': 163, 'height': 50},
+    {'left': 34, 'bottom': 10310, 'width': 163, 'height': 50},#11
     {'left': 322, 'bottom': 10310, 'width': 179, 'height': 50},
-    {'left': 34, 'bottom': 10074, 'width': 195, 'height': 50},
+    {'left': 34, 'bottom': 10074, 'width': 195, 'height': 50},#12
     {'left': 322, 'bottom': 10074, 'width': 211, 'height': 50},
-    {'left': 34, 'bottom': 9838, 'width': 215, 'height': 50},
+    {'left': 34, 'bottom': 9838, 'width': 215, 'height': 50},#13
     {'left': 322, 'bottom': 9838, 'width': 215, 'height': 50},
-    {'left': 34, 'bottom': 9602, 'width': 216, 'height': 51},
+    {'left': 34, 'bottom': 9602, 'width': 216, 'height': 51},#14
     {'left': 322, 'bottom': 9602, 'width': 216, 'height': 51},
-    {'left': 34, 'bottom': 9366, 'width': 216, 'height': 51},
+    {'left': 34, 'bottom': 9366, 'width': 216, 'height': 51},#15
     {'left': 322, 'bottom': 9366, 'width': 214, 'height': 51},
-    {'left': 34, 'bottom': 9130, 'width': 211, 'height': 51},
+    {'left': 34, 'bottom': 9130, 'width': 211, 'height': 51},#16
     {'left': 291, 'bottom': 9130, 'width': 220, 'height': 51},
-    {'left': 10, 'bottom': 8894, 'width': 156, 'height': 51},
+    {'left': 10, 'bottom': 8894, 'width': 156, 'height': 51},#17
     {'left': 171, 'bottom': 8894, 'width': 36, 'height': 51},
     {'left': 226, 'bottom': 8894, 'width': 56, 'height': 51},
     {'left': 290, 'bottom': 8894, 'width': 52, 'height': 51},
