@@ -61,9 +61,12 @@ class NormalAttack:
 
     def do(self):
         segment_length = self.end_frame - self.start_frame + 1
-        # down_attack은 2배 느리게 출력
-        speed_multiplier = 0.5 if self.down_attack else 1.0
-        self.character.frame += segment_length * ACTION_PER_TIME * NORMAL_ATTACK_ANIMATION_SPEED * game_framework.frame_time * speed_multiplier
+        self.character.frame += segment_length * ACTION_PER_TIME * NORMAL_ATTACK_ANIMATION_SPEED * game_framework.frame_time
+
+        # down_attack 상태일 때 dir 방향으로 전진
+        if self.down_attack:
+            from character_config import DOWN_ATTACK_SPEED_PPS
+            self.character.x += self.character.face_dir * DOWN_ATTACK_SPEED_PPS * game_framework.frame_time
 
         if self.character.frame >= self.end_frame + 1:
             # 윗 방향키 공격, 아래 방향키 공격, 달리기 공격은 콤보 없이 바로 종료
