@@ -127,6 +127,7 @@ class NarutoConfig(CharacterConfig):
         self.special_attack_frames = list(range(0, 4))
         self.ranged_attack_frames = list(range(30, 30 + 3))
         self.hit_frames = [54, 55]
+        self.knockback_frames = [53, 56, 57, 58, 59]
         self.dash_frames = list(range(101, 101 + 6))
 
         # 나루토 전용 히트박스 설정 (기본값 사용)
@@ -166,6 +167,7 @@ class ItachiConfig(CharacterConfig):
         self.special_attack_frames = list(range(0, 43))  # 스페셜 이미지의 전체 프레임 (0~42)
         self.ranged_attack_frames = list(range(100, 125))  # 원거리 공격 프레임
         self.hit_frames = [46, 47]
+        self.knockback_frames = [46, 47]  # 임시로 hit_frames와 동일 (나중에 수정 필요)
         # ... 나머지 동작들도 추가 필요
 
         # 이타치 전용 히트박스 설정
