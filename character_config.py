@@ -120,6 +120,7 @@ class NarutoConfig(CharacterConfig):
         self.normal_attack_frames = list(range(35, 35 + 13))  # 임시
         self.normal_attack_segments = [(35, 38), (39, 42), (43, 47)]  # 임시
         self.run_attack_segments = [(61, 73)]
+        self.up_attack_segments = [(48, 52)]
         self.jump_frames = [20, 21]  # 임시
         self.defense_frames = [19]  # 임시
         self.special_attack_frames = list(range(0, 4))  # 임시
