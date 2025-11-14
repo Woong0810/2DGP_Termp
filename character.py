@@ -93,7 +93,6 @@ class Character:
 
         jump_rules = {
             landed: self.IDLE,
-            key_down(kb['dash']): self.DASH,
             take_hit: self.HIT
         }
 
