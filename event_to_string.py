@@ -66,6 +66,12 @@ def hit_end(e):
 def take_hit(e):
     return e[0] == 'TAKE_HIT'
 
+def stand_up(e):
+    return e[0] == 'STAND_UP'
+
+def stand_up_end(e):
+    return e[0] == 'STAND_UP_END'
+
 def dash_end(e):
     return e[0] == 'DASH_END'
 
