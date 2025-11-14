@@ -3,6 +3,7 @@ from idle import Idle
 from run import Run
 from normal_attack import NormalAttack
 from jump import Jump
+from jump_attack import JumpAttack
 from defense import Defense
 from special_attack import SpecialAttack
 from ranged_attack import RangedAttack
@@ -45,6 +46,7 @@ class Character:
         self.RUN = Run(self)
         self.NORMAL_ATTACK = NormalAttack(self)
         self.JUMP = Jump(self)
+        self.JUMP_ATTACK = JumpAttack(self)
         self.DEFENSE = Defense(self)
         self.SPECIAL_ATTACK = SpecialAttack(self)
         self.RANGED_ATTACK = RangedAttack(self)
@@ -92,6 +94,7 @@ class Character:
             attack_rules[key_down(kb['jump_key'])] = self.JUMP
 
         jump_rules = {
+            key_down(kb['attack']): self.JUMP_ATTACK,
             landed: self.IDLE,
             take_hit: self.HIT
         }
@@ -111,6 +114,10 @@ class Character:
                 self.RUN: run_rules,
                 self.NORMAL_ATTACK: attack_rules,
                 self.JUMP: jump_rules,
+                self.JUMP_ATTACK: {
+                    landed: self.IDLE,
+                    take_hit: self.HIT
+                },
                 self.DEFENSE: defense_rules,
                 self.SPECIAL_ATTACK: {
                     special_attack_end: self.IDLE
@@ -185,15 +192,12 @@ class Character:
 
         # JUMP 상태에서 처리
         if self.state_machine.cur_state == self.JUMP:
-            # 점프 키 - 2단 점프
-            is_jump_key = (event.type == SDL_KEYDOWN and
-                          ('jump_key' in self.key_bindings and event.key == self.key_bindings['jump_key']))
-
-            if is_jump_key:
-                self.JUMP.handle_double_jump()
-            # 좌우 방향키
-            elif event.type == SDL_KEYDOWN:
-                if event.key == self.key_bindings['left']:
+            if event.type == SDL_KEYDOWN:
+                # 점프 키 - 2단 점프
+                if 'jump_key' in self.key_bindings and event.key == self.key_bindings['jump_key']:
+                    self.JUMP.handle_double_jump()
+                # 좌우 방향키
+                elif event.key == self.key_bindings['left']:
                     self.JUMP.dir = -1
                 elif event.key == self.key_bindings['right']:
                     self.JUMP.dir = 1
@@ -202,6 +206,9 @@ class Character:
                     self.JUMP.dir = 0
                 elif event.key == self.key_bindings['right'] and self.JUMP.dir == 1:
                     self.JUMP.dir = 0
+
+        if self.state_machine.cur_state == self.JUMP_ATTACK:
+            pass
 
         self.state_machine.handle_event(('INPUT', event))
 

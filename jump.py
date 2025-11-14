@@ -54,6 +54,7 @@ class Jump:
                 self.vx = JUMP_SPEED_PPS
             self.character.face_dir = 1
 
+        # 점프 프레임 업데이트
         jump_frames = self.character.config.jump_frames
         frames_per_action = len(jump_frames)
         self.character.frame = (self.character.frame + frames_per_action * ACTION_PER_TIME * JUMP_ANIMATION_SPEED * game_framework.frame_time) % frames_per_action
@@ -76,9 +77,9 @@ class Jump:
             self.vy = math.sqrt(2 * GRAVITY_PPS2 * JUMP_HEIGHT_PIXEL)
 
     def draw(self):
-        jump_frames = self.character.config.jump_frames
         all_frames = self.character.config.frames
-        frame_idx = jump_frames[int(self.character.frame)]  # int로 변환
+        jump_frames = self.character.config.jump_frames
+        frame_idx = jump_frames[int(self.character.frame)]
         frame = all_frames[frame_idx]
 
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
@@ -96,7 +97,7 @@ class Jump:
     def get_bb(self):
         all_frames = self.character.config.frames
         jump_frames = self.character.config.jump_frames
-        frame_idx = jump_frames[int(self.character.frame)]  # int로 변환
+        frame_idx = jump_frames[int(self.character.frame)]
         frame = all_frames[frame_idx]
 
         hb = self.character.config.hitbox_jump
