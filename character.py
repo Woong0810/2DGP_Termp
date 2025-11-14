@@ -241,8 +241,7 @@ class Character:
         self.opponent = opponent
 
     def handle_collision(self, group, other):
-        # 무적 상태면 모든 공격 무시
-        if self.invincible_time > 0:
+        if self.invincible_time > 0 or self.state_machine.cur_state == self.DASH:
             return
 
         if group == 'normal_attack:character':
@@ -287,4 +286,3 @@ class Character:
 
         if self.hp < 0:
             self.hp = 0
-
