@@ -46,6 +46,7 @@ NORMAL_ATTACK_ANIMATION_SPEED = 2.0    # 2배 빠르게
 SPECIAL_ATTACK_ANIMATION_SPEED = 0.2   # 0.2배의 속도로 (필살기)
 RANGED_ATTACK_CHAR_ANIMATION_SPEED = 2.0   # 원거리 공격 애니메이션 속도
 HIT_ANIMATION_SPEED = 1.5       # 1.5배 빠르게
+STAND_UP_ANIMATION_SPEED = 1.5  # 일어나기 애니메이션 속도
 
 # ===== 공격 설정 =====
 # Normal Attack
@@ -66,6 +67,7 @@ DEFENSE_DAMAGE_REDUCTION = 0.5  # 방어 시 데미지 감소율 (50%)
 # ===== 피격 설정 =====
 HIT_DURATION = 0.3              # 피격 애니메이션 지속 시간 (초)
 HIT_INVINCIBILITY_TIME = 0.5    # 피격 후 무적 시간 (초)
+KNOCKBACK_DOWN_TIME = 2.0       # 넉백 후 누워있는 시간 (초)
 
 class CharacterConfig:
     """캐릭터 설정 베이스 클래스"""
@@ -128,6 +130,7 @@ class NarutoConfig(CharacterConfig):
         self.ranged_attack_frames = list(range(30, 30 + 3))
         self.hit_frames = [54, 55]
         self.knockback_frames = [53, 56, 57, 58, 59]
+        self.stand_up_frames = [60, 18, 17, 16]
         self.dash_frames = list(range(101, 101 + 6))
 
         # 나루토 전용 히트박스 설정 (기본값 사용)
