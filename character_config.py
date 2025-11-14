@@ -7,6 +7,7 @@ from characters_itachi_frames import FRAMES as ITACHI_FRAMES
 from characters_itachi_special_attack_frames import FRAMES as ITACHI_SPECIAL_FRAMES
 from characters_jiraiya_frames import FRAMES as JIRAIYA_FRAMES
 from character_temp_frames import FRAMES as TEMP_FRAMES
+from character_temp_frames_speical_attack import FRAMES as NARUTO_SPECIAL_FRAMES
 
 # ===== 물리 기반 상수 설정 =====
 PIXEL_PER_METER = (10.0 / 0.4)  # 10 pixel = 40 cm
@@ -117,6 +118,10 @@ class NarutoConfig(CharacterConfig):
         self.image_path = "character_temp_transparent.png"
         self.frames = TEMP_FRAMES
 
+        # 스페셜 공격 전용 이미지 및 프레임 데이터
+        self.special_attack_image_path = "character_temp_2_transparent.png"
+        self.special_attack_frames_data = NARUTO_SPECIAL_FRAMES
+
         # 원본 크기로 출력
         self.scale_x = 1.0
         self.scale_y = 1.0
@@ -134,7 +139,7 @@ class NarutoConfig(CharacterConfig):
         self.jump_attack_segments = [(76, 79), (80, 82)]
         self.jump_frames = [20, 21]
         self.defense_frames = [19]
-        self.special_attack_frames = list(range(0, 4))
+        self.special_attack_frames = list(range(0, 84))
         self.ranged_attack_frames = list(range(30, 30 + 3))
         self.hit_frames = [54, 55]
         self.knockback_frames = [53, 56, 57, 58, 59]
