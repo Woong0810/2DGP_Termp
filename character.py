@@ -122,14 +122,17 @@ class Character:
                 self.JUMP: jump_rules,
                 self.JUMP_ATTACK: {
                     landed: self.IDLE,
-                    take_hit: self.HIT
+                    take_hit: self.HIT,
+                    key_down(kb['dash']): self.DASH
                 },
                 self.DEFENSE: defense_rules,
                 self.SPECIAL_ATTACK: {
-                    special_attack_end: self.IDLE
+                    special_attack_end: self.IDLE,
+                    key_down(kb['dash']): self.DASH
                 },
                 self.RANGED_ATTACK: {
-                    ranged_attack_end: self.IDLE
+                    ranged_attack_end: self.IDLE,
+                    key_down(kb['dash']): self.DASH
                 },
                 self.HIT: {
                     hit_end: self.IDLE,
@@ -175,32 +178,53 @@ class Character:
     def handle_event(self, event):
         # 키 바인딩이 있는 경우, 자신의 키인지 확인
         if self.key_bindings:
-            # 자신의 키가 아니면 무시
             if not self.is_my_key(event):
                 return
 
-        # 윗 방향키 상태 추적 (커맨드용)
-        if event.type == SDL_KEYDOWN and event.key == self.key_bindings['up']:
-            self.up_pressed = True
-        elif event.type == SDL_KEYUP and event.key == self.key_bindings['up']:
-            self.up_pressed = False
+        # 윗/아래 방향키 상태 추적 (공격 상태가 아닐 때만 커맨드용으로 갱신)
+        in_attack_state = self.state_machine.cur_state in (self.NORMAL_ATTACK, self.JUMP_ATTACK, self.SPECIAL_ATTACK, self.RANGED_ATTACK)
+        if not in_attack_state:
+            if event.type == SDL_KEYDOWN and event.key == self.key_bindings['up']:
+                self.up_pressed = True
+            elif event.type == SDL_KEYUP and event.key == self.key_bindings['up']:
+                self.up_pressed = False
 
-        # 아래 방향키 상태 추적 (커맨드용)
-        if event.type == SDL_KEYDOWN and event.key == self.key_bindings['down']:
-            self.down_pressed = True
-        elif event.type == SDL_KEYUP and event.key == self.key_bindings['down']:
-            self.down_pressed = False
+            if event.type == SDL_KEYDOWN and event.key == self.key_bindings['down']:
+                self.down_pressed = True
+            elif event.type == SDL_KEYUP and event.key == self.key_bindings['down']:
+                self.down_pressed = False
 
+        # HIT 상태: dash 외 입력 무시
         if self.state_machine.cur_state == self.HIT:
             if not (event.type == SDL_KEYDOWN and event.key == self.key_bindings['dash']):
                 return
 
-        # SPECIAL_ATTACK, RANGED_ATTACK 상태에서는 모든 입력 무시
-        if self.state_machine.cur_state == self.SPECIAL_ATTACK or self.state_machine.cur_state == self.RANGED_ATTACK:
-            return
+        # 공격 상태에서의 입력 제한: dash만 허용 + 해당 상태의 attack 키 홀드만 내부 처리
+        if in_attack_state:
+            # dash는 허용하여 상태머신에 전달
+            if event.type == SDL_KEYDOWN and event.key == self.key_bindings['dash']:
+                pass  # 계속 진행하여 아래 state_machine.handle_event로 전달
+            else:
+                # 공격 상태 내부의 attack 키 홀드/해제는 상태 객체로 직접 전달
+                if self.state_machine.cur_state == self.NORMAL_ATTACK:
+                    if event.type == SDL_KEYDOWN and event.key == self.key_bindings['attack']:
+                        self.NORMAL_ATTACK.handle_n_key_down()
+                        return
+                    elif event.type == SDL_KEYUP and event.key == self.key_bindings['attack']:
+                        self.NORMAL_ATTACK.handle_n_key_up()
+                        return
+                if self.state_machine.cur_state == self.JUMP_ATTACK:
+                    if event.type == SDL_KEYDOWN and event.key == self.key_bindings['attack']:
+                        self.JUMP_ATTACK.handle_n_key_down()
+                        return
+                    elif event.type == SDL_KEYUP and event.key == self.key_bindings['attack']:
+                        self.JUMP_ATTACK.handle_n_key_up()
+                        return
+                # 그 외 입력은 모두 무시
+                return
 
-        # 공격키 입력 시 커맨드 체크
-        if event.type == SDL_KEYDOWN and event.key == self.key_bindings['attack']:
+        # 공격키 입력 시 커맨드 체크 (공격 상태가 아닐 때만)
+        if event.type == SDL_KEYDOWN and event.key == self.key_bindings['attack'] and not in_attack_state:
             if self.down_pressed:
                 self.NORMAL_ATTACK.set_down_attack(True)
                 self.NORMAL_ATTACK.set_up_attack(False)
@@ -208,7 +232,6 @@ class Character:
                 self.NORMAL_ATTACK.set_up_attack(True)
                 self.NORMAL_ATTACK.set_down_attack(False)
             else:
-                # 일반 공격
                 self.NORMAL_ATTACK.set_up_attack(False)
                 self.NORMAL_ATTACK.set_down_attack(False)
 
@@ -222,10 +245,8 @@ class Character:
         # JUMP 상태에서 처리
         if self.state_machine.cur_state == self.JUMP:
             if event.type == SDL_KEYDOWN:
-                # 점프 키 - 2단 점프
                 if 'jump_key' in self.key_bindings and event.key == self.key_bindings['jump_key']:
                     self.JUMP.handle_double_jump()
-                # 좌우 방향키
                 elif event.key == self.key_bindings['left']:
                     self.JUMP.dir = -1
                 elif event.key == self.key_bindings['right']:
@@ -236,9 +257,7 @@ class Character:
                 elif event.key == self.key_bindings['right'] and self.JUMP.dir == 1:
                     self.JUMP.dir = 0
 
-        if self.state_machine.cur_state == self.JUMP_ATTACK:
-            pass
-
+        # 상태머신에 이벤트 전달
         self.state_machine.handle_event(('INPUT', event))
 
     def is_my_key(self, event):
