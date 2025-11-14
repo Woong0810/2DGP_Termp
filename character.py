@@ -291,6 +291,8 @@ class Character:
             self.take_hit(is_knockback=is_knockback, knockback_distance=50)
 
         elif group == 'special_attack:character':
+            if hasattr(other, 'owner') and other.owner == self:
+                return
             if self.state_machine.cur_state == self.DEFENSE:
                 return
             if self.state_machine.cur_state == self.HIT:

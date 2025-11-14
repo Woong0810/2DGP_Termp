@@ -6,6 +6,7 @@ import game_world
 class SpecialAttack:
     def __init__(self, character):
         self.character = character
+        self.owner = character
         self.loop_count = 0
 
         # 이타치의 경우 스페셜 공격 전용 이미지 로드
