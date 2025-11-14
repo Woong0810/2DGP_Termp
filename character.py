@@ -131,7 +131,8 @@ class Character:
                 },
                 self.HIT: {
                     hit_end: self.IDLE,
-                    stand_up: self.STAND_UP
+                    stand_up: self.STAND_UP,
+                    key_down(kb['dash']): self.DASH
                 },
                 self.STAND_UP: {
                     stand_up_end: self.IDLE
@@ -182,9 +183,9 @@ class Character:
         elif event.type == SDL_KEYUP and event.key == self.key_bindings['up']:
             self.up_pressed = False
 
-        # HIT 상태에서는 모든 입력 무시
         if self.state_machine.cur_state == self.HIT:
-            return
+            if not (event.type == SDL_KEYDOWN and event.key == self.key_bindings['dash']):
+                return
 
         # SPECIAL_ATTACK, RANGED_ATTACK 상태에서는 모든 입력 무시
         if self.state_machine.cur_state == self.SPECIAL_ATTACK or self.state_machine.cur_state == self.RANGED_ATTACK:
