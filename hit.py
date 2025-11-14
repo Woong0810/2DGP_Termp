@@ -7,10 +7,23 @@ class Hit:
     def __init__(self, character):
         self.character = character
         self.elapsed_time = 0.0
+        self.is_knockback = False
+        self.knockback_distance = 0
+        self.knockback_dir = 0
 
     def enter(self, event):
         self.character.frame = 0
         self.elapsed_time = 0.0
+
+        if event and len(event) > 1 and isinstance(event[1], tuple):
+            self.is_knockback = event[1][0]
+            self.knockback_distance = event[1][1] if len(event[1]) > 1 else 0
+            self.knockback_dir = event[1][2] if len(event[1]) > 2 else 0
+        else:
+            self.is_knockback = False
+            self.knockback_distance = 0
+            self.knockback_dir = 0
+
         game_world.add_collision_pairs('normal_attack:character', None, self.character)
         game_world.add_collision_pairs('special_attack:character', None, self.character)
         game_world.add_collision_pairs('ranged_attack:character', None, self.character)
@@ -22,16 +35,31 @@ class Hit:
     def do(self):
         self.elapsed_time += game_framework.frame_time
 
-        # 수업 방식: game_framework.frame_time 사용
-        self.character.frame = (self.character.frame + 2 * ACTION_PER_TIME * HIT_ANIMATION_SPEED * game_framework.frame_time) % 2
+        if self.is_knockback:
+            knockback_frames = self.character.config.knockback_frames
+            frames_per_action = len(knockback_frames)
+            self.character.frame = (self.character.frame + frames_per_action * ACTION_PER_TIME * HIT_ANIMATION_SPEED * game_framework.frame_time) % frames_per_action
+
+            if self.elapsed_time < HIT_DURATION:
+                knockback_speed = self.knockback_distance / HIT_DURATION
+                self.character.x += self.knockback_dir * knockback_speed * game_framework.frame_time
+        else:
+            hit_frames = self.character.config.hit_frames
+            frames_per_action = len(hit_frames)
+            self.character.frame = (self.character.frame + frames_per_action * ACTION_PER_TIME * HIT_ANIMATION_SPEED * game_framework.frame_time) % frames_per_action
 
         if self.elapsed_time >= HIT_DURATION:
             from event_to_string import hit_end
             self.character.state_machine.add_event(('HIT_END', 0))
 
     def draw(self):
-        HIT_FRAMES = [self.character.config.frames[idx] for idx in self.character.config.hit_frames]
-        frame = HIT_FRAMES[int(self.character.frame)]
+        if self.is_knockback:
+            frame_indices = self.character.config.knockback_frames
+        else:
+            frame_indices = self.character.config.hit_frames
+
+        frame_idx = frame_indices[int(self.character.frame)]
+        frame = self.character.config.frames[frame_idx]
 
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
         draw_w = int(w * self.character.config.scale_x)
@@ -46,7 +74,13 @@ class Hit:
         draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        frame = self.character.config.frames[self.character.config.hit_frames[int(self.character.frame)]]  # int로 변환
+        if self.is_knockback:
+            frame_indices = self.character.config.knockback_frames
+        else:
+            frame_indices = self.character.config.hit_frames
+
+        frame_idx = frame_indices[int(self.character.frame)]
+        frame = self.character.config.frames[frame_idx]
         hitbox = self.character.config.hitbox_hit
 
         width = frame['width'] * self.character.config.scale_x * hitbox['scale_x']
