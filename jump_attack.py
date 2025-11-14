@@ -11,7 +11,6 @@ class JumpAttack:
         self.start_frame = 0
         self.end_frame = 0
         self.attack_frame = 0.0
-        self.attack_finished = False  # 공격 사이클 완료 여부
 
         self.vy = 0.0
         self.vx = 0.0
@@ -25,7 +24,6 @@ class JumpAttack:
         self.ground_y = jump_state.ground_y
         self.jump_count = jump_state.jump_count
 
-        self.attack_finished = False
 
         if hasattr(self.character.config, 'jump_attack_segments'):
             segments = self.character.config.jump_attack_segments
@@ -50,29 +48,18 @@ class JumpAttack:
         game_world.remove_collision_object(self.character)
 
     def do(self):
-        if not self.attack_finished:
-            segment_length = self.end_frame - self.start_frame + 1
-            self.attack_frame += segment_length * ACTION_PER_TIME * NORMAL_ATTACK_ANIMATION_SPEED * game_framework.frame_time
-            if self.attack_frame >= segment_length:
-                if hasattr(self.character.config, 'jump_attack_segments'):
-                    segments = self.character.config.jump_attack_segments
-                    self.combo_index += 1
+        segment_length = self.end_frame - self.start_frame + 1
+        self.attack_frame += segment_length * ACTION_PER_TIME * NORMAL_ATTACK_ANIMATION_SPEED * game_framework.frame_time
 
-                    # 모든 세그먼트를 한 번씩 다 출력했으면 완료
-                    if self.combo_index >= len(segments):
-                        self.attack_finished = True
-                        # 마지막 프레임에서 멈춤
-                        self.attack_frame = segment_length - 0.01
-                    else:
-                        # 다음 세그먼트로
-                        self.start_frame, self.end_frame = segments[self.combo_index]
-                        self.attack_frame = 0.0
+        if self.attack_frame >= segment_length:
+            if hasattr(self.character.config, 'jump_attack_segments'):
+                segments = self.character.config.jump_attack_segments
+                self.combo_index = (self.combo_index + 1) % len(segments)
+                self.start_frame, self.end_frame = segments[self.combo_index]
+                self.attack_frame = 0.0
 
         self.character.x += self.vx * game_framework.frame_time
-
-        # 공격 중에는 천천히 떨어짐
-        reduced_gravity = GRAVITY_PPS2 * 0.3
-        self.vy -= reduced_gravity * game_framework.frame_time
+        self.vy -= GRAVITY_PPS2 * game_framework.frame_time
         self.character.y += self.vy * game_framework.frame_time
 
         if self.character.y <= self.ground_y:
