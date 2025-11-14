@@ -57,6 +57,9 @@ def landed(e):
 def special_attack_end(e):
     return e[0] == 'SPECIAL_ATTACK_END'
 
+def special_attack2_end(e):
+    return e[0] == 'SPECIAL_ATTACK2_END'
+
 def ranged_attack_end(e):
     return e[0] == 'RANGED_ATTACK_END'
 
