@@ -97,6 +97,7 @@ class CharacterConfig:
         self.jump_frames = []
         self.defense_frames = []
         self.special_attack_frames = []
+        self.special_attack2_frames = []  # 두번째 필살기 프레임 인덱스 추가
         self.ranged_attack_frames = []
         self.hit_frames = []
         self.dash_frames = []
@@ -140,6 +141,7 @@ class NarutoConfig(CharacterConfig):
         self.jump_frames = [20, 21]
         self.defense_frames = [19]
         self.special_attack_frames = list(range(0, 84))
+        self.special_attack2_frames = list(range(252, 252 + 39))
         self.ranged_attack_frames = list(range(30, 30 + 3))
         self.hit_frames = [54, 55]
         self.knockback_frames = [53, 56, 57, 58, 59]
