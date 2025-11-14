@@ -14,6 +14,7 @@ class NormalAttack:
         self.from_run = False
         self.up_attack = False
         self.down_attack = False
+        self.collision_hold_remaining = 0.0
 
     def set_up_attack(self, is_up_attack):
         self.up_attack = is_up_attack
@@ -40,6 +41,8 @@ class NormalAttack:
         self.start_frame, self.end_frame = segments[self.combo_index]
         self.character.frame = self.start_frame
 
+        self.collision_hold_remaining = 0.0
+
         # 동적으로 attack 키 체크
         from sdl2 import SDL_KEYDOWN
         if e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == self.character.key_bindings['attack']:
@@ -56,16 +59,28 @@ class NormalAttack:
             self.up_attack = False
             self.down_attack = False
         self.n_key_pressed = False
+        self.collision_hold_remaining = 0.0
 
         game_world.remove_collision_object(self)
 
     def do(self):
+        # 충돌 후 유지 중이면 프레임 고정 및 시간 감소
+        if self.collision_hold_remaining > 0.0:
+            self.character.frame = self.end_frame
+            self.collision_hold_remaining -= game_framework.frame_time
+            if self.collision_hold_remaining <= 0.0:
+                self.character.state_machine.handle_event(('SEGMENT_END', None))
+            return
+
         segment_length = self.end_frame - self.start_frame + 1
         self.character.frame += segment_length * ACTION_PER_TIME * NORMAL_ATTACK_ANIMATION_SPEED * game_framework.frame_time
 
-        # down_attack 상태일 때 dir 방향으로 전진
+        # down_attack 상태일 때 전진 (충돌 전까지만)
         if self.down_attack:
-            from character_config import DOWN_ATTACK_SPEED_PPS
+            try:
+                from character_config import DOWN_ATTACK_SPEED_PPS
+            except ImportError:
+                from character_config import RUN_SPEED_PPS as DOWN_ATTACK_SPEED_PPS
             self.character.x += self.character.face_dir * DOWN_ATTACK_SPEED_PPS * game_framework.frame_time
 
         if self.character.frame >= self.end_frame + 1:
@@ -146,5 +161,6 @@ class NormalAttack:
         return self.from_run
 
     def handle_collision(self, group, other):
-        pass
-
+        if group == 'normal_attack:character' and self.down_attack and self.collision_hold_remaining <= 0.0:
+            self.character.frame = self.end_frame
+            self.collision_hold_remaining = 1.0
