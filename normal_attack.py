@@ -12,16 +12,23 @@ class NormalAttack:
         self.end_frame = 0
         self.n_key_pressed = False
         self.from_run = False
-        self.up_attack = False  # 윗 방향키 + 공격키 커맨드
+        self.up_attack = False
+        self.down_attack = False
 
     def set_up_attack(self, is_up_attack):
         self.up_attack = is_up_attack
+
+    def set_down_attack(self, is_down_attack):
+        self.down_attack = is_down_attack
 
     def enter(self, e):
         from run import Run
         self.from_run = isinstance(self.character.state_machine.prev_state, Run)
 
-        if self.up_attack and hasattr(self.character.config, 'up_attack_segments'):
+        if self.down_attack and hasattr(self.character.config, 'down_attack_segments'):
+            segments = self.character.config.down_attack_segments
+            self.combo_index = 0
+        elif self.up_attack and hasattr(self.character.config, 'up_attack_segments'):
             segments = self.character.config.up_attack_segments
             self.combo_index = 0
         elif self.from_run:
@@ -47,6 +54,7 @@ class NormalAttack:
             self.combo_index = 0
             self.from_run = False
             self.up_attack = False
+            self.down_attack = False
         self.n_key_pressed = False
 
         game_world.remove_collision_object(self)
@@ -56,8 +64,8 @@ class NormalAttack:
         self.character.frame += segment_length * ACTION_PER_TIME * NORMAL_ATTACK_ANIMATION_SPEED * game_framework.frame_time
 
         if self.character.frame >= self.end_frame + 1:
-            # 윗 방향키 공격이나 달리기 공격은 콤보 없이 바로 종료
-            if self.up_attack or self.from_run:
+            # 윗 방향키 공격, 아래 방향키 공격, 달리기 공격은 콤보 없이 바로 종료
+            if self.up_attack or self.down_attack or self.from_run:
                 self.character.state_machine.handle_event(('SEGMENT_END', None))
             elif self.n_key_pressed:
                 segments = self.character.config.normal_attack_segments
@@ -123,7 +131,7 @@ class NormalAttack:
     def is_last_segment(self):
         if self.from_run:
             segments = self.character.config.run_attack_segments
-        elif self.up_attack:
+        elif self.up_attack or self.down_attack:
             return False
         else:
             segments = self.character.config.normal_attack_segments
