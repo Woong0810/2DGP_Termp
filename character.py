@@ -8,6 +8,7 @@ from defense import Defense
 from special_attack import SpecialAttack
 from ranged_attack import RangedAttack
 from hit import Hit
+from stand_up import StandUp
 from dash import Dash
 from state_machine import StateMachine
 from event_to_string import *
@@ -51,6 +52,7 @@ class Character:
         self.SPECIAL_ATTACK = SpecialAttack(self)
         self.RANGED_ATTACK = RangedAttack(self)
         self.HIT = Hit(self)
+        self.STAND_UP = StandUp(self)
         self.DASH = Dash(self)
 
         # 키 바인딩 기반 rules 생성
@@ -126,7 +128,11 @@ class Character:
                     ranged_attack_end: self.IDLE
                 },
                 self.HIT: {
-                    hit_end: self.IDLE
+                    hit_end: self.IDLE,
+                    stand_up: self.STAND_UP
+                },
+                self.STAND_UP: {
+                    stand_up_end: self.IDLE
                 },
                 self.DASH: {
                     dash_end: self.IDLE

@@ -1,5 +1,5 @@
 from pico2d import draw_rectangle
-from character_config import ACTION_PER_TIME, HIT_ANIMATION_SPEED, HIT_DURATION
+from character_config import ACTION_PER_TIME, HIT_ANIMATION_SPEED, HIT_DURATION, KNOCKBACK_DOWN_TIME
 import game_framework
 import game_world
 
@@ -10,10 +10,12 @@ class Hit:
         self.is_knockback = False
         self.knockback_distance = 0
         self.knockback_dir = 0
+        self.is_lying_down = False
 
     def enter(self, event):
         self.character.frame = 0
         self.elapsed_time = 0.0
+        self.is_lying_down = False
 
         if event and len(event) > 1 and isinstance(event[1], tuple):
             self.is_knockback = event[1][0]
@@ -36,21 +38,30 @@ class Hit:
         self.elapsed_time += game_framework.frame_time
 
         if self.is_knockback:
-            knockback_frames = self.character.config.knockback_frames
-            frames_per_action = len(knockback_frames)
-            self.character.frame = (self.character.frame + frames_per_action * ACTION_PER_TIME * HIT_ANIMATION_SPEED * game_framework.frame_time) % frames_per_action
-
             if self.elapsed_time < HIT_DURATION:
+                knockback_frames = self.character.config.knockback_frames
+                frames_per_action = len(knockback_frames)
+                self.character.frame = (self.character.frame + frames_per_action * ACTION_PER_TIME * HIT_ANIMATION_SPEED * game_framework.frame_time) % frames_per_action
+
                 knockback_speed = self.knockback_distance / HIT_DURATION
                 self.character.x += self.knockback_dir * knockback_speed * game_framework.frame_time
+
+            elif self.elapsed_time < HIT_DURATION + KNOCKBACK_DOWN_TIME:
+                if not self.is_lying_down:
+                    self.is_lying_down = True
+                    # 마지막 넉백 프레임으로 고정
+                    knockback_frames = self.character.config.knockback_frames
+                    self.character.frame = len(knockback_frames) - 1
+
+            else:
+                self.character.state_machine.add_event(('STAND_UP', 0))
         else:
             hit_frames = self.character.config.hit_frames
             frames_per_action = len(hit_frames)
             self.character.frame = (self.character.frame + frames_per_action * ACTION_PER_TIME * HIT_ANIMATION_SPEED * game_framework.frame_time) % frames_per_action
 
-        if self.elapsed_time >= HIT_DURATION:
-            from event_to_string import hit_end
-            self.character.state_machine.add_event(('HIT_END', 0))
+            if self.elapsed_time >= HIT_DURATION:
+                self.character.state_machine.add_event(('HIT_END', 0))
 
     def draw(self):
         if self.is_knockback:
