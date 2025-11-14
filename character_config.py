@@ -115,18 +115,19 @@ class NarutoConfig(CharacterConfig):
         self.scale_y = 1.0
         self.draw_offset_y = 0
 
-        self.idle_frames = list(range(0, 0 + 4))  # 임시
-        self.run_frames = list(range(10, 10 + 6))  # 임시
-        self.normal_attack_frames = list(range(35, 35 + 13))  # 임시
-        self.normal_attack_segments = [(35, 38), (39, 42), (43, 47)]  # 임시
+        self.idle_frames = list(range(0, 0 + 4))
+        self.run_frames = list(range(10, 10 + 6))
+        self.normal_attack_frames = list(range(35, 35 + 13))
+        self.normal_attack_segments = [(35, 38), (39, 42), (43, 47)]
         self.run_attack_segments = [(61, 73)]
         self.up_attack_segments = [(48, 52)]
-        self.jump_frames = [20, 21]  # 임시
-        self.defense_frames = [19]  # 임시
-        self.special_attack_frames = list(range(0, 4))  # 임시
-        self.ranged_attack_frames = list(range(30, 30 + 3))  # 원거리 공격 프레임
+        self.jump_attack_segments = [(76, 79), (80, 82)]
+        self.jump_frames = [20, 21]
+        self.defense_frames = [19]
+        self.special_attack_frames = list(range(0, 4))
+        self.ranged_attack_frames = list(range(30, 30 + 3))
         self.hit_frames = [54, 55]
-        self.dash_frames = list(range(101, 101 + 6))  # 임시
+        self.dash_frames = list(range(101, 101 + 6))
 
         # 나루토 전용 히트박스 설정 (기본값 사용)
         self.hitbox_idle = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
