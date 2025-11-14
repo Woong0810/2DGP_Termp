@@ -120,6 +120,18 @@ class NormalAttack:
         # 범위를 벗어나면 빈 히트박스 반환
         return (0, 0, 0, 0)
 
+    def is_last_segment(self):
+        if self.from_run:
+            segments = self.character.config.run_attack_segments
+        elif self.up_attack:
+            return False
+        else:
+            segments = self.character.config.normal_attack_segments
+        return self.combo_index == len(segments) - 1
+
+    def is_run_attack(self):
+        return self.from_run
+
     def handle_collision(self, group, other):
         pass
 
