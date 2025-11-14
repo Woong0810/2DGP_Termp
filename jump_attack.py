@@ -104,6 +104,12 @@ class JumpAttack:
             )
         return (0, 0, 0, 0)
 
+    def is_last_segment(self):
+        if hasattr(self.character.config, 'jump_attack_segments'):
+            segments = self.character.config.jump_attack_segments
+            return self.combo_index == len(segments) - 1
+        return False
+
     def handle_collision(self, group, other):
         pass
 
