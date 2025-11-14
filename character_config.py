@@ -120,7 +120,7 @@ class NarutoConfig(CharacterConfig):
         self.scale_y = 1.0
         self.draw_offset_y = 0
 
-        self.knockback_draw_offset_y = -5
+        self.knockback_draw_offset_y = -10
 
         self.idle_frames = list(range(0, 0 + 4))
         self.run_frames = list(range(10, 10 + 6))
