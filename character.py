@@ -134,8 +134,9 @@ class Character:
             }
         )
 
-    def take_hit(self):
-        self.state_machine.add_event(('TAKE_HIT', 0))
+    def take_hit(self, is_knockback=False, knockback_distance=50):
+        knockback_dir = -self.face_dir if is_knockback else 0
+        self.state_machine.add_event(('TAKE_HIT', (is_knockback, knockback_distance, knockback_dir)))
 
     def update(self):
         self.state_machine.update()
@@ -231,7 +232,9 @@ class Character:
             if self.state_machine.cur_state == self.HIT:    # 이미 Hit 상태면 무시
                 return
             self.hp -= 5  # 일반 공격 데미지
-            self.take_hit()
+
+            is_knockback = other.is_last_segment() or other.is_run_attack()
+            self.take_hit(is_knockback=is_knockback, knockback_distance=50)
 
         elif group == 'jump_attack:character':
             if self.state_machine.cur_state == self.DEFENSE:
@@ -239,7 +242,9 @@ class Character:
             if self.state_machine.cur_state == self.HIT:
                 return
             self.hp -= 7  # 점프 공격 데미지 (일반 공격보다 약간 높음)
-            self.take_hit()
+
+            is_knockback = other.is_last_segment()
+            self.take_hit(is_knockback=is_knockback, knockback_distance=50)
 
         elif group == 'special_attack:character':
             if self.state_machine.cur_state == self.DEFENSE:
