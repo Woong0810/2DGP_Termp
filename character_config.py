@@ -83,6 +83,9 @@ class CharacterConfig:
         # 캐릭터 그리기 오프셋 (피벗 차이 보정)
         self.draw_offset_y = 0
 
+        # 상태별 전용 오프셋: 넉백 전용 y 오프셋 (기본 0)
+        self.knockback_draw_offset_y = 0
+
         # 각 동작의 프레임 인덱스 범위
         self.idle_frames = []
         self.run_frames = []
@@ -116,6 +119,8 @@ class NarutoConfig(CharacterConfig):
         self.scale_x = 1.0
         self.scale_y = 1.0
         self.draw_offset_y = 0
+
+        self.knockback_draw_offset_y = -5
 
         self.idle_frames = list(range(0, 0 + 4))
         self.run_frames = list(range(10, 10 + 6))
