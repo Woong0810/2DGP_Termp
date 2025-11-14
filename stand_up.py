@@ -1,7 +1,6 @@
 from pico2d import draw_rectangle
 from character_config import ACTION_PER_TIME, STAND_UP_ANIMATION_SPEED
 import game_framework
-import game_world
 
 class StandUp:
     def __init__(self, character):
@@ -11,7 +10,8 @@ class StandUp:
         self.character.frame = 0
 
     def exit(self, event):
-        pass
+        if event and event[0] == 'STAND_UP_END':
+            self.character.invincible_time = 0.5
 
     def do(self):
         stand_up_frames = self.character.config.stand_up_frames

@@ -43,6 +43,8 @@ class Character:
         self.max_hp = 100
         self.hp = self.max_hp
 
+        self.invincible_time = 0.0
+
         self.IDLE = Idle(self)
         self.RUN = Run(self)
         self.NORMAL_ATTACK = NormalAttack(self)
@@ -147,6 +149,13 @@ class Character:
     def update(self):
         self.state_machine.update()
 
+        # 무적 시간 감소
+        import game_framework
+        if self.invincible_time > 0:
+            self.invincible_time -= game_framework.frame_time
+            if self.invincible_time < 0:
+                self.invincible_time = 0
+
     def draw(self):
         self.state_machine.draw()
         if self.debug_draw:
@@ -232,6 +241,10 @@ class Character:
         self.opponent = opponent
 
     def handle_collision(self, group, other):
+        # 무적 상태면 모든 공격 무시
+        if self.invincible_time > 0:
+            return
+
         if group == 'normal_attack:character':
             if self.state_machine.cur_state == self.DEFENSE:
                 return
