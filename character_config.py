@@ -43,6 +43,7 @@ DEFENSE_ANIMATION_SPEED = 1.5
 DASH_ANIMATION_SPEED = 2.0
 SHIELD_EFFECT_ANIMATION_SPEED = 2.0  # 실드 이펙트 2배 빠르게
 NORMAL_ATTACK_ANIMATION_SPEED = 2.0    # 2배 빠르게
+DOWN_ATTACK_ANIMATION_SPEED = 1.0  # 다운 공격 애니메이션 속도
 SPECIAL_ATTACK_ANIMATION_SPEED = 0.2   # 0.2배의 속도로 (필살기)
 RANGED_ATTACK_CHAR_ANIMATION_SPEED = 2.0   # 원거리 공격 애니메이션 속도
 HIT_ANIMATION_SPEED = 1.5       # 1.5배 빠르게
@@ -128,7 +129,7 @@ class NarutoConfig(CharacterConfig):
         self.normal_attack_segments = [(35, 38), (39, 42), (43, 47)]
         self.run_attack_segments = [(61, 73)]
         self.up_attack_segments = [(48, 52)]
-        self.down_attack_segments = [(126, 133)]
+        self.down_attack_segments = [(271, 278)]
         self.jump_attack_segments = [(76, 79), (80, 82)]
         self.jump_frames = [20, 21]
         self.defense_frames = [19]
