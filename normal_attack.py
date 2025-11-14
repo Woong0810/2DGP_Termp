@@ -51,13 +51,10 @@ class NormalAttack:
         game_world.add_collision_pairs('normal_attack:character', self, None)
 
     def exit(self, e):
-        # 동적으로 attack 키 체크
-        from sdl2 import SDL_KEYDOWN
-        if not (e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == self.character.key_bindings['attack']):
-            self.combo_index = 0
-            self.from_run = False
-            self.up_attack = False
-            self.down_attack = False
+        self.combo_index = 0
+        self.from_run = False
+        self.up_attack = False
+        self.down_attack = False
         self.n_key_pressed = False
         self.collision_hold_remaining = 0.0
 
