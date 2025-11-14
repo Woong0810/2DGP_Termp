@@ -233,6 +233,14 @@ class Character:
             self.hp -= 5  # 일반 공격 데미지
             self.take_hit()
 
+        elif group == 'jump_attack:character':
+            if self.state_machine.cur_state == self.DEFENSE:
+                return
+            if self.state_machine.cur_state == self.HIT:
+                return
+            self.hp -= 7  # 점프 공격 데미지 (일반 공격보다 약간 높음)
+            self.take_hit()
+
         elif group == 'special_attack:character':
             if self.state_machine.cur_state == self.DEFENSE:
                 return
