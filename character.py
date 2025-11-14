@@ -6,6 +6,7 @@ from jump import Jump
 from jump_attack import JumpAttack
 from defense import Defense
 from special_attack import SpecialAttack
+from special_attack2 import SpecialAttack2
 from ranged_attack import RangedAttack
 from hit import Hit
 from stand_up import StandUp
@@ -53,6 +54,7 @@ class Character:
         self.JUMP_ATTACK = JumpAttack(self)
         self.DEFENSE = Defense(self)
         self.SPECIAL_ATTACK = SpecialAttack(self)
+        self.SPECIAL_ATTACK2 = SpecialAttack2(self)
         self.RANGED_ATTACK = RangedAttack(self)
         self.HIT = Hit(self)
         self.STAND_UP = StandUp(self)
@@ -67,6 +69,7 @@ class Character:
             key_down(kb['left']): self.RUN,
             key_down(kb['down']): self.DEFENSE,
             key_down(kb['special']): self.SPECIAL_ATTACK,
+            key_down(kb.get('special2', -1)): self.SPECIAL_ATTACK2,
             key_down(kb['ranged']): self.RANGED_ATTACK,
             key_down(kb['dash']): self.DASH,
             take_hit: self.HIT
@@ -80,6 +83,7 @@ class Character:
             key_down(kb['attack']): self.NORMAL_ATTACK,
             key_down(kb['down']): self.DEFENSE,
             key_down(kb['special']): self.SPECIAL_ATTACK,
+            key_down(kb.get('special2', -1)): self.SPECIAL_ATTACK2,
             key_down(kb['ranged']): self.RANGED_ATTACK,
             key_down(kb['dash']): self.DASH,
             take_hit: self.HIT
@@ -91,6 +95,7 @@ class Character:
             segment_end: self.IDLE,
             key_down(kb['down']): self.DEFENSE,
             key_down(kb['special']): self.SPECIAL_ATTACK,
+            key_down(kb.get('special2', -1)): self.SPECIAL_ATTACK2,
             key_down(kb['ranged']): self.RANGED_ATTACK,
             key_down(kb['dash']): self.DASH,
             take_hit: self.HIT
@@ -108,6 +113,7 @@ class Character:
             key_up(kb['down']): self.IDLE,
             key_down(kb['attack']): self.NORMAL_ATTACK,
             key_down(kb['special']): self.SPECIAL_ATTACK,
+            key_down(kb.get('special2', -1)): self.SPECIAL_ATTACK2,
             key_down(kb['ranged']): self.RANGED_ATTACK,
             key_down(kb['dash']): self.DASH,
             take_hit: self.HIT
@@ -128,7 +134,13 @@ class Character:
                 self.DEFENSE: defense_rules,
                 self.SPECIAL_ATTACK: {
                     special_attack_end: self.IDLE,
-                    key_down(kb['dash']): self.DASH
+                    key_down(kb['dash']): self.DASH,
+                    key_down(kb.get('special2', -1)): self.SPECIAL_ATTACK2
+                },
+                self.SPECIAL_ATTACK2: {
+                    special_attack2_end: self.IDLE,
+                    key_down(kb['dash']): self.DASH,
+                    key_down(kb['special']): self.SPECIAL_ATTACK
                 },
                 self.RANGED_ATTACK: {
                     ranged_attack_end: self.IDLE,
@@ -193,7 +205,7 @@ class Character:
             self.down_pressed = False
 
         # 공격 상태 여부 판단 (입력 제한 처리용)
-        in_attack_state = self.state_machine.cur_state in (self.NORMAL_ATTACK, self.JUMP_ATTACK, self.SPECIAL_ATTACK, self.RANGED_ATTACK)
+        in_attack_state = self.state_machine.cur_state in (self.NORMAL_ATTACK, self.JUMP_ATTACK, self.SPECIAL_ATTACK, self.SPECIAL_ATTACK2, self.RANGED_ATTACK)
 
         # HIT 상태: dash 외 입력 무시
         if self.state_machine.cur_state == self.HIT:
