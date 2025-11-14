@@ -34,6 +34,8 @@ class Character:
         self.frame_duration = 0.1  # 기본값, 상태별로 변경 가능
         self.debug_draw = True  # 디버그 모드: 바운딩 박스 표시
 
+        self.up_pressed = False
+
         self.opponent = None  # 상대 캐릭터 참조
 
         self.max_hp = 100
@@ -52,53 +54,65 @@ class Character:
         # 키 바인딩 기반 rules 생성
         from event_to_string import key_down, key_up
         kb = self.key_bindings
+        idle_rules = {
+            key_down(kb['attack']): self.NORMAL_ATTACK,
+            key_down(kb['right']): self.RUN,
+            key_down(kb['left']): self.RUN,
+            key_down(kb['down']): self.DEFENSE,
+            key_down(kb['special']): self.SPECIAL_ATTACK,
+            key_down(kb['ranged']): self.RANGED_ATTACK,
+            key_down(kb['dash']): self.DASH,
+            take_hit: self.HIT
+        }
+        if 'jump_key' in kb:
+            idle_rules[key_down(kb['jump_key'])] = self.JUMP
+
+        run_rules = {
+            key_up(kb['right']): self.IDLE,
+            key_up(kb['left']): self.IDLE,
+            key_down(kb['attack']): self.NORMAL_ATTACK,
+            key_down(kb['down']): self.DEFENSE,
+            key_down(kb['special']): self.SPECIAL_ATTACK,
+            key_down(kb['ranged']): self.RANGED_ATTACK,
+            key_down(kb['dash']): self.DASH,
+            take_hit: self.HIT
+        }
+        if 'jump_key' in kb:
+            run_rules[key_down(kb['jump_key'])] = self.JUMP
+
+        attack_rules = {
+            segment_end: self.IDLE,
+            key_down(kb['down']): self.DEFENSE,
+            key_down(kb['special']): self.SPECIAL_ATTACK,
+            key_down(kb['ranged']): self.RANGED_ATTACK,
+            key_down(kb['dash']): self.DASH,
+            take_hit: self.HIT
+        }
+        if 'jump_key' in kb:
+            attack_rules[key_down(kb['jump_key'])] = self.JUMP
+
+        jump_rules = {
+            landed: self.IDLE,
+            key_down(kb['dash']): self.DASH,
+            take_hit: self.HIT
+        }
+
+        defense_rules = {
+            key_up(kb['down']): self.IDLE,
+            key_down(kb['special']): self.SPECIAL_ATTACK,
+            key_down(kb['ranged']): self.RANGED_ATTACK,
+            key_down(kb['dash']): self.DASH,
+            take_hit: self.HIT
+        }
 
         self.state_machine = StateMachine(
             self.IDLE,
             {
-                self.IDLE: {
-                    key_down(kb['attack']): self.NORMAL_ATTACK,
-                    key_down(kb['right']): self.RUN,
-                    key_down(kb['left']): self.RUN,
-                    key_down(kb['up']): self.JUMP,
-                    key_down(kb['down']): self.DEFENSE,
-                    key_down(kb['special']): self.SPECIAL_ATTACK,
-                    key_down(kb['ranged']): self.RANGED_ATTACK,
-                    key_down(kb['dash']): self.DASH,
-                    take_hit: self.HIT
-                },
-                self.RUN: {
-                    key_up(kb['right']): self.IDLE,
-                    key_up(kb['left']): self.IDLE,
-                    key_down(kb['attack']): self.NORMAL_ATTACK,
-                    key_down(kb['up']): self.JUMP,
-                    key_down(kb['down']): self.DEFENSE,
-                    key_down(kb['special']): self.SPECIAL_ATTACK,
-                    key_down(kb['ranged']): self.RANGED_ATTACK,
-                    key_down(kb['dash']): self.DASH,
-                    take_hit: self.HIT
-                },
-                self.NORMAL_ATTACK: {
-                    segment_end: self.IDLE,
-                    key_down(kb['up']): self.JUMP,
-                    key_down(kb['down']): self.DEFENSE,
-                    key_down(kb['special']): self.SPECIAL_ATTACK,
-                    key_down(kb['ranged']): self.RANGED_ATTACK,
-                    key_down(kb['dash']): self.DASH,
-                    take_hit: self.HIT
-                },
-                self.JUMP: {
-                    landed: self.IDLE,
-                    key_down(kb['dash']): self.DASH,
-                    take_hit: self.HIT
-                },
-                self.DEFENSE: {
-                    key_up(kb['down']): self.IDLE,
-                    key_down(kb['special']): self.SPECIAL_ATTACK,
-                    key_down(kb['ranged']): self.RANGED_ATTACK,
-                    key_down(kb['dash']): self.DASH,
-                    take_hit: self.HIT
-                },
+                self.IDLE: idle_rules,
+                self.RUN: run_rules,
+                self.NORMAL_ATTACK: attack_rules,
+                self.JUMP: jump_rules,
+                self.DEFENSE: defense_rules,
                 self.SPECIAL_ATTACK: {
                     special_attack_end: self.IDLE
                 },
@@ -140,6 +154,12 @@ class Character:
             if not self.is_my_key(event):
                 return
 
+        # 윗 방향키 상태 추적 (커맨드용)
+        if event.type == SDL_KEYDOWN and event.key == self.key_bindings['up']:
+            self.up_pressed = True
+        elif event.type == SDL_KEYUP and event.key == self.key_bindings['up']:
+            self.up_pressed = False
+
         # HIT 상태에서는 모든 입력 무시
         if self.state_machine.cur_state == self.HIT:
             return
@@ -147,6 +167,15 @@ class Character:
         # SPECIAL_ATTACK, RANGED_ATTACK 상태에서는 모든 입력 무시
         if self.state_machine.cur_state == self.SPECIAL_ATTACK or self.state_machine.cur_state == self.RANGED_ATTACK:
             return
+
+        # 공격키 입력 시 윗 방향키 체크 (커맨드)
+        if event.type == SDL_KEYDOWN and event.key == self.key_bindings['attack']:
+            if self.up_pressed:
+                # 윗 방향키 + 공격키 = 특별한 공격
+                self.NORMAL_ATTACK.set_up_attack(True)
+            else:
+                # 일반 공격
+                self.NORMAL_ATTACK.set_up_attack(False)
 
         # NORMAL_ATTACK 상태에서 attack키 DOWN/UP 추적
         if self.state_machine.cur_state == self.NORMAL_ATTACK:
@@ -157,8 +186,11 @@ class Character:
 
         # JUMP 상태에서 처리
         if self.state_machine.cur_state == self.JUMP:
-            # 윗 방향키 - 2단 점프
-            if event.type == SDL_KEYDOWN and event.key == self.key_bindings['up']:
+            # 점프 키 - 2단 점프
+            is_jump_key = (event.type == SDL_KEYDOWN and
+                          ('jump_key' in self.key_bindings and event.key == self.key_bindings['jump_key']))
+
+            if is_jump_key:
                 self.JUMP.handle_double_jump()
             # 좌우 방향키
             elif event.type == SDL_KEYDOWN:
