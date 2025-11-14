@@ -37,6 +37,7 @@ class Character:
         self.debug_draw = True  # 디버그 모드: 바운딩 박스 표시
 
         self.up_pressed = False
+        self.down_pressed = False
 
         self.opponent = None  # 상대 캐릭터 참조
 
@@ -105,6 +106,7 @@ class Character:
 
         defense_rules = {
             key_up(kb['down']): self.IDLE,
+            key_down(kb['attack']): self.NORMAL_ATTACK,
             key_down(kb['special']): self.SPECIAL_ATTACK,
             key_down(kb['ranged']): self.RANGED_ATTACK,
             key_down(kb['dash']): self.DASH,
@@ -183,6 +185,12 @@ class Character:
         elif event.type == SDL_KEYUP and event.key == self.key_bindings['up']:
             self.up_pressed = False
 
+        # 아래 방향키 상태 추적 (커맨드용)
+        if event.type == SDL_KEYDOWN and event.key == self.key_bindings['down']:
+            self.down_pressed = True
+        elif event.type == SDL_KEYUP and event.key == self.key_bindings['down']:
+            self.down_pressed = False
+
         if self.state_machine.cur_state == self.HIT:
             if not (event.type == SDL_KEYDOWN and event.key == self.key_bindings['dash']):
                 return
@@ -191,14 +199,18 @@ class Character:
         if self.state_machine.cur_state == self.SPECIAL_ATTACK or self.state_machine.cur_state == self.RANGED_ATTACK:
             return
 
-        # 공격키 입력 시 윗 방향키 체크 (커맨드)
+        # 공격키 입력 시 커맨드 체크
         if event.type == SDL_KEYDOWN and event.key == self.key_bindings['attack']:
-            if self.up_pressed:
-                # 윗 방향키 + 공격키 = 특별한 공격
+            if self.down_pressed:
+                self.NORMAL_ATTACK.set_down_attack(True)
+                self.NORMAL_ATTACK.set_up_attack(False)
+            elif self.up_pressed:
                 self.NORMAL_ATTACK.set_up_attack(True)
+                self.NORMAL_ATTACK.set_down_attack(False)
             else:
                 # 일반 공격
                 self.NORMAL_ATTACK.set_up_attack(False)
+                self.NORMAL_ATTACK.set_down_attack(False)
 
         # NORMAL_ATTACK 상태에서 attack키 DOWN/UP 추적
         if self.state_machine.cur_state == self.NORMAL_ATTACK:
