@@ -214,6 +214,9 @@ class Character:
 
         if in_attack_state:
             if event.type == SDL_KEYDOWN and event.key == self.key_bindings['dash']:
+                # 점프 공격 중에는 대쉬 사용 불가
+                if self.state_machine.cur_state == self.JUMP_ATTACK:
+                    return
                 pass
             else:
                 if self.state_machine.cur_state == self.NORMAL_ATTACK:

@@ -17,6 +17,8 @@ class JumpAttack:
         self.ground_y = 0.0
         self.jump_count = 0
 
+        self.n_key_pressed = False
+
     def enter(self, e):
         jump_state = self.character.JUMP
         self.vy = jump_state.vy
@@ -54,9 +56,12 @@ class JumpAttack:
         if self.attack_frame >= segment_length:
             if hasattr(self.character.config, 'jump_attack_segments'):
                 segments = self.character.config.jump_attack_segments
-                self.combo_index = (self.combo_index + 1) % len(segments)
-                self.start_frame, self.end_frame = segments[self.combo_index]
-                self.attack_frame = 0.0
+                if self.n_key_pressed and self.combo_index < len(segments) - 1:
+                    self.combo_index += 1
+                    self.start_frame, self.end_frame = segments[self.combo_index]
+                    self.attack_frame = 0.0
+                elif not self.n_key_pressed:
+                    self.attack_frame = segment_length - 0.01
 
         self.character.x += self.vx * game_framework.frame_time
         self.vy -= GRAVITY_PPS2 * game_framework.frame_time
@@ -109,6 +114,12 @@ class JumpAttack:
             segments = self.character.config.jump_attack_segments
             return self.combo_index == len(segments) - 1
         return False
+
+    def handle_n_key_down(self):
+        self.n_key_pressed = True
+
+    def handle_n_key_up(self):
+        self.n_key_pressed = False
 
     def handle_collision(self, group, other):
         pass
