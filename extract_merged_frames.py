@@ -116,7 +116,7 @@ print(f"필터링된 노이즈: {filtered_count}개")
 print(f"유효한 프레임 수: {len(filtered_frames)}")
 
 # 파일로 저장
-output_file = 'character_temp_frames.py'
+output_file = 'character_naruto_frames.py'
 with open(output_file, 'w', encoding='utf-8') as f:
     f.write("# Auto-generated frame data for character_temp_transparent.png\n")
     f.write("# Frames are ordered from top to bottom in the sprite sheet\n")

@@ -1,5 +1,5 @@
 from pico2d import *
-from character_temp_frames import FRAMES
+from character_naruto_frames import FRAMES
 
 open_canvas(800, 600)
 

@@ -20,7 +20,7 @@ print(f"필터링된 프레임 수: {filtered_count}")
 print(f"유효한 프레임 수: {len(valid_frames)}")
 
 # 필터링된 결과를 새 파일로 저장
-output_file = 'character_temp_frames.py'
+output_file = 'character_naruto_frames.py'
 with open(output_file, 'w', encoding='utf-8') as f:
     f.write("# Filtered frame data for character_temp (minimum size: 10x10)\n")
     f.write("FRAMES = [\n")

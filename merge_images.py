@@ -1,9 +1,9 @@
 from PIL import Image
 
 # 3개의 투명 배경 이미지 로드
-img1 = Image.open('character_temp_1_transparent.png')
-img2 = Image.open('character_temp_2_transparent.png')
-img3 = Image.open('character_temp_3_transparent.png')
+img1 = Image.open('character_naruto_1.png')
+img2 = Image.open('character_naruto_2.png')
+img3 = Image.open('character_naruto_3.png')
 
 print(f"Image 1 크기: {img1.size}")
 print(f"Image 2 크기: {img2.size}")

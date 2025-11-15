@@ -2,11 +2,10 @@
 캐릭터별 프레임 설정 정보
 각 캐릭터마다 어떤 동작이 몇 번째 프레임에 있는지 정의
 """
-from characters_naruto_frames import FRAMES as NARUTO_FRAMES
 from characters_itachi_frames import FRAMES as ITACHI_FRAMES
 from characters_itachi_special_attack_frames import FRAMES as ITACHI_SPECIAL_FRAMES
 from characters_jiraiya_frames import FRAMES as JIRAIYA_FRAMES
-from character_temp_frames import FRAMES as TEMP_FRAMES
+from character_naruto_frames import FRAMES as NARUTO_FRAMES
 from character_temp_frames_speical_attack import FRAMES as NARUTO_SPECIAL_FRAMES
 
 # ===== 물리 기반 상수 설정 =====
@@ -117,10 +116,10 @@ class NarutoConfig(CharacterConfig):
         super().__init__()
         self.name = "Naruto"
         self.image_path = "character_temp_transparent.png"
-        self.frames = TEMP_FRAMES
+        self.frames = NARUTO_FRAMES
 
         # 스페셜 공격 전용 이미지 및 프레임 데이터
-        self.special_attack_image_path = "character_temp_2_transparent.png"
+        self.special_attack_image_path = "character_naruto_2.png"
         self.special_attack_frames_data = NARUTO_SPECIAL_FRAMES
 
         # 원본 크기로 출력

@@ -98,9 +98,9 @@ def extract_frames_from_transparent(image_path):
 
 # 3개의 이미지에서 프레임 추출
 image_files = [
-    'character_temp_1_transparent.png',
-    'character_temp_2_transparent.png',
-    'character_temp_3_transparent.png'
+    'character_naruto_1.png',
+    'character_naruto_2.png',
+    'character_naruto_3.png'
 ]
 
 all_frames = []
