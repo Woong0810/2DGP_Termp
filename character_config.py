@@ -123,8 +123,8 @@ class NarutoConfig(CharacterConfig):
         self.special_attack_frames_data = NARUTO_SPECIAL_FRAMES
 
         # 원본 크기로 출력
-        self.scale_x = 1.0
-        self.scale_y = 1.0
+        self.scale_x = 1.1
+        self.scale_y = 1.2
         self.draw_offset_y = 0
 
         self.knockback_draw_offset_y = -10
@@ -174,7 +174,7 @@ class ItachiConfig(CharacterConfig):
         self.draw_offset_y = 0
 
         # TODO: Itachi의 프레임 인덱스 설정 (나중에 추가)
-        self.idle_frames = list(range(42, 46))
+        self.idle_frames = list(range(88, 92))
         self.run_frames = list(range(27, 33))
         self.normal_attack_frames = list(range(0, 13))
         self.normal_attack_segments = [(0, 3), (4, 7), (8, 12)]
