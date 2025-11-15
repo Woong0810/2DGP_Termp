@@ -1,5 +1,5 @@
 from pico2d import *
-from character_temp_frames_speical_attack import FRAMES
+from character_naruto_sa_frames import FRAMES
 
 # 설정
 SPRITE_SHEET = 'character_naruto_2.png'

@@ -1,4 +1,4 @@
-# Auto-generated frame data for character_temp_transparent.png
+# Auto-generated frame data for character_naruto.png
 # Frames are ordered from top to bottom in the sprite sheet
 FRAMES = [
     {'left': 3, 'bottom': 14709, 'width': 35, 'height': 51},
