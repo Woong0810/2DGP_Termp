@@ -18,10 +18,6 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.change_mode(title_mode)
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_h:
-            player1.take_hit()
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_m:
-            player2.take_hit()
         else:
             player1.handle_event(event)
             player2.handle_event(event)

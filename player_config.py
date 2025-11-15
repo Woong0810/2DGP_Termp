@@ -3,10 +3,9 @@
 캐릭터와 독립적으로 플레이어 번호에 따라 키 바인딩을 제공
 """
 from sdl2 import SDLK_LEFT, SDLK_RIGHT, SDLK_UP, SDLK_DOWN
-from sdl2 import SDLK_j, SDLK_k, SDLK_l, SDLK_u, SDLK_i, SDLK_o  # Player1 o 추가
+from sdl2 import SDLK_j, SDLK_k, SDLK_l, SDLK_u, SDLK_i, SDLK_o
 from sdl2 import SDLK_a, SDLK_d, SDLK_w, SDLK_s
-from sdl2 import SDLK_b, SDLK_c, SDLK_v, SDLK_x, SDLK_g, SDLK_f, SDLK_h  # Player2 키 추가/확장
-
+from sdl2 import SDLK_b, SDLK_c, SDLK_v, SDLK_g, SDLK_f, SDLK_h
 # Player 1 키 바인딩 (방향키 + J, K, L, U, I, O)
 PLAYER1_KEY_BINDINGS = {
     'left': SDLK_LEFT,
