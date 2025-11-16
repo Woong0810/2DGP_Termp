@@ -81,6 +81,9 @@ def dash_end(e):
 def resume_jump(e):
     return e[0] == 'RESUME_JUMP'
 
+def fall(e):
+    return e[0] == 'FALL'
+
 # 키 바인딩을 받아서 체크
 def key_down(key_code):
     def check(e):
