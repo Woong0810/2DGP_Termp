@@ -206,6 +206,23 @@ class Character:
         # 현재 상태의 바운딩 박스 반환
         return self.state_machine.get_bb()
 
+    def get_feet_bb(self):
+        all_frames = self.config.frames
+        idle_frames = self.config.idle_frames
+        frame_idx = idle_frames[0]  # 첫 idle 프레임 기준으로 고정
+        frame = all_frames[frame_idx]
+
+        hb = self.config.hitbox_idle  # 발 기준은 idle 히트박스를 기준으로
+        hw = frame['width'] * self.config.scale_x * hb['scale_x'] / 2
+        hh = frame['height'] * self.config.scale_y * hb['scale_y'] / 2
+
+        left = self.x - hw + hb['x_offset']
+        right = self.x + hw + hb['x_offset']
+        bottom = self.y - hh + hb['y_offset']
+        top = bottom + 5  # 발 두께는 5픽셀 정도
+
+        return left, bottom, right, top
+
     def draw_bb(self):
         # 디버그용: 바운딩 박스 그리기
         self.state_machine.draw_bb()
