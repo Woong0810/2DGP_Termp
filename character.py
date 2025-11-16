@@ -183,8 +183,13 @@ class Character:
         dy = ground_top - bottom
         self.y += dy
 
-    def take_hit(self, is_knockback=False, knockback_distance=50):
-        knockback_dir = -self.face_dir if is_knockback else 0
+    def take_hit(self, is_knockback=False, knockback_distance=50, knockback_dir=None):
+        if is_knockback:
+            if knockback_dir is None:
+                knockback_dir = -self.face_dir
+        else:
+            knockback_dir = 0
+
         self.state_machine.add_event(('TAKE_HIT', (is_knockback, knockback_distance, knockback_dir)))
 
     def update(self):
@@ -332,8 +337,25 @@ class Character:
                 return
             self.hp -= 5  # 일반 공격 데미지
 
-            is_knockback = other.is_last_segment() or other.is_run_attack()
-            self.take_hit(is_knockback=is_knockback, knockback_distance=50)
+            is_knockback = other.is_last_segment() or other.is_run_attack() or other.is_down_attack() or other.is_up_attack()
+            knockback_dir = 0
+            if is_knockback:
+                if hasattr(other, 'character'):
+                    attacker = other.character
+                    if attacker.x > self.x:
+                        knockback_dir = -1
+                    elif attacker.x < self.x:
+                        knockback_dir = 1
+                    else:
+                        knockback_dir = -self.face_dir
+                else:
+                    knockback_dir = -self.face_dir
+
+            self.take_hit(
+                is_knockback=is_knockback,
+                knockback_distance=50,
+                knockback_dir=knockback_dir
+            )
 
         elif group == 'jump_attack:character':
             if self.state_machine.cur_state == self.DEFENSE:
@@ -343,7 +365,24 @@ class Character:
             self.hp -= 7  # 점프 공격 데미지 (일반 공격보다 약간 높음)
 
             is_knockback = other.is_last_segment()
-            self.take_hit(is_knockback=is_knockback, knockback_distance=50)
+            knockback_dir = 0
+            if is_knockback:
+                if hasattr(other, 'character'):
+                    attacker = other.character
+                    if attacker.x > self.x:
+                        knockback_dir = -1
+                    elif attacker.x < self.x:
+                        knockback_dir = 1
+                    else:
+                        knockback_dir = -self.face_dir
+                else:
+                    knockback_dir = -self.face_dir
+
+            self.take_hit(
+                is_knockback=is_knockback,
+                knockback_distance=50,
+                knockback_dir=knockback_dir
+            )
 
         elif group == 'special_attack:character':
             if hasattr(other, 'owner') and other.owner == self:

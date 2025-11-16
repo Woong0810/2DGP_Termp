@@ -157,6 +157,12 @@ class NormalAttack:
     def is_run_attack(self):
         return self.from_run
 
+    def is_down_attack(self):
+        return self.down_attack
+
+    def is_up_attack(self):
+        return self.up_attack
+
     def handle_collision(self, group, other):
         if group == 'normal_attack:character' and self.down_attack and self.collision_hold_remaining <= 0.0:
             self.character.frame = self.end_frame
