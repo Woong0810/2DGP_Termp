@@ -40,6 +40,27 @@ class Run:
         frames_per_action = len(run_frames)
         self.character.frame = (self.character.frame + frames_per_action * ACTION_PER_TIME * RUN_ANIMATION_SPEED * game_framework.frame_time) % frames_per_action
 
+        self.check_fall_or_snap_to_ground()
+
+    def check_fall_or_snap_to_ground(self):
+        if not hasattr(self.character, 'stage') or self.character.stage is None:
+            return
+
+        left, bottom, right, top = self.get_bb()
+        ground_top = self.character.stage.get_ground_top_under(left, bottom, right)
+
+        if ground_top is None:
+            jump_state = self.character.JUMP
+            jump_state.vy = 0.0
+            jump_state.dir = self.character.dir
+            jump_state.ground_y = -1000
+
+            self.character.state_machine.handle_event(('FALL', None))
+        else:
+            dy = ground_top - bottom
+            if abs(dy) > 1:
+                self.character.y += dy
+
     def draw(self):
         run_frames = self.character.config.run_frames
         all_frames = self.character.config.frames
