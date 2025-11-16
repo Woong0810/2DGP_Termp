@@ -201,20 +201,26 @@ class Character:
         dy = ground_top - bottom
         self.y += dy
 
-    def take_hit(self, is_knockback=False, knockback_distance=50,
-                 knockback_dir=None, hitstun_frames=None, will_knockdown=False):
+    def take_hit(self, is_knockback=False,
+                 knockback_distance=50,
+                 knockback_dir=None,
+                 hitstun_frames=None,
+                 will_knockdown=False):
+
         if is_knockback:
             if knockback_dir is None:
                 knockback_dir = -self.face_dir
         else:
             knockback_dir = 0
+
         if hitstun_frames is not None:
             hit_duration = hitstun_frames / 60.0
         else:
             hit_duration = HIT_DURATION
 
-        self.state_machine.add_event(('TAKE_HIT', (is_knockback, knockback_distance,
-                                                   knockback_dir, hit_duration, will_knockdown)))
+        self.state_machine.add_event(
+            ('TAKE_HIT', (is_knockback, knockback_distance, knockback_dir, hit_duration, will_knockdown))
+        )
 
     def update(self):
         self.state_machine.update()
@@ -364,7 +370,9 @@ class Character:
             knockback_distance = NORMAL_ATTACK_KNOCKBACK
             hitstun_frames = HITSTUN_FRAMES_NORMAL
             hitstop_frames = HITSTOP_FRAMES_NORMAL
-            is_knockback = other.is_last_segment() or other.is_run_attack()
+            is_knockback = False
+            will_knockdown = False
+            attacker_push = 0
 
             attacker = getattr(other, 'character', None)
             if attacker is not None and hasattr(attacker, 'config'):
@@ -379,12 +387,13 @@ class Character:
 
                     if 0 <= idx < len(data_list):
                         data = data_list[idx]
-
                         damage = data.get('damage', damage)
                         knockback_distance = data.get('knockback', knockback_distance)
                         hitstun_frames = data.get('hitstun_frames', hitstun_frames)
                         hitstop_frames = data.get('hitstop_frames', hitstop_frames)
-                        is_knockback = data.get('knockdown', is_knockback)
+                        attacker_push = data.get('attacker_push', 0)
+                        will_knockdown = data.get('knockdown', False)
+                        is_knockback = will_knockdown
 
             knockback_dir = 0
             if is_knockback and attacker is not None:
@@ -402,7 +411,9 @@ class Character:
                 knockback_distance=knockback_distance,
                 knockback_dir=knockback_dir,
                 hitstun_frames=hitstun_frames,
+                will_knockdown=will_knockdown
             )
+            attacker.x += attacker.face_dir * attacker_push
 
         elif group == 'jump_attack:character':
             if self.state_machine.cur_state == self.DEFENSE:
