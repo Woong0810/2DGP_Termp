@@ -15,6 +15,7 @@ class Hit:
         self.ground_y = 0.0
         self.vy = 0.0
         self.hit_duration = HIT_DURATION
+        self.will_knockdown = False
 
     def enter(self, event):
         self.character.frame = 0
@@ -33,15 +34,18 @@ class Hit:
             self.ground_y = self.character.y
 
         if event and len(event) > 1 and isinstance(event[1], tuple):
-            self.is_knockback = event[1][0]
-            self.knockback_distance = event[1][1] if len(event[1]) > 1 else 0
-            self.knockback_dir = event[1][2] if len(event[1]) > 2 else 0
-            self.hit_duration = event[1][3] if len(event[1]) > 3 else HIT_DURATION
+            data = event[1]
+            self.is_knockback = data[0] if len(data) > 0 else False
+            self.knockback_distance = data[1] if len(data) > 1 else 0
+            self.knockback_dir = data[2] if len(data) > 2 else 0
+            self.hit_duration = data[3] if len(data) > 3 else HIT_DURATION
+            self.will_knockdown = data[4] if len(data) > 4 else False
         else:
             self.is_knockback = False
             self.knockback_distance = 0
             self.knockback_dir = 0
             self.hit_duration = HIT_DURATION
+            self.will_knockdown = False
         self.vy = 0.0
 
         game_world.add_collision_pairs('normal_attack:character', None, self.character)
@@ -54,7 +58,12 @@ class Hit:
         game_world.remove_collision_object(self.character)
 
     def do(self):
-        self.elapsed_time += game_framework.frame_time
+        dt = game_framework.frame_time
+        self.elapsed_time += dt
+
+        if self.knockback_distance != 0 and self.elapsed_time < self.hit_duration:
+            push_speed = self.knockback_distance / self.hit_duration
+            self.character.x += self.knockback_dir * push_speed * dt
 
         if self.is_knockback:
             prev_bottom = None
@@ -64,32 +73,38 @@ class Hit:
             if self.elapsed_time < self.hit_duration:
                 knockback_frames = self.character.config.knockback_frames
                 frames_per_action = len(knockback_frames)
-                self.character.frame = (self.character.frame + frames_per_action * ACTION_PER_TIME * HIT_ANIMATION_SPEED * game_framework.frame_time) % frames_per_action
+                self.character.frame = (self.character.frame
+                                        +frames_per_action * ACTION_PER_TIME
+                                        * HIT_ANIMATION_SPEED * dt ) % frames_per_action
 
-                knockback_speed = self.knockback_distance / self.hit_duration
-                self.character.x += self.knockback_dir * knockback_speed * game_framework.frame_time
-
-            elif self.elapsed_time < self.hit_duration + KNOCKBACK_DOWN_TIME:
-                if not self.is_lying_down:
-                    self.is_lying_down = True
-                    # 마지막 넉백 프레임으로 고정
-                    knockback_frames = self.character.config.knockback_frames
-                    self.character.frame = len(knockback_frames) - 1
+                if self.was_in_air and hasattr(self.character, 'stage') and self.character.stage is not None:
+                    self.vy -= GRAVITY_PPS2 * dt
+                    self.character.y += self.vy * dt
+                    self.check_landing(prev_bottom)
 
             else:
-                self.character.state_machine.add_event(('STAND_UP', 0))
+                if self.will_knockdown:
+                    if self.elapsed_time < self.hit_duration + KNOCKBACK_DOWN_TIME:
+                        if not self.is_lying_down:
+                            self.is_lying_down = True
+                            knockback_frames = self.character.config.knockback_frames
+                            self.character.frame = len(knockback_frames) - 1
+                    else:
+                        self.character.state_machine.add_event(('STAND_UP', 0))
+                else:
+                    if self.was_in_air:
+                        self.character.state_machine.add_event(('RESUME_JUMP', self.ground_y))
+                    else:
+                        self.character.state_machine.add_event(('HIT_END', 0))
 
-            if self.was_in_air and hasattr(self.character, 'stage') and self.character.stage is not None:
-                self.vy -= GRAVITY_PPS2 * game_framework.frame_time
-                self.character.y += self.vy * game_framework.frame_time
-                self.check_landing(prev_bottom)
         else:
             hit_frames = self.character.config.hit_frames
             frames_per_action = len(hit_frames)
-            self.character.frame = (self.character.frame + frames_per_action * ACTION_PER_TIME * HIT_ANIMATION_SPEED * game_framework.frame_time) % frames_per_action
+            self.character.frame = ( self.character.frame
+                                     + frames_per_action * ACTION_PER_TIME
+                                     * HIT_ANIMATION_SPEED * dt) % frames_per_action
 
             if self.elapsed_time >= self.hit_duration:
-                # 공중에서 피격당했다면 JUMP 상태로 복귀
                 if self.was_in_air:
                     self.character.state_machine.add_event(('RESUME_JUMP', self.ground_y))
                 else:

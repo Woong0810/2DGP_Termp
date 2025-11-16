@@ -207,11 +207,11 @@ class Character:
                  hitstun_frames=None,
                  will_knockdown=False):
 
-        if is_knockback:
-            if knockback_dir is None:
+        if knockback_dir is None:
+            if is_knockback:
                 knockback_dir = -self.face_dir
-        else:
-            knockback_dir = 0
+            else:
+                knockback_dir = 0
 
         if hitstun_frames is not None:
             hit_duration = hitstun_frames / 60.0
@@ -396,7 +396,7 @@ class Character:
                         is_knockback = will_knockdown
 
             knockback_dir = 0
-            if is_knockback and attacker is not None:
+            if attacker is not None:
                 if attacker.x > self.x:
                     knockback_dir = -1
                 elif attacker.x < self.x:
