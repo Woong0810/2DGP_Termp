@@ -1,5 +1,5 @@
 from pico2d import draw_rectangle
-from character_config import ACTION_PER_TIME, HIT_ANIMATION_SPEED, HIT_DURATION, KNOCKBACK_DOWN_TIME
+from character_config import ACTION_PER_TIME, HIT_ANIMATION_SPEED, HIT_DURATION, KNOCKBACK_DOWN_TIME, GRAVITY_PPS2
 import game_framework
 import game_world
 
@@ -13,6 +13,7 @@ class Hit:
         self.is_lying_down = False
         self.was_in_air = False
         self.ground_y = 0.0
+        self.vy = 0.0
 
     def enter(self, event):
         self.character.frame = 0
@@ -38,6 +39,7 @@ class Hit:
             self.is_knockback = False
             self.knockback_distance = 0
             self.knockback_dir = 0
+        self.vy = 0.0
 
         game_world.add_collision_pairs('normal_attack:character', None, self.character)
         game_world.add_collision_pairs('jump_attack:character', None, self.character)
@@ -52,6 +54,10 @@ class Hit:
         self.elapsed_time += game_framework.frame_time
 
         if self.is_knockback:
+            prev_bottom = None
+            if self.was_in_air:
+                _, prev_bottom, _, _ = self.get_bb()
+
             if self.elapsed_time < HIT_DURATION:
                 knockback_frames = self.character.config.knockback_frames
                 frames_per_action = len(knockback_frames)
@@ -69,6 +75,11 @@ class Hit:
 
             else:
                 self.character.state_machine.add_event(('STAND_UP', 0))
+
+            if self.was_in_air and hasattr(self.character, 'stage') and self.character.stage is not None:
+                self.vy -= GRAVITY_PPS2 * game_framework.frame_time
+                self.character.y += self.vy * game_framework.frame_time
+                self.check_landing(prev_bottom)
         else:
             hit_frames = self.character.config.hit_frames
             frames_per_action = len(hit_frames)
@@ -80,6 +91,27 @@ class Hit:
                     self.character.state_machine.add_event(('RESUME_JUMP', self.ground_y))
                 else:
                     self.character.state_machine.add_event(('HIT_END', 0))
+
+    def check_landing(self, prev_bottom):
+        if not (hasattr(self.character, 'stage') and self.character.stage is not None):
+            return
+
+        left, bottom, right, top = self.get_bb()
+
+        if hasattr(self.character.stage, 'find_landing_platform'):
+            ground_top = self.character.stage.find_landing_platform(
+                left, prev_bottom, right, bottom, self.vy
+            )
+        else:
+            ground_top = None
+
+        if ground_top is not None:
+            dy = ground_top - bottom
+            self.character.y += dy
+
+            self.vy = 0.0
+            self.was_in_air = False
+            self.ground_y = ground_top
 
     def draw(self):
         if self.is_knockback:
