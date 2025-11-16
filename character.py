@@ -413,7 +413,6 @@ class Character:
                 hitstun_frames=hitstun_frames,
                 will_knockdown=will_knockdown
             )
-            attacker.x += attacker.face_dir * attacker_push
 
         elif group == 'jump_attack:character':
             if self.state_machine.cur_state == self.DEFENSE:

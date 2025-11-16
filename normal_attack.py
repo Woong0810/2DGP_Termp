@@ -16,6 +16,9 @@ class NormalAttack:
         self.down_attack = False
         self.collision_hold_remaining = 0.0
 
+        self.segment_move_speed = 0.0
+        self.segment_move_elapsed = 0.0
+
     def set_up_attack(self, is_up_attack):
         self.up_attack = is_up_attack
 
@@ -48,6 +51,8 @@ class NormalAttack:
         if e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == self.character.key_bindings['attack']:
             self.n_key_pressed = True
 
+        self._update_segment_move()
+
         game_world.add_collision_pairs('normal_attack:character', self, None)
 
     def exit(self, e):
@@ -69,6 +74,12 @@ class NormalAttack:
                 self.character.state_machine.handle_event(('SEGMENT_END', None))
             return
 
+        if self.segment_move_speed != 0.0:
+            self.segment_move_elapsed += game_framework.frame_time
+            segment_duration = 1.0 / (ACTION_PER_TIME * NORMAL_ATTACK_ANIMATION_SPEED)
+            if self.segment_move_elapsed < segment_duration:
+                self.character.x += self.character.face_dir * self.segment_move_speed * game_framework.frame_time
+
         segment_length = self.end_frame - self.start_frame + 1
         self.character.frame += segment_length * ACTION_PER_TIME * NORMAL_ATTACK_ANIMATION_SPEED * game_framework.frame_time
 
@@ -89,8 +100,36 @@ class NormalAttack:
                 self.combo_index = (self.combo_index + 1) % len(segments)
                 self.start_frame, self.end_frame = segments[self.combo_index]
                 self.character.frame = self.start_frame
+                self._update_segment_move()
             else:
                 self.character.state_machine.handle_event(('SEGMENT_END', None))
+
+    def _update_segment_move(self):
+        self.segment_move_elapsed = 0.0
+        self.segment_move_speed = 0.0
+
+        if self.from_run or self.up_attack or self.down_attack:
+            return
+
+        cfg = getattr(self.character, 'config', None)
+        if cfg is None:
+            return
+        if getattr(cfg, 'name', None) != "Naruto":
+            return
+        if not hasattr(cfg, 'normal_attack_data'):
+            return
+
+        data_list = cfg.normal_attack_data
+        if not (0 <= self.combo_index < len(data_list)):
+            return
+
+        data = data_list[self.combo_index]
+        push = data.get('attacker_push', 0)
+        if push == 0:
+            return
+
+        segment_duration = 1.0 / (ACTION_PER_TIME * NORMAL_ATTACK_ANIMATION_SPEED)
+        self.segment_move_speed = push / segment_duration
 
     def handle_n_key_down(self):
         self.n_key_pressed = True
