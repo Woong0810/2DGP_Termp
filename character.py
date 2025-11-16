@@ -357,27 +357,49 @@ class Character:
                 return
             if self.state_machine.cur_state == self.HIT:    # 이미 Hit 상태면 무시
                 return
-            self.hp -= NORMAL_ATTACK_DAMAGE
-            game_framework.add_hitstop(HITSTOP_FRAMES_NORMAL)
-            is_knockback = other.is_last_segment() or other.is_run_attack() or other.is_up_attack()
+
+            damage = NORMAL_ATTACK_DAMAGE
+            knockback_distance = NORMAL_ATTACK_KNOCKBACK
+            hitstun_frames = HITSTUN_FRAMES_NORMAL
+            hitstop_frames = HITSTOP_FRAMES_NORMAL
+            is_knockback = other.is_last_segment() or other.is_run_attack()
+
+            attacker = getattr(other, 'character', None)
+            if attacker is not None and hasattr(attacker, 'config'):
+                cfg = attacker.config
+
+                if getattr(cfg, 'name', None) == "Naruto" \
+                        and hasattr(cfg, 'normal_attack_data') \
+                        and not other.from_run and not other.up_attack and not other.down_attack:
+
+                    data_list = cfg.normal_attack_data
+                    idx = getattr(other, 'combo_index', 0)
+
+                    if 0 <= idx < len(data_list):
+                        data = data_list[idx]
+
+                        damage = data.get('damage', damage)
+                        knockback_distance = data.get('knockback', knockback_distance)
+                        hitstun_frames = data.get('hitstun_frames', hitstun_frames)
+                        hitstop_frames = data.get('hitstop_frames', hitstop_frames)
+                        is_knockback = data.get('knockdown', is_knockback)
+
             knockback_dir = 0
-            if is_knockback:
-                if hasattr(other, 'character'):
-                    attacker = other.character
-                    if attacker.x > self.x:
-                        knockback_dir = -1
-                    elif attacker.x < self.x:
-                        knockback_dir = 1
-                    else:
-                        knockback_dir = -self.face_dir
+            if is_knockback and attacker is not None:
+                if attacker.x > self.x:
+                    knockback_dir = -1
+                elif attacker.x < self.x:
+                    knockback_dir = 1
                 else:
                     knockback_dir = -self.face_dir
 
+            self.hp -= damage
+            game_framework.add_hitstop(hitstop_frames)
             self.take_hit(
                 is_knockback=is_knockback,
-                knockback_distance=NORMAL_ATTACK_KNOCKBACK,
+                knockback_distance=knockback_distance,
                 knockback_dir=knockback_dir,
-                hitstun_frames=HITSTUN_FRAMES_NORMAL
+                hitstun_frames=hitstun_frames,
             )
 
         elif group == 'jump_attack:character':

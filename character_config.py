@@ -196,6 +196,33 @@ class NarutoConfig(CharacterConfig):
         self.hitbox_ranged_attack = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_hit = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}  # 피격 히트박스
 
+        self.normal_attack_data = [
+            {
+                'name': 'naruto_ground_A_1',  # 1타
+                'damage': 4,
+                'hitstop_frames': 3,
+                'hitstun_frames': 14,
+                'knockback': 30,
+                'knockdown': False,
+            },
+            {
+                'name': 'naruto_ground_A_2',  # 2타
+                'damage': 4,
+                'hitstop_frames': 3,
+                'hitstun_frames': 14,
+                'knockback': 30,
+                'knockdown': False,
+            },
+            {
+                'name': 'naruto_ground_A_3',  # 3타
+                'damage': 8,
+                'hitstop_frames': 5,
+                'hitstun_frames': 20,
+                'knockback': 80,
+                'knockdown': True,
+            },
+        ]
+
 class ItachiConfig(CharacterConfig):
     def __init__(self):
         super().__init__()
