@@ -3,7 +3,7 @@
 각 캐릭터마다 어떤 동작이 몇 번째 프레임에 있는지 정의
 """
 from character_itachi_frames import FRAMES as ITACHI_FRAMES
-from characters_itachi_special_attack_frames import FRAMES as ITACHI_SPECIAL_FRAMES
+from character_itachi_sa_frames import FRAMES as ITACHI_SPECIAL_FRAMES
 from characters_jiraiya_frames import FRAMES as JIRAIYA_FRAMES
 from character_naruto_frames import FRAMES as NARUTO_FRAMES
 from character_naruto_sa_frames import FRAMES as NARUTO_SPECIAL_FRAMES
@@ -164,6 +164,9 @@ class ItachiConfig(CharacterConfig):
         self.image_path = "character_itachi.png"
         self.frames = ITACHI_FRAMES
 
+        self.special_attack_image_path = "character_itachi_sa.png"
+        self.special_attack_frames_data = ITACHI_SPECIAL_FRAMES
+
         # 원본 크기로 출력
         self.scale_x = 1.0
         self.scale_y = 1.0
@@ -180,7 +183,8 @@ class ItachiConfig(CharacterConfig):
         self.jump_attack_segments = [(94, 97), (98, 100)]
         self.jump_frames = [44, 45, 46, 47]
         self.defense_frames = [48]
-        self.special_attack_frames = list(range(112, 112 + 87))
+        self.special_attack_frames = list(range(112, 112 + 12))
+        self.special_attack2_frames = list(range(252, 252 + 39))
         self.ranged_attack_frames = list(range(49, 49 + 3))
         self.hit_frames = [86, 87]
         self.knockback_frames = [85, 69, 70, 71, 72, 73, 74, 75]
