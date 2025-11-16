@@ -7,6 +7,10 @@ class Background:
 
         self.platforms = [
             {'left': 0, 'bottom': 0, 'right': 800, 'top': 20},
+            {'left': 0, 'bottom': 180, 'right': 200, 'top': 200},
+            {'left': 300, 'bottom': 180, 'right': 650, 'top': 200},
+            {'left': 360, 'bottom': 240, 'right': 600, 'top': 260},
+            {'left': 730, 'bottom': 180, 'right': 800, 'top': 200},
         ]
 
     def update(self):
@@ -19,10 +23,8 @@ class Background:
             draw_rectangle(box['left'], box['bottom'], box['right'], box['top'])
 
     def get_bb(self):
-        if self.platforms:
-            b = self.platforms[0]
-            return (b['left'], b['bottom'], b['right'], b['top'])
-        return (0, 0, 0, 0)
+        b = self.platforms[0]
+        return (b['left'], b['bottom'], b['right'], b['top'])
 
     def handle_collision(self, group, other):
         pass
@@ -44,7 +46,7 @@ class Background:
                     landing_top = b_top
         return landing_top
 
-    def get_ground_top_under(self, left, bottom, right, tolerance=2):
+    def get_ground_top_under(self, left, bottom, right, tolerance=12):
         best_top = None
 
         for box in self.platforms:
@@ -53,7 +55,7 @@ class Background:
             if right <= b_left or left >= b_right:
                 continue
 
-            if abs(bottom - b_top) <= tolerance:
+            if bottom >= b_top - tolerance and bottom <= b_top + tolerance:
                 if best_top is None or b_top > best_top:
                     best_top = b_top
 
