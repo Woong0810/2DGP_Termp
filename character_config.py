@@ -75,6 +75,12 @@ HIT_DURATION = 0.3              # 피격 애니메이션 지속 시간 (초)
 HIT_INVINCIBILITY_TIME = 0.5    # 피격 후 무적 시간 (초)
 KNOCKBACK_DOWN_TIME = 2.0       # 넉백 후 누워있는 시간 (초)
 
+# 히트스턴 프레임 수
+HITSTUN_FRAMES_NORMAL = 16      # 지상 일반 공격에 맞았을 때
+HITSTUN_FRAMES_JUMP = 18        # 점프 공격에 맞았을 때
+HITSTUN_FRAMES_SPECIAL = 24     # 스페셜/강 공격에 맞았을 때
+HITSTUN_FRAMES_RANGED = 12      # 수리검 등 원거리 공격에 맞았을 때
+
 # ===== 히트스톱 설정 =====
 HITSTOP_FRAMES_NORMAL = 3       # 지상 기본기
 HITSTOP_FRAMES_JUMP = 4         # 점프 공격
