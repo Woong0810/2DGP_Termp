@@ -13,7 +13,15 @@ from stand_up import StandUp
 from dash import Dash
 from state_machine import StateMachine
 from event_to_string import *
-from character_config import NarutoConfig
+from character_config import (
+    NarutoConfig,
+    NORMAL_ATTACK_DAMAGE,
+    NORMAL_ATTACK_KNOCKBACK,
+    JUMP_ATTACK_DAMAGE,
+    JUMP_ATTACK_KNOCKBACK,
+    SPECIAL_ATTACK_DAMAGE,
+    RANGED_ATTACK_DAMAGE,
+)
 from background import Background
 
 class Character:
@@ -335,7 +343,7 @@ class Character:
                 return
             if self.state_machine.cur_state == self.HIT:    # 이미 Hit 상태면 무시
                 return
-            self.hp -= 5  # 일반 공격 데미지
+            self.hp -= NORMAL_ATTACK_DAMAGE
 
             is_knockback = other.is_last_segment() or other.is_run_attack() or other.is_down_attack() or other.is_up_attack()
             knockback_dir = 0
@@ -353,7 +361,7 @@ class Character:
 
             self.take_hit(
                 is_knockback=is_knockback,
-                knockback_distance=50,
+                knockback_distance=NORMAL_ATTACK_KNOCKBACK,
                 knockback_dir=knockback_dir
             )
 
@@ -362,7 +370,7 @@ class Character:
                 return
             if self.state_machine.cur_state == self.HIT:
                 return
-            self.hp -= 7  # 점프 공격 데미지 (일반 공격보다 약간 높음)
+            self.hp -= JUMP_ATTACK_DAMAGE
 
             is_knockback = other.is_last_segment()
             knockback_dir = 0
@@ -380,7 +388,7 @@ class Character:
 
             self.take_hit(
                 is_knockback=is_knockback,
-                knockback_distance=50,
+                knockback_distance=JUMP_ATTACK_KNOCKBACK,
                 knockback_dir=knockback_dir
             )
 
@@ -391,7 +399,7 @@ class Character:
                 return
             if self.state_machine.cur_state == self.HIT:
                 return
-            self.hp -= 15  # 특수 공격 데미지
+            self.hp -= SPECIAL_ATTACK_DAMAGE
             self.take_hit()
 
         elif group == 'character:shuriken':
@@ -403,7 +411,7 @@ class Character:
                 return
             if self.state_machine.cur_state == self.HIT:
                 return
-            self.hp -= 10  # 수리검 데미지
+            self.hp -= RANGED_ATTACK_DAMAGE
             self.take_hit()
 
         if self.hp < 0:

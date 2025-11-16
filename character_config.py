@@ -52,16 +52,20 @@ STAND_UP_ANIMATION_SPEED = 1.5  # 일어나기 애니메이션 속도
 
 # ===== 공격 설정 =====
 # Normal Attack
-NORMAL_ATTACK_DAMAGE = 10       # 기본 공격 데미지
+NORMAL_ATTACK_DAMAGE = 5        # 기본 공격 데미지 (지상 기본 공격)
 NORMAL_ATTACK_KNOCKBACK = 50    # 넉백 거리 (pixel)
 
+# Jump Attack
+JUMP_ATTACK_DAMAGE = 7          # 점프 공격 데미지 (일반 공격보다 약간 높음)
+JUMP_ATTACK_KNOCKBACK = 50      # 넉백 거리 (기본 공격과 동일하게 설정)
+
 # Special Attack
-SPECIAL_ATTACK_DAMAGE = 30      # 스페셜 공격 데미지
-SPECIAL_ATTACK_KNOCKBACK = 100  # 넉백 거리
+SPECIAL_ATTACK_DAMAGE = 15      # 스페셜 공격 데미지
+SPECIAL_ATTACK_KNOCKBACK = 100  # 넉백 거리 (현재 코드는 넉백은 아직 사용 안 함)
 SPECIAL_ATTACK_LOOP_COUNT = 3   # 마지막 프레임 반복 횟수
 
 # Ranged Attack
-RANGED_ATTACK_DAMAGE = 20       # 원거리 공격 데미지
+RANGED_ATTACK_DAMAGE = 10       # 원거리 공격 데미지 (수리검 등)
 
 # ===== 방어 설정 =====
 DEFENSE_DAMAGE_REDUCTION = 0.5  # 방어 시 데미지 감소율 (50%)
@@ -70,6 +74,12 @@ DEFENSE_DAMAGE_REDUCTION = 0.5  # 방어 시 데미지 감소율 (50%)
 HIT_DURATION = 0.3              # 피격 애니메이션 지속 시간 (초)
 HIT_INVINCIBILITY_TIME = 0.5    # 피격 후 무적 시간 (초)
 KNOCKBACK_DOWN_TIME = 2.0       # 넉백 후 누워있는 시간 (초)
+
+# ===== 히트스톱 설정 =====
+HITSTOP_FRAMES_NORMAL = 3       # 지상 기본기
+HITSTOP_FRAMES_JUMP = 4         # 점프 공격
+HITSTOP_FRAMES_SPECIAL = 6      # 스페셜 / 강한 기술
+HITSTOP_FRAMES_RANGED = 2       # 수리검 등 원거리
 
 class CharacterConfig:
     """캐릭터 설정 베이스 클래스"""
