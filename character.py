@@ -201,7 +201,8 @@ class Character:
         dy = ground_top - bottom
         self.y += dy
 
-    def take_hit(self, is_knockback=False, knockback_distance=50, knockback_dir=None, hitstun_frames=None):
+    def take_hit(self, is_knockback=False, knockback_distance=50,
+                 knockback_dir=None, hitstun_frames=None, will_knockdown=False):
         if is_knockback:
             if knockback_dir is None:
                 knockback_dir = -self.face_dir
@@ -212,7 +213,8 @@ class Character:
         else:
             hit_duration = HIT_DURATION
 
-        self.state_machine.add_event(('TAKE_HIT', (is_knockback, knockback_distance, knockback_dir, hit_duration)))
+        self.state_machine.add_event(('TAKE_HIT', (is_knockback, knockback_distance,
+                                                   knockback_dir, hit_duration, will_knockdown)))
 
     def update(self):
         self.state_machine.update()

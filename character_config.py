@@ -203,6 +203,7 @@ class NarutoConfig(CharacterConfig):
                 'hitstop_frames': 3,
                 'hitstun_frames': 14,
                 'knockback': 30,
+                'attacker_push': 10,
                 'knockdown': False,
             },
             {
@@ -210,7 +211,8 @@ class NarutoConfig(CharacterConfig):
                 'damage': 4,
                 'hitstop_frames': 3,
                 'hitstun_frames': 14,
-                'knockback': 30,
+                'knockback': 60,
+                'attacker_push': 12,
                 'knockdown': False,
             },
             {
@@ -218,7 +220,8 @@ class NarutoConfig(CharacterConfig):
                 'damage': 8,
                 'hitstop_frames': 5,
                 'hitstun_frames': 20,
-                'knockback': 80,
+                'knockback': 140,
+                'attacker_push': 16,
                 'knockdown': True,
             },
         ]
