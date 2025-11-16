@@ -14,9 +14,10 @@ from dash import Dash
 from state_machine import StateMachine
 from event_to_string import *
 from character_config import NarutoConfig
+from background import Background
 
 class Character:
-    def __init__(self, character_config=None, key_bindings=None, x=400, y=90):
+    def __init__(self, character_config=None, key_bindings=None, x=400, y=90, stage=None):
         # 캐릭터 설정 (기본값: Naruto)
         self.config = character_config if character_config else NarutoConfig()
 
@@ -32,6 +33,7 @@ class Character:
         self.face_dir = 1
         self.dir = 0  # RUN 상태에서 사용할 방향
         self.image = load_image(self.config.image_path)
+        self.stage = stage
 
         self.accum_time = 0.0
         self.frame_duration = 0.1  # 기본값, 상태별로 변경 가능
@@ -162,6 +164,22 @@ class Character:
                 }
             }
         )
+
+        if self.stage is not None and hasattr(self.stage, 'get_ground_top_under'):
+            self.align_to_stage()
+
+    def align_to_stage(self):
+        if self.stage is None or not hasattr(self.stage, 'get_ground_top_under'):
+            return
+
+        left, bottom, right, top = self.get_bb()
+
+        ground_top = self.stage.get_ground_top_under(left, bottom, right, tolerance=100)
+        if ground_top is None:
+            return
+
+        dy = ground_top - bottom
+        self.y += dy
 
     def take_hit(self, is_knockback=False, knockback_distance=50):
         knockback_dir = -self.face_dir if is_knockback else 0
