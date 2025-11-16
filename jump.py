@@ -76,16 +76,37 @@ class Jump:
         frames_per_action = len(jump_frames)
         self.character.frame = (self.character.frame + frames_per_action * ACTION_PER_TIME * JUMP_ANIMATION_SPEED * game_framework.frame_time) % frames_per_action
 
+        prev_left, prev_bottom, prev_right, prev_top = self.get_bb()
         self.character.x += self.vx * game_framework.frame_time
-
         self.vy -= GRAVITY_PPS2 * game_framework.frame_time
         self.character.y += self.vy * game_framework.frame_time
 
-        # 착지 체크
+        self.check_landing(prev_bottom)
+
+    def check_landing(self, prev_bottom):
+        if hasattr(self.character, 'stage') and \
+                self.character.stage is not None and \
+                hasattr(self.character.stage, 'find_landing_platform'):
+
+            left, bottom, right, top = self.get_bb()
+            ground_top = self.character.stage.find_landing_platform(
+                left, prev_bottom, right, bottom, self.vy
+            )
+
+            if ground_top is not None:
+                dy = ground_top - bottom
+                self.character.y += dy
+
+                self.vy = 0.0
+                self.character.frame = 0
+                self.character.jump_count = 0
+                self.ground_y = self.character.y  # 호환용
+                self.character.state_machine.handle_event(('LANDED', None))
+            return
+
         if self.character.y <= self.ground_y:
             self.character.y = self.ground_y
             self.character.frame = 0
-            # 착지 시 character.jump_count를 초기화하여 지상에서 다시 점프 가능하도록 함
             self.character.jump_count = 0
             self.character.state_machine.handle_event(('LANDED', None))
 
