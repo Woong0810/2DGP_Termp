@@ -111,6 +111,18 @@ class CharacterConfig:
         self.hitbox_ranged_attack = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_hit = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}  # 피격 히트박스
 
+        self.shuriken = {
+            'image_path': None,
+            'speed': 300,
+            'rotation_speed': 720,
+            'max_distance': 400,
+            'damage': 10,
+            'draw_size': None,
+            'bbox_size': 20,
+            'use_rotation': True,
+            'frame': None
+        }
+
 class NarutoConfig(CharacterConfig):
     def __init__(self):
         super().__init__()
@@ -118,7 +130,18 @@ class NarutoConfig(CharacterConfig):
         self.image_path = "character_naruto.png"
         self.frames = NARUTO_FRAMES
 
-        # 스페셜 공격 전용 이미지 및 프레임 데이터
+        self.shuriken = {
+            'image_path': 'shuriken.png',
+            'speed': 300,
+            'rotation_speed': 720,
+            'max_distance': 400,
+            'damage': 10,
+            'draw_size': (52, 52),
+            'bbox_size': 20,
+            'use_rotation': True,
+            'frame': None
+        }
+
         self.special_attack_image_path = "character_naruto_2.png"
         self.special_attack_frames_data = NARUTO_SPECIAL_FRAMES
 
@@ -163,6 +186,18 @@ class ItachiConfig(CharacterConfig):
         self.name = "Itachi"
         self.image_path = "character_itachi.png"
         self.frames = ITACHI_FRAMES
+
+        self.shuriken = {
+            'image_path': 'shuriken2.png',
+            'speed': 600,
+            'rotation_speed': 0,
+            'max_distance': 400,
+            'damage': 12,
+            'draw_size': (26, 13),
+            'bbox_size': 20,
+            'use_rotation': False,
+            'frame': None
+        }
 
         self.special_attack_image_path = "character_itachi_sa.png"
         self.special_attack_frames_data = ITACHI_SPECIAL_FRAMES
