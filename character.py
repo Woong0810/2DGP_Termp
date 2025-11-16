@@ -21,8 +21,18 @@ from character_config import (
     JUMP_ATTACK_KNOCKBACK,
     SPECIAL_ATTACK_DAMAGE,
     RANGED_ATTACK_DAMAGE,
+    HITSTOP_FRAMES_NORMAL,
+    HITSTOP_FRAMES_JUMP,
+    HITSTOP_FRAMES_SPECIAL,
+    HITSTOP_FRAMES_RANGED,
+    HITSTUN_FRAMES_NORMAL,
+    HITSTUN_FRAMES_JUMP,
+    HITSTUN_FRAMES_SPECIAL,
+    HITSTUN_FRAMES_RANGED,
+    HIT_DURATION, SPECIAL_ATTACK_KNOCKBACK,
 )
 from background import Background
+import game_framework
 
 class Character:
     def __init__(self, character_config=None, key_bindings=None, x=400, y=90, stage=None):
@@ -191,14 +201,18 @@ class Character:
         dy = ground_top - bottom
         self.y += dy
 
-    def take_hit(self, is_knockback=False, knockback_distance=50, knockback_dir=None):
+    def take_hit(self, is_knockback=False, knockback_distance=50, knockback_dir=None, hitstun_frames=None):
         if is_knockback:
             if knockback_dir is None:
                 knockback_dir = -self.face_dir
         else:
             knockback_dir = 0
+        if hitstun_frames is not None:
+            hit_duration = hitstun_frames / 60.0
+        else:
+            hit_duration = HIT_DURATION
 
-        self.state_machine.add_event(('TAKE_HIT', (is_knockback, knockback_distance, knockback_dir)))
+        self.state_machine.add_event(('TAKE_HIT', (is_knockback, knockback_distance, knockback_dir, hit_duration)))
 
     def update(self):
         self.state_machine.update()
@@ -344,8 +358,8 @@ class Character:
             if self.state_machine.cur_state == self.HIT:    # 이미 Hit 상태면 무시
                 return
             self.hp -= NORMAL_ATTACK_DAMAGE
-
-            is_knockback = other.is_last_segment() or other.is_run_attack() or other.is_down_attack() or other.is_up_attack()
+            game_framework.add_hitstop(HITSTOP_FRAMES_NORMAL)
+            is_knockback = other.is_last_segment() or other.is_run_attack() or other.is_up_attack()
             knockback_dir = 0
             if is_knockback:
                 if hasattr(other, 'character'):
@@ -362,7 +376,8 @@ class Character:
             self.take_hit(
                 is_knockback=is_knockback,
                 knockback_distance=NORMAL_ATTACK_KNOCKBACK,
-                knockback_dir=knockback_dir
+                knockback_dir=knockback_dir,
+                hitstun_frames=HITSTUN_FRAMES_NORMAL
             )
 
         elif group == 'jump_attack:character':
@@ -371,7 +386,7 @@ class Character:
             if self.state_machine.cur_state == self.HIT:
                 return
             self.hp -= JUMP_ATTACK_DAMAGE
-
+            game_framework.add_hitstop(HITSTOP_FRAMES_JUMP)
             is_knockback = other.is_last_segment()
             knockback_dir = 0
             if is_knockback:
@@ -389,7 +404,8 @@ class Character:
             self.take_hit(
                 is_knockback=is_knockback,
                 knockback_distance=JUMP_ATTACK_KNOCKBACK,
-                knockback_dir=knockback_dir
+                knockback_dir=knockback_dir,
+                hitstun_frames=HITSTUN_FRAMES_JUMP
             )
 
         elif group == 'special_attack:character':
@@ -400,7 +416,24 @@ class Character:
             if self.state_machine.cur_state == self.HIT:
                 return
             self.hp -= SPECIAL_ATTACK_DAMAGE
-            self.take_hit()
+            game_framework.add_hitstop(HITSTOP_FRAMES_SPECIAL)
+            knockback_dir = 0
+            is_knockback = True
+            if hasattr(other, 'character'):
+                attacker = other.character
+                if attacker.x > self.x:
+                    knockback_dir = -1
+                elif attacker.x < self.x:
+                    knockback_dir = 1
+                else:
+                    knockback_dir = -self.face_dir
+
+            self.take_hit(
+                is_knockback=is_knockback,
+                knockback_distance=SPECIAL_ATTACK_KNOCKBACK,
+                knockback_dir=knockback_dir,
+                hitstun_frames=HITSTUN_FRAMES_SPECIAL,
+            )
 
         elif group == 'character:shuriken':
             # 자신이 발사한 수리검인지 확인
@@ -412,7 +445,13 @@ class Character:
             if self.state_machine.cur_state == self.HIT:
                 return
             self.hp -= RANGED_ATTACK_DAMAGE
-            self.take_hit()
+            game_framework.add_hitstop(HITSTOP_FRAMES_RANGED)
+            self.take_hit(
+                is_knockback=False,
+                knockback_distance=0,
+                knockback_dir=0,
+                hitstun_frames=HITSTUN_FRAMES_RANGED,
+            )
 
         if self.hp < 0:
             self.hp = 0
