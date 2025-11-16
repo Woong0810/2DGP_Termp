@@ -118,6 +118,8 @@ class Hit:
         height = frame['height'] * self.character.config.scale_y * hitbox['scale_y']
         x_offset = hitbox['x_offset'] * self.character.face_dir
         y_offset = hitbox['y_offset']
+        if self.is_knockback and hasattr(self.character.config, 'knockback_draw_offset_y'):
+            y_offset += self.character.config.knockback_draw_offset_y
 
         return (
             self.character.x - width / 2 + x_offset,

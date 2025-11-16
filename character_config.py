@@ -176,6 +176,8 @@ class ItachiConfig(CharacterConfig):
         self.scale_y = 1.0
         self.draw_offset_y = 0
 
+        self.knockback_draw_offset_y = -12
+
         # TODO: Itachi의 프레임 인덱스 설정 (나중에 추가)
         self.idle_frames = list(range(88, 88 + 4))
         self.run_frames = list(range(30, 30 + 6))
