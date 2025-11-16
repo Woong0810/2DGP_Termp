@@ -167,6 +167,10 @@ class ItachiConfig(CharacterConfig):
         self.special_attack_image_path = "character_itachi_sa.png"
         self.special_attack_frames_data = ITACHI_SPECIAL_FRAMES
 
+        from character_itachi_sa_2_frames import FRAMES as ITACHI_SPECIAL2_FRAMES
+        self.special_attack2_image_path = "character_itachi_sa_2.png"
+        self.special_attack2_frames_data = ITACHI_SPECIAL2_FRAMES
+
         # 원본 크기로 출력
         self.scale_x = 1.0
         self.scale_y = 1.0
@@ -184,7 +188,7 @@ class ItachiConfig(CharacterConfig):
         self.jump_frames = [44, 45, 46, 47]
         self.defense_frames = [48]
         self.special_attack_frames = list(range(112, 112 + 12))
-        self.special_attack2_frames = list(range(252, 252 + 39))
+        self.special_attack2_frames = list(range(0, 40))
         self.ranged_attack_frames = list(range(49, 49 + 3))
         self.hit_frames = [86, 87]
         self.knockback_frames = [85, 69, 70, 71, 72, 73, 74, 75]
