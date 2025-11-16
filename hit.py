@@ -11,11 +11,24 @@ class Hit:
         self.knockback_distance = 0
         self.knockback_dir = 0
         self.is_lying_down = False
+        self.was_in_air = False
+        self.ground_y = 0.0
 
     def enter(self, event):
         self.character.frame = 0
         self.elapsed_time = 0.0
         self.is_lying_down = False
+
+        prev_state = self.character.state_machine.prev_state
+        if prev_state == self.character.JUMP or prev_state == self.character.JUMP_ATTACK:
+            self.was_in_air = True
+            if prev_state == self.character.JUMP:
+                self.ground_y = prev_state.ground_y
+            elif prev_state == self.character.JUMP_ATTACK:
+                self.ground_y = prev_state.ground_y
+        else:
+            self.was_in_air = False
+            self.ground_y = self.character.y
 
         if event and len(event) > 1 and isinstance(event[1], tuple):
             self.is_knockback = event[1][0]
@@ -27,6 +40,7 @@ class Hit:
             self.knockback_dir = 0
 
         game_world.add_collision_pairs('normal_attack:character', None, self.character)
+        game_world.add_collision_pairs('jump_attack:character', None, self.character)
         game_world.add_collision_pairs('special_attack:character', None, self.character)
         game_world.add_collision_pairs('ranged_attack:character', None, self.character)
         game_world.add_collision_pairs('character:shuriken', self.character, None)
@@ -61,7 +75,11 @@ class Hit:
             self.character.frame = (self.character.frame + frames_per_action * ACTION_PER_TIME * HIT_ANIMATION_SPEED * game_framework.frame_time) % frames_per_action
 
             if self.elapsed_time >= HIT_DURATION:
-                self.character.state_machine.add_event(('HIT_END', 0))
+                # 공중에서 피격당했다면 JUMP 상태로 복귀
+                if self.was_in_air:
+                    self.character.state_machine.add_event(('RESUME_JUMP', self.ground_y))
+                else:
+                    self.character.state_machine.add_event(('HIT_END', 0))
 
     def draw(self):
         if self.is_knockback:

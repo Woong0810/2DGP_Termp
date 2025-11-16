@@ -15,20 +15,27 @@ class Jump:
         self.dir = 0
 
     def enter(self, e):
-        self.jump_count = 1
-        self.character.frame = 0
-
-        # 물리 기반 점프 속도 계산: v = sqrt(2 * g * h)
-        self.vy = math.sqrt(2 * GRAVITY_PPS2 * JUMP_HEIGHT_PIXEL)
-        self.ground_y = self.character.y
-
-        # 이전 상태가 RUN이었으면 수평 속도 유지, IDLE에서는 수직 점프
-        prev_state = self.character.state_machine.prev_state
-        if prev_state == self.character.RUN:
-            self.vx = self.character.dir * RUN_SPEED_PPS
+        if e[0] == 'RESUME_JUMP':
+            self.jump_count = 1
+            self.character.frame = 0
+            self.vy = 0
+            self.vx = 0
+            self.ground_y = e[1]
+            self.dir = 0
         else:
-            self.vx = 0.0
-        self.dir = 0
+            # 일반 점프
+            self.jump_count = 1
+            self.character.frame = 0
+
+            self.vy = math.sqrt(2 * GRAVITY_PPS2 * JUMP_HEIGHT_PIXEL)
+            self.ground_y = self.character.y
+
+            prev_state = self.character.state_machine.prev_state
+            if prev_state == self.character.RUN:
+                self.vx = self.character.dir * RUN_SPEED_PPS
+            else:
+                self.vx = 0.0
+            self.dir = 0
 
         game_world.add_collision_pairs('normal_attack:character', None, self.character)
         game_world.add_collision_pairs('jump_attack:character', None, self.character)
