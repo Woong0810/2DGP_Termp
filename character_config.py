@@ -164,28 +164,28 @@ class ItachiConfig(CharacterConfig):
         self.image_path = "character_itachi.png"
         self.frames = ITACHI_FRAMES
 
-        # 스페셜 공격 전용 이미지 및 프레임 데이터
-        self.special_attack_image_path = "Itachi_special_attack_clean.png"
-        self.special_attack_frames_data = ITACHI_SPECIAL_FRAMES
-
         # 원본 크기로 출력
         self.scale_x = 1.0
         self.scale_y = 1.0
         self.draw_offset_y = 0
 
         # TODO: Itachi의 프레임 인덱스 설정 (나중에 추가)
-        self.idle_frames = list(range(88, 92))
-        self.run_frames = list(range(27, 33))
+        self.idle_frames = list(range(88, 88 + 4))
+        self.run_frames = list(range(30, 30 + 6))
         self.normal_attack_frames = list(range(0, 13))
         self.normal_attack_segments = [(0, 3), (4, 7), (8, 12)]
-        self.run_attack_segments = [(48, 53)]
-        self.jump_frames = [36, 37]
-        self.defense_frames = [85]
-        self.special_attack_frames = list(range(0, 43))  # 스페셜 이미지의 전체 프레임 (0~42)
-        self.ranged_attack_frames = list(range(100, 125))  # 원거리 공격 프레임
-        self.hit_frames = [46, 47]
-        self.knockback_frames = [46, 47]  # 임시로 hit_frames와 동일 (나중에 수정 필요)
-        # ... 나머지 동작들도 추가 필요
+        self.run_attack_segments = [(8, 12)]
+        self.up_attack_segments = [(13, 16)]
+        self.down_attack_segments = [(77, 84)]
+        self.jump_attack_segments = [(94, 97), (98, 100)]
+        self.jump_frames = [44, 45, 46, 47]
+        self.defense_frames = [48]
+        self.special_attack_frames = list(range(112, 112 + 87))
+        self.ranged_attack_frames = list(range(49, 49 + 3))
+        self.hit_frames = [86, 87]
+        self.knockback_frames = [85, 69, 70, 71, 72, 73, 74, 75]
+        self.stand_up_frames = [38, 37, 36]
+        self.dash_frames = list(range(42, 42 + 2))
 
         # 이타치 전용 히트박스 설정
         self.hitbox_idle = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 0}

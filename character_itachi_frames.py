@@ -49,7 +49,7 @@ FRAMES = [
     {'left': 4, 'bottom': 4253, 'width': 49, 'height': 51},
     {'left': 60, 'bottom': 4253, 'width': 49, 'height': 51},
     {'left': 0, 'bottom': 4164, 'width': 32, 'height': 63},
-    {'left': 85, 'bottom': 4125, 'width': 42, 'height': 29},
+    {'left': 85, 'bottom': 4090, 'width': 42, 'height': 63},
     {'left': 69, 'bottom': 4090, 'width': 50, 'height': 62},
     {'left': 8, 'bottom': 4090, 'width': 29, 'height': 61},
     {'left': 137, 'bottom': 4090, 'width': 34, 'height': 61},
