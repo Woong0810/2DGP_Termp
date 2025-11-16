@@ -46,6 +46,7 @@ class Character:
         self.hp = self.max_hp
 
         self.invincible_time = 0.0
+        self.jump_count = 0
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)

@@ -15,7 +15,6 @@ class JumpAttack:
         self.vy = 0.0
         self.vx = 0.0
         self.ground_y = 0.0
-        self.jump_count = 0
 
         self.n_key_pressed = False
 
@@ -24,7 +23,6 @@ class JumpAttack:
         self.vy = jump_state.vy
         self.vx = jump_state.vx
         self.ground_y = jump_state.ground_y
-        self.jump_count = jump_state.jump_count
 
         if hasattr(self.character.config, 'jump_attack_segments'):
             segments = self.character.config.jump_attack_segments
