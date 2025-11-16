@@ -15,27 +15,25 @@ class Jump:
         self.dir = 0
 
     def enter(self, e):
-        if e[0] == 'RESUME_JUMP':
+        if e and (e[0] == 'RESUME_JUMP' or e[0] == 'SEGMENT_END'):
             self.jump_count = 1
             self.character.frame = 0
-            self.vy = 0
-            self.vx = 0
-            self.ground_y = e[1]
             self.dir = 0
+            return
+
+        self.jump_count = 1
+        self.character.frame = 0
+
+        self.vy = math.sqrt(2 * GRAVITY_PPS2 * JUMP_HEIGHT_PIXEL)
+        self.ground_y = self.character.y
+
+        prev_state = self.character.state_machine.prev_state
+        if prev_state == self.character.RUN:
+            from character_config import RUN_SPEED_PPS
+            self.vx = self.character.dir * RUN_SPEED_PPS
         else:
-            # 일반 점프
-            self.jump_count = 1
-            self.character.frame = 0
-
-            self.vy = math.sqrt(2 * GRAVITY_PPS2 * JUMP_HEIGHT_PIXEL)
-            self.ground_y = self.character.y
-
-            prev_state = self.character.state_machine.prev_state
-            if prev_state == self.character.RUN:
-                self.vx = self.character.dir * RUN_SPEED_PPS
-            else:
-                self.vx = 0.0
-            self.dir = 0
+            self.vx = 0.0
+        self.dir = 0
 
         game_world.add_collision_pairs('normal_attack:character', None, self.character)
         game_world.add_collision_pairs('jump_attack:character', None, self.character)
@@ -117,5 +115,3 @@ class Jump:
             self.character.x + hw + hb['x_offset'],
             self.character.y + hh + hb['y_offset']
         )
-
-

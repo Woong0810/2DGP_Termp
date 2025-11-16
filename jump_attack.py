@@ -26,7 +26,6 @@ class JumpAttack:
         self.ground_y = jump_state.ground_y
         self.jump_count = jump_state.jump_count
 
-
         if hasattr(self.character.config, 'jump_attack_segments'):
             segments = self.character.config.jump_attack_segments
             self.combo_index = 0
@@ -34,10 +33,6 @@ class JumpAttack:
             self.attack_frame = 0.0
 
         game_world.add_collision_pairs('jump_attack:character', self, None)
-        game_world.add_collision_pairs('normal_attack:character', None, self.character)
-        game_world.add_collision_pairs('special_attack:character', None, self.character)
-        game_world.add_collision_pairs('ranged_attack:character', None, self.character)
-        game_world.add_collision_pairs('character:shuriken', self.character, None)
 
     def exit(self, e):
         jump_state = self.character.JUMP
@@ -47,7 +42,6 @@ class JumpAttack:
         jump_state.jump_count = self.jump_count
 
         game_world.remove_collision_object(self)
-        game_world.remove_collision_object(self.character)
 
     def do(self):
         segment_length = self.end_frame - self.start_frame + 1
@@ -60,8 +54,8 @@ class JumpAttack:
                     self.combo_index += 1
                     self.start_frame, self.end_frame = segments[self.combo_index]
                     self.attack_frame = 0.0
-                elif not self.n_key_pressed:
-                    self.attack_frame = segment_length - 0.01
+                else:
+                    self.character.state_machine.handle_event(('SEGMENT_END', None))
 
         self.character.x += self.vx * game_framework.frame_time
         self.vy -= GRAVITY_PPS2 * game_framework.frame_time
@@ -123,5 +117,3 @@ class JumpAttack:
 
     def handle_collision(self, group, other):
         pass
-
-

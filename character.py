@@ -129,6 +129,7 @@ class Character:
                 self.JUMP_ATTACK: {
                     landed: self.IDLE,
                     take_hit: self.HIT,
+                    segment_end: self.JUMP,
                     key_down(kb['dash']): self.DASH
                 },
                 self.DEFENSE: defense_rules,
