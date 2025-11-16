@@ -31,6 +31,9 @@ class JumpAttack:
             self.combo_index = 0
             self.start_frame, self.end_frame = segments[self.combo_index]
             self.attack_frame = 0.0
+        else:
+            self.start_frame, self.end_frame = 0, 0
+            self.attack_frame = 0.0
 
         game_world.add_collision_pairs('jump_attack:character', self, None)
 
@@ -39,7 +42,6 @@ class JumpAttack:
         jump_state.vy = self.vy
         jump_state.vx = self.vx
         jump_state.ground_y = self.ground_y
-        jump_state.jump_count = self.jump_count
 
         game_world.remove_collision_object(self)
 
@@ -50,17 +52,19 @@ class JumpAttack:
         if self.attack_frame >= segment_length:
             if hasattr(self.character.config, 'jump_attack_segments'):
                 segments = self.character.config.jump_attack_segments
-                if self.n_key_pressed and self.combo_index < len(segments) - 1:
+                if self.combo_index < len(segments) - 1:
                     self.combo_index += 1
                     self.start_frame, self.end_frame = segments[self.combo_index]
                     self.attack_frame = 0.0
                 else:
                     self.character.state_machine.handle_event(('SEGMENT_END', None))
 
+        # 물리 적용
         self.character.x += self.vx * game_framework.frame_time
         self.vy -= GRAVITY_PPS2 * game_framework.frame_time
         self.character.y += self.vy * game_framework.frame_time
 
+        # 착지 체크
         if self.character.y <= self.ground_y:
             self.character.y = self.ground_y
             self.character.frame = 0

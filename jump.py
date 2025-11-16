@@ -44,7 +44,6 @@ class Jump:
     def exit(self, e):
         self.jump_count = 0
         self.dir = 0
-        self.vx = 0.0
         game_world.remove_collision_object(self.character)
 
     def do(self):
