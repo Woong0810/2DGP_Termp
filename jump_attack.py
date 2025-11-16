@@ -57,7 +57,7 @@ class JumpAttack:
                 else:
                     self.character.state_machine.handle_event(('SEGMENT_END', None))
 
-        prev_left, prev_bottom, prev_right, prev_top = self.get_bb()
+        prev_left, prev_bottom, prev_right, prev_top = self.character.get_feet_bb()
         self.character.x += self.vx * game_framework.frame_time
         self.vy -= GRAVITY_PPS2 * game_framework.frame_time
         self.character.y += self.vy * game_framework.frame_time
@@ -69,7 +69,7 @@ class JumpAttack:
                 self.character.stage is not None and \
                 hasattr(self.character.stage, 'find_landing_platform'):
 
-            left, bottom, right, top = self.get_bb()
+            left, bottom, right, top = self.character.get_feet_bb()
             ground_top = self.character.stage.find_landing_platform(
                 left, prev_bottom, right, bottom, self.vy
             )

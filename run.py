@@ -46,7 +46,7 @@ class Run:
         if not hasattr(self.character, 'stage') or self.character.stage is None:
             return
 
-        left, bottom, right, top = self.get_bb()
+        left, bottom, right, top = self.character.get_feet_bb()
         ground_top = self.character.stage.get_ground_top_under(left, bottom, right)
 
         if ground_top is None:
