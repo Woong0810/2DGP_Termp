@@ -14,6 +14,10 @@ class Jump:
         self.dir = 0
 
     def enter(self, e):
+        if e and e[0] == 'FALL':
+            self.character.frame = 0
+            self.dir = 0
+            return
         if e and (e[0] == 'RESUME_JUMP' or e[0] == 'SEGMENT_END'):
             self.character.frame = 0
             self.dir = 0
