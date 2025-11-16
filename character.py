@@ -75,6 +75,7 @@ class Character:
             key_down(kb.get('special2', -1)): self.SPECIAL_ATTACK2,
             key_down(kb['ranged']): self.RANGED_ATTACK,
             key_down(kb['dash']): self.DASH,
+            fall: self.JUMP,
             take_hit: self.HIT
         }
         if 'jump_key' in kb:
@@ -89,6 +90,7 @@ class Character:
             key_down(kb.get('special2', -1)): self.SPECIAL_ATTACK2,
             key_down(kb['ranged']): self.RANGED_ATTACK,
             key_down(kb['dash']): self.DASH,
+            fall: self.JUMP,
             take_hit: self.HIT
         }
         if 'jump_key' in kb:
