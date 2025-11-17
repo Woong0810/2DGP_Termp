@@ -225,6 +225,76 @@ class NarutoConfig(CharacterConfig):
                 'knockdown': True,
             },
         ]
+        self.run_attack_data = [
+            {
+                'name': 'naruto_run_A',
+                'damage': 6,
+                'hitstop_frames': 4,
+                'hitstun_frames': 18,
+                'knockback': 70,
+                'attacker_push': 40,
+                'knockdown': True,
+            },
+        ]
+        self.up_attack_data = [
+            {
+                'name': 'naruto_up_A',
+                'damage': 5,
+                'hitstop_frames': 3,
+                'hitstun_frames': 18,
+                'knockback': 30,
+                'attacker_push': 0,
+                'knockdown': False,
+            },
+        ]
+        self.down_attack_data = [
+            {
+                'name': 'naruto_down_A',
+                'damage': 7,
+                'hitstop_frames': 4,
+                'hitstun_frames': 22,
+                'knockback': 80,
+                'attacker_push': 10,
+                'knockdown': True,
+            },
+        ]
+        self.jump_attack_data = [
+            {
+                'name': 'naruto_jump_A_1',
+                'damage': 5,
+                'hitstop_frames': 3,
+                'hitstun_frames': 16,
+                'knockback': 15,
+                'attacker_push': 5,
+                'knockdown': False,
+            },
+            {
+                'name': 'naruto_jump_A_2',
+                'damage': 7,
+                'hitstop_frames': 4,
+                'hitstun_frames': 22,
+                'knockback': 70,
+                'attacker_push': 10,
+                'knockdown': True,
+            },
+        ]
+        self.special_attack_data = {
+            'name': 'naruto_rasengan',
+            'damage': 20,
+            'hitstop_frames': 8,
+            'hitstun_frames': 40,
+            'knockback': 120,
+            'knockdown': True,
+        }
+
+        self.ranged_attack_data = {
+            'name': 'naruto_shuriken',
+            'damage': 0,
+            'hitstop_frames': 2,
+            'hitstun_frames': 14,
+            'knockback': 20,
+            'knockdown': False,
+        }
 
 class ItachiConfig(CharacterConfig):
     def __init__(self):
@@ -238,7 +308,7 @@ class ItachiConfig(CharacterConfig):
             'speed': 600,
             'rotation_speed': 0,
             'max_distance': 400,
-            'damage': 12,
+            'damage': 8,
             'draw_size': (26, 13),
             'bbox_size': 20,
             'use_rotation': False,
@@ -287,6 +357,105 @@ class ItachiConfig(CharacterConfig):
         self.hitbox_special_attack = {'scale_x': 1.1, 'scale_y': 1.05, 'x_offset': 0, 'y_offset': 5}
         self.hitbox_ranged_attack = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}
         self.hitbox_hit = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 0}  # 피격 히트박스
+
+        self.normal_attack_data = [
+            {
+                'name': 'itachi_ground_A_1',
+                'damage': 4,
+                'hitstop_frames': 3,
+                'hitstun_frames': 14,
+                'knockback': 8,
+                'attacker_push': 8,
+                'knockdown': False,
+            },
+            {
+                'name': 'itachi_ground_A_2',
+                'damage': 4,
+                'hitstop_frames': 3,
+                'hitstun_frames': 14,
+                'knockback': 12,
+                'attacker_push': 12,
+                'knockdown': False,
+            },
+            {
+                'name': 'itachi_ground_A_3',
+                'damage': 8,
+                'hitstop_frames': 5,
+                'hitstun_frames': 20,
+                'knockback': 80,
+                'attacker_push': 15,
+                'knockdown': True,  # 마지막타 다운
+            },
+        ]
+        self.run_attack_data = [
+            {
+                'name': 'itachi_run_A',
+                'damage': 6,
+                'hitstop_frames': 4,
+                'hitstun_frames': 20,
+                'knockback': 80,
+                'attacker_push': 35,
+                'knockdown': True,
+            },
+        ]
+        self.up_attack_data = [
+            {
+                'name': 'itachi_up_A',
+                'damage': 5,
+                'hitstop_frames': 3,
+                'hitstun_frames': 20,
+                'knockback': 35,
+                'attacker_push': 5,
+                'knockdown': False,
+            },
+        ]
+        self.down_attack_data = [
+            {
+                'name': 'itachi_down_A',
+                'damage': 6,
+                'hitstop_frames': 4,
+                'hitstun_frames': 22,
+                'knockback': 70,
+                'attacker_push': 10,
+                'knockdown': True,
+            },
+        ]
+        self.jump_attack_data = [
+            {
+                'name': 'itachi_jump_A_1',
+                'damage': 5,
+                'hitstop_frames': 3,
+                'hitstun_frames': 16,
+                'knockback': 25,
+                'attacker_push': 5,
+                'knockdown': False,
+            },
+            {
+                'name': 'itachi_jump_A_2',
+                'damage': 7,
+                'hitstop_frames': 4,
+                'hitstun_frames': 22,
+                'knockback': 70,
+                'attacker_push': 10,
+                'knockdown': True,
+            },
+        ]
+        self.special_attack_data = {
+            'name': 'itachi_amaterasu',
+            'damage': 18,
+            'hitstop_frames': 6,
+            'hitstun_frames': 45,
+            'knockback': 30,
+            'knockdown': True,
+        }
+        self.ranged_attack_data = {
+            'name': 'itachi_shuriken',
+            'damage': 0,
+            'hitstop_frames': 3,
+            'hitstun_frames': 16,
+            'knockback': 25,
+            'knockdown': False,
+        }
 
 class JiraiyaConfig(CharacterConfig):
     def __init__(self):
