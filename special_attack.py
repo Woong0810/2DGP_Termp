@@ -81,7 +81,7 @@ class SpecialAttack:
         return self.target is None and int(self.character.frame) < 43
 
     def _update_naruto_special1(self, prev_frame_int, cur_frame_int):
-        if self.target is not None:
+        if self.target is not None and cur_frame_int < 43:
             if self.target.x > self.character.x:
                 self.character.face_dir = 1
             elif self.target.x < self.character.x:
@@ -138,28 +138,32 @@ class SpecialAttack:
             game_framework.add_hitstop(hitstop_frames)
             return
 
-        if not hasattr(target, 'HIT') or target.state_machine.cur_state != target.HIT:
+        hit_state = getattr(target, 'HIT', None)
+        if hit_state is None:
             return
-        hit_state = target.HIT
 
         if frame_int == 44:
             dir2 = -self.character.face_dir
-            target.take_hit(
-                is_knockback=True,
-                knockback_distance=40,
-                knockback_dir=dir2,
-                hitstun_frames=30,
-                will_knockdown=False
-            )
+
+            hit_state.is_knockback = True
+            hit_state.knockback_distance = 35
+            hit_state.knockback_dir = dir2
+            hit_state.elapsed_time = 0.0
             hit_state.naruto_replay_hit()
+
             target.hp = max(0, target.hp - damage)
             game_framework.add_hitstop(hitstop_frames)
             return
 
         if frame_int == 59:
-            target.y += 100
+            target.y += 120
+
+            hit_state.was_in_air = True
+            hit_state.vy = 0.0  # 바로 떨어지지 않게 0으로 시작
+
             hit_state.naruto_start_air_lock()
             hit_state.naruto_replay_hit()
+
             target.hp = max(0, target.hp - damage)
             game_framework.add_hitstop(hitstop_frames)
             return
