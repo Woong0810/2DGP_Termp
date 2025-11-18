@@ -289,7 +289,7 @@ class NarutoConfig(CharacterConfig):
 
         self.ranged_attack_data = {
             'name': 'naruto_shuriken',
-            'damage': 0,
+            'damage': 10,
             'hitstop_frames': 2,
             'hitstun_frames': 14,
             'knockback': 20,
@@ -450,7 +450,7 @@ class ItachiConfig(CharacterConfig):
         }
         self.ranged_attack_data = {
             'name': 'itachi_shuriken',
-            'damage': 0,
+            'damage': 8,
             'hitstop_frames': 3,
             'hitstun_frames': 16,
             'knockback': 25,

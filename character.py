@@ -458,6 +458,7 @@ class Character:
                 will_knockdown=will_knockdown
             )
 
+
         elif group == 'special_attack:character':
             if hasattr(other, 'owner') and other.owner == self:
                 return
@@ -465,12 +466,26 @@ class Character:
                 return
             if self.state_machine.cur_state == self.HIT:
                 return
-            self.hp -= SPECIAL_ATTACK_DAMAGE
-            game_framework.add_hitstop(HITSTOP_FRAMES_SPECIAL)
+
+            damage = SPECIAL_ATTACK_DAMAGE
+            knockback_distance = SPECIAL_ATTACK_KNOCKBACK
+            hitstun_frames = HITSTUN_FRAMES_SPECIAL
+            hitstop_frames = HITSTOP_FRAMES_SPECIAL
+            will_knockdown = True  # 기본은 다운기로 취급
+
+            attacker = getattr(other, 'character', None)
+            if attacker is not None and hasattr(attacker, 'config'):
+                cfg = attacker.config
+                if hasattr(cfg, 'special_attack_data'):
+                    data = cfg.special_attack_data
+                    damage = data.get('damage', damage)
+                    knockback_distance = data.get('knockback', knockback_distance)
+                    hitstun_frames = data.get('hitstun_frames', hitstun_frames)
+                    hitstop_frames = data.get('hitstop_frames', hitstop_frames)
+                    will_knockdown = data.get('knockdown', will_knockdown)
+
             knockback_dir = 0
-            is_knockback = True
-            if hasattr(other, 'character'):
-                attacker = other.character
+            if knockback_distance != 0 and attacker is not None:
                 if attacker.x > self.x:
                     knockback_dir = -1
                 elif attacker.x < self.x:
@@ -478,29 +493,58 @@ class Character:
                 else:
                     knockback_dir = -self.face_dir
 
+            self.hp -= damage
+            game_framework.add_hitstop(hitstop_frames)
             self.take_hit(
-                is_knockback=is_knockback,
-                knockback_distance=SPECIAL_ATTACK_KNOCKBACK,
+                is_knockback=will_knockdown,
+                knockback_distance=knockback_distance,
                 knockback_dir=knockback_dir,
-                hitstun_frames=HITSTUN_FRAMES_SPECIAL,
+                hitstun_frames=hitstun_frames,
+                will_knockdown=will_knockdown
             )
 
         elif group == 'character:shuriken':
-            # 자신이 발사한 수리검인지 확인
             if hasattr(other, 'owner') and other.owner == self:
                 return
-            # 방어 중이거나 이미 Hit 상태면 무시
             if self.state_machine.cur_state == self.DEFENSE:
                 return
             if self.state_machine.cur_state == self.HIT:
                 return
-            self.hp -= RANGED_ATTACK_DAMAGE
-            game_framework.add_hitstop(HITSTOP_FRAMES_RANGED)
+
+            damage = RANGED_ATTACK_DAMAGE
+            knockback_distance = 0
+            hitstun_frames = HITSTUN_FRAMES_RANGED
+            hitstop_frames = HITSTOP_FRAMES_RANGED
+            will_knockdown = False
+
+            owner = getattr(other, 'owner', None)
+            if owner is not None and hasattr(owner, 'config'):
+                cfg = owner.config
+                if hasattr(cfg, 'ranged_attack_data'):
+                    data = cfg.ranged_attack_data
+                    damage = data.get('damage', damage)
+                    knockback_distance = data.get('knockback', knockback_distance)
+                    hitstun_frames = data.get('hitstun_frames', hitstun_frames)
+                    hitstop_frames = data.get('hitstop_frames', hitstop_frames)
+                    will_knockdown = data.get('knockdown', will_knockdown)
+
+            knockback_dir = 0
+            if knockback_distance != 0 and owner is not None:
+                if owner.x > self.x:
+                    knockback_dir = -1
+                elif owner.x < self.x:
+                    knockback_dir = 1
+                else:
+                    knockback_dir = -self.face_dir
+
+            self.hp -= damage
+            game_framework.add_hitstop(hitstop_frames)
             self.take_hit(
-                is_knockback=False,
-                knockback_distance=0,
-                knockback_dir=0,
-                hitstun_frames=HITSTUN_FRAMES_RANGED,
+                is_knockback=will_knockdown,
+                knockback_distance=knockback_distance,
+                knockback_dir=knockback_dir,
+                hitstun_frames=hitstun_frames,
+                will_knockdown=will_knockdown
             )
 
         if self.hp < 0:
