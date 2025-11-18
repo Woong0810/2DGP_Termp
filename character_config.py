@@ -167,6 +167,8 @@ class NarutoConfig(CharacterConfig):
         self.draw_offset_y = 0
 
         self.knockback_draw_offset_y = -10
+        self.special_attack_offset_y = -10
+        self.special_attack_2_offset_y = 0
 
         self.idle_frames = list(range(0, 0 + 4))
         self.run_frames = list(range(10, 10 + 6))
@@ -338,6 +340,8 @@ class ItachiConfig(CharacterConfig):
         self.draw_offset_y = 0
 
         self.knockback_draw_offset_y = -12
+        self.special_attack_offset_y = 0
+        self.special_attack_2_offset_y = -10
 
         # TODO: Itachi의 프레임 인덱스 설정 (나중에 추가)
         self.idle_frames = list(range(88, 88 + 4))
