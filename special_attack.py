@@ -126,30 +126,32 @@ class SpecialAttack:
 
         # 첫 타 (43프레임 근처): 기존 충돌 처리로 피격 상태(HIT) 진입
         if frame_int == 43:
+            target.naruto_special_chain_active = True
             target.handle_collision('special_attack:character', self)
-            target.x += self.character.face_dir * 30  # 약간 밀려나는 효과
-            game_framework.add_hitstop(hitstop_frames)
             return
-        if frame_int == 44:
-            target.handle_collision('special_attack:character', self)
-            target.x -= self.character.face_dir * 30  # 약간 밀려나는 효과
-            game_framework.add_hitstop(hitstop_frames)
-            return
-        # 59 프레임: 공중으로 띄우기
-        if frame_int == 59:
-            target.y += 130
 
-        # 데미지 누적
+        if not hasattr(target, 'HIT') or target.state_machine.cur_state != target.HIT:
+            return
+        hit_state = target.HIT
+
+        if frame_int in (44, 67, 73):
+            hit_state.naruto_replay_hit()
+        if frame_int == 59:
+            # 한 번만 위로 띄워서 공중에 고정
+            target.y += 100  # 필요하면 값 조절
+            hit_state.naruto_start_air_lock()
+            hit_state.naruto_replay_hit()
+        if frame_int == 78:
+            # 더 이상 연속 히트 모드 아님
+            target.naruto_special_chain_active = False
+            hit_state.naruto_end_chain_with_knockdown()
+
         target.hp -= damage
         if target.hp < 0:
             target.hp = 0
 
         game_framework.add_hitstop(hitstop_frames)
-
-        # 계속 얻어맞는 느낌을 위해 HIT 상태 시간 초기화
-        if hasattr(target, 'HIT') and target.state_machine.cur_state == target.HIT:
-            hit_state = target.HIT
-            hit_state.elapsed_time = 0.0
+        hit_state.elapsed_time = 0.0
 
     def draw(self):
         if self.character.config.name == "Itachi":
