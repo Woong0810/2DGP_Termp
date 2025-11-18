@@ -363,40 +363,48 @@ class Character:
         if group == 'normal_attack:character':
             if self.state_machine.cur_state == self.DEFENSE:
                 return
-            if self.state_machine.cur_state == self.HIT:    # 이미 Hit 상태면 무시
+            if self.state_machine.cur_state == self.HIT:
                 return
 
             damage = NORMAL_ATTACK_DAMAGE
             knockback_distance = NORMAL_ATTACK_KNOCKBACK
             hitstun_frames = HITSTUN_FRAMES_NORMAL
             hitstop_frames = HITSTOP_FRAMES_NORMAL
-            is_knockback = False
             will_knockdown = False
-            attacker_push = 0
 
             attacker = getattr(other, 'character', None)
+
             if attacker is not None and hasattr(attacker, 'config'):
                 cfg = attacker.config
+                data_list = None
+                idx = 0
 
-                if getattr(cfg, 'name', None) == "Naruto" \
-                        and hasattr(cfg, 'normal_attack_data') \
-                        and not other.from_run and not other.up_attack and not other.down_attack:
-
+                if getattr(other, 'from_run', False) and hasattr(cfg, 'run_attack_data'):
+                    data_list = cfg.run_attack_data
+                    idx = 0
+                elif getattr(other, 'up_attack', False) and hasattr(cfg, 'up_attack_data'):
+                    data_list = cfg.up_attack_data
+                    idx = 0
+                elif getattr(other, 'down_attack', False) and hasattr(cfg, 'down_attack_data'):
+                    data_list = cfg.down_attack_data
+                    idx = 0
+                elif hasattr(cfg, 'normal_attack_data'):
                     data_list = cfg.normal_attack_data
                     idx = getattr(other, 'combo_index', 0)
 
-                    if 0 <= idx < len(data_list):
-                        data = data_list[idx]
-                        damage = data.get('damage', damage)
-                        knockback_distance = data.get('knockback', knockback_distance)
-                        hitstun_frames = data.get('hitstun_frames', hitstun_frames)
-                        hitstop_frames = data.get('hitstop_frames', hitstop_frames)
-                        attacker_push = data.get('attacker_push', 0)
-                        will_knockdown = data.get('knockdown', False)
-                        is_knockback = will_knockdown
+                if data_list:
+                    if idx < 0 or idx >= len(data_list):
+                        idx = len(data_list) - 1
+                    data = data_list[idx]
+
+                    damage = data.get('damage', damage)
+                    knockback_distance = data.get('knockback', knockback_distance)
+                    hitstun_frames = data.get('hitstun_frames', hitstun_frames)
+                    hitstop_frames = data.get('hitstop_frames', hitstop_frames)
+                    will_knockdown = data.get('knockdown', False)
 
             knockback_dir = 0
-            if attacker is not None:
+            if knockback_distance != 0 and attacker is not None:
                 if attacker.x > self.x:
                     knockback_dir = -1
                 elif attacker.x < self.x:
@@ -407,7 +415,7 @@ class Character:
             self.hp -= damage
             game_framework.add_hitstop(hitstop_frames)
             self.take_hit(
-                is_knockback=is_knockback,
+                is_knockback=will_knockdown,
                 knockback_distance=knockback_distance,
                 knockback_dir=knockback_dir,
                 hitstun_frames=hitstun_frames,
@@ -419,6 +427,7 @@ class Character:
                 return
             if self.state_machine.cur_state == self.HIT:
                 return
+
             damage = JUMP_ATTACK_DAMAGE
             knockback_distance = JUMP_ATTACK_KNOCKBACK
             hitstun_frames = HITSTUN_FRAMES_JUMP
@@ -431,7 +440,9 @@ class Character:
                 if hasattr(cfg, 'jump_attack_data'):
                     data_list = cfg.jump_attack_data
                     idx = getattr(other, 'combo_index', 0)
-                    if 0 <= idx < len(data_list):
+                    if data_list:
+                        if idx < 0 or idx >= len(data_list):
+                            idx = len(data_list) - 1
                         data = data_list[idx]
                         damage = data.get('damage', damage)
                         knockback_distance = data.get('knockback', knockback_distance)
@@ -457,7 +468,6 @@ class Character:
                 hitstun_frames=hitstun_frames,
                 will_knockdown=will_knockdown
             )
-
 
         elif group == 'special_attack:character':
             if hasattr(other, 'owner') and other.owner == self:
