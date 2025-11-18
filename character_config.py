@@ -283,18 +283,18 @@ class NarutoConfig(CharacterConfig):
         self.special_attack_data = [
             {
                 'name': 'naruto_special_A_1',
-                'damage': 15,
-                'hitstop_frames': 6,
+                'damage': 1,
+                'hitstop_frames': 15,
                 'hitstun_frames': 32,
-                'knockback': 80,
+                'knockback': 0,
                 'knockdown': False,
             },
             {
                 'name': 'naruto_special_A_2',
                 'damage': 20,
-                'hitstop_frames': 8,
+                'hitstop_frames': 20,
                 'hitstun_frames': 40,
-                'knockback': 120,
+                'knockback': 0,
                 'knockdown': True,
             },
         ]
