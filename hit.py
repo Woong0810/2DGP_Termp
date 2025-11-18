@@ -137,7 +137,6 @@ class Hit:
 
     def naruto_start_air_lock(self):
         self.naruto_air_lock = True
-        self.vy = 0.0
 
     def naruto_replay_hit(self):    # 추가 히트가 들어올 때, 히트 애니메이션을 처음부터 다시 재생
         self.elapsed_time = 0.0
