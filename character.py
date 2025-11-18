@@ -81,6 +81,8 @@ class Character:
         self.STAND_UP = StandUp(self)
         self.DASH = Dash(self)
 
+        self.naruto_special_chain_active = False
+
         # 키 바인딩 기반 rules 생성
         from event_to_string import key_down, key_up
         kb = self.key_bindings
@@ -470,12 +472,11 @@ class Character:
             )
 
         elif group == 'special_attack:character':
-            if hasattr(other, 'is_search_phase') and callable(getattr(other, 'is_search_phase', None)):
-                try:
+            if hasattr(other, 'character') and getattr(other.character, 'config', None) \
+                    and other.character.config.name == "Naruto":
+                if hasattr(other, 'is_search_phase') and callable(other.is_search_phase):
                     if other.is_search_phase():
                         return
-                except:
-                    pass
             if hasattr(other, 'owner') and other.owner == self:
                 return
             if self.state_machine.cur_state == self.DEFENSE:
