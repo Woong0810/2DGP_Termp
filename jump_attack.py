@@ -18,6 +18,9 @@ class JumpAttack:
 
         self.n_key_pressed = False
 
+        self.segment_move_speed = 0.0
+        self.segment_move_elapsed = 0.0
+
     def enter(self, e):
         jump_state = self.character.JUMP
         self.vy = jump_state.vy
@@ -33,6 +36,10 @@ class JumpAttack:
             self.start_frame, self.end_frame = 0, 0
             self.attack_frame = 0.0
 
+        self.segment_move_elapsed = 0.0
+        self.segment_move_speed = 0.0
+        self._update_segment_move()
+
         game_world.add_collision_pairs('jump_attack:character', self, None)
 
     def exit(self, e):
@@ -47,6 +54,12 @@ class JumpAttack:
         segment_length = self.end_frame - self.start_frame + 1
         self.attack_frame += segment_length * ACTION_PER_TIME * NORMAL_ATTACK_ANIMATION_SPEED * game_framework.frame_time
 
+        if self.segment_move_speed != 0.0:
+            self.segment_move_elapsed += game_framework.frame_time
+            segment_duration = 1.0 / (ACTION_PER_TIME * NORMAL_ATTACK_ANIMATION_SPEED)
+            if self.segment_move_elapsed < segment_duration:
+                self.character.x += self.character.face_dir * self.segment_move_speed * game_framework.frame_time
+
         if self.attack_frame >= segment_length:
             if hasattr(self.character.config, 'jump_attack_segments'):
                 segments = self.character.config.jump_attack_segments
@@ -54,6 +67,7 @@ class JumpAttack:
                     self.combo_index += 1
                     self.start_frame, self.end_frame = segments[self.combo_index]
                     self.attack_frame = 0.0
+                    self._update_segment_move()
                 else:
                     self.character.state_machine.handle_event(('SEGMENT_END', None))
 
@@ -63,6 +77,30 @@ class JumpAttack:
         self.character.y += self.vy * game_framework.frame_time
 
         self.check_landing(prev_bottom)
+
+    def _update_segment_move(self):
+        self.segment_move_elapsed = 0.0
+        self.segment_move_speed = 0.0
+
+        cfg = getattr(self.character, 'config', None)
+        if cfg is None:
+            return
+        if not hasattr(cfg, 'jump_attack_data'):
+            return
+
+        data_list = cfg.jump_attack_data
+        idx = getattr(self, 'segment_index', 0)
+        if not (0 <= idx < len(data_list)):
+            return
+
+        data = data_list[idx]
+        push = data.get('attacker_push', 0)
+        if push == 0:
+            return
+
+        from character_config import ACTION_PER_TIME, NORMAL_ATTACK_ANIMATION_SPEED
+        segment_duration = 1.0 / (ACTION_PER_TIME * NORMAL_ATTACK_ANIMATION_SPEED)
+        self.segment_move_speed = push / segment_duration
 
     def check_landing(self, prev_bottom):
         if hasattr(self.character, 'stage') and \
