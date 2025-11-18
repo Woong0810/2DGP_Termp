@@ -3,7 +3,7 @@ from pico2d import *
 import game_world
 from background import Background
 from character import Character
-from character_config import NarutoConfig, ItachiConfig
+from character_config import NarutoConfig, ItachiConfig, JiraiyaConfig
 import game_framework
 import title_mode
 from hp_bar import HPBar
@@ -32,7 +32,7 @@ def init():
     player1 = Character(NarutoConfig(), key_bindings=PLAYER1_KEY_BINDINGS, x=200, y=30, stage=background)
     game_world.add_object(player1, 1)
 
-    player2 = Character(ItachiConfig(), key_bindings=PLAYER2_KEY_BINDINGS, x=600, y=30, stage=background)
+    player2 = Character(JiraiyaConfig(), key_bindings=PLAYER2_KEY_BINDINGS, x=600, y=30, stage=background)
     player2.face_dir = -1
     game_world.add_object(player2, 1)
 
