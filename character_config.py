@@ -278,14 +278,24 @@ class NarutoConfig(CharacterConfig):
                 'knockdown': True,
             },
         ]
-        self.special_attack_data = {
-            'name': 'naruto_rasengan',
-            'damage': 20,
-            'hitstop_frames': 8,
-            'hitstun_frames': 40,
-            'knockback': 120,
-            'knockdown': True,
-        }
+        self.special_attack_data = [
+            {
+                'name': 'naruto_special_A_1',
+                'damage': 15,
+                'hitstop_frames': 6,
+                'hitstun_frames': 32,
+                'knockback': 80,
+                'knockdown': False,
+            },
+            {
+                'name': 'naruto_special_A_2',
+                'damage': 20,
+                'hitstop_frames': 8,
+                'hitstun_frames': 40,
+                'knockback': 120,
+                'knockdown': True,
+            },
+        ]
 
         self.ranged_attack_data = {
             'name': 'naruto_shuriken',
@@ -384,7 +394,7 @@ class ItachiConfig(CharacterConfig):
                 'hitstun_frames': 20,
                 'knockback': 80,
                 'attacker_push': 15,
-                'knockdown': True,  # 마지막타 다운
+                'knockdown': True,
             },
         ]
         self.run_attack_data = [
@@ -448,14 +458,24 @@ class ItachiConfig(CharacterConfig):
             'knockback': 30,
             'knockdown': True,
         }
-        self.ranged_attack_data = {
-            'name': 'itachi_shuriken',
-            'damage': 8,
-            'hitstop_frames': 3,
-            'hitstun_frames': 16,
-            'knockback': 25,
-            'knockdown': False,
-        }
+        self.special_attack_data = [
+            {
+                'name': 'itachi_special_A_1',
+                'damage': 18,
+                'hitstop_frames': 6,
+                'hitstun_frames': 45,
+                'knockback': 30,
+                'knockdown': False,
+            },
+            {
+                'name': 'itachi_special_A_2',
+                'damage': 22,
+                'hitstop_frames': 10,
+                'hitstun_frames': 60,
+                'knockback': 40,
+                'knockdown': True,
+            },
+        ]
 
 class JiraiyaConfig(CharacterConfig):
     def __init__(self):

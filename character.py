@@ -481,18 +481,21 @@ class Character:
             knockback_distance = SPECIAL_ATTACK_KNOCKBACK
             hitstun_frames = HITSTUN_FRAMES_SPECIAL
             hitstop_frames = HITSTOP_FRAMES_SPECIAL
-            will_knockdown = True  # 기본은 다운기로 취급
+            will_knockdown = True
 
             attacker = getattr(other, 'character', None)
             if attacker is not None and hasattr(attacker, 'config'):
                 cfg = attacker.config
+
                 if hasattr(cfg, 'special_attack_data'):
-                    data = cfg.special_attack_data
-                    damage = data.get('damage', damage)
-                    knockback_distance = data.get('knockback', knockback_distance)
-                    hitstun_frames = data.get('hitstun_frames', hitstun_frames)
-                    hitstop_frames = data.get('hitstop_frames', hitstop_frames)
-                    will_knockdown = data.get('knockdown', will_knockdown)
+                    data_list = cfg.special_attack_data
+                    if isinstance(data_list, list) and len(data_list) > 0:
+                        data = data_list[0]
+                        damage = data.get('damage', damage)
+                        knockback_distance = data.get('knockback', knockback_distance)
+                        hitstun_frames = data.get('hitstun_frames', hitstun_frames)
+                        hitstop_frames = data.get('hitstop_frames', hitstop_frames)
+                        will_knockdown = data.get('knockdown', will_knockdown)
 
             knockback_dir = 0
             if knockback_distance != 0 and attacker is not None:
@@ -512,6 +515,54 @@ class Character:
                 hitstun_frames=hitstun_frames,
                 will_knockdown=will_knockdown
             )
+
+        elif group == 'special_attack2:character':
+            if hasattr(other, 'owner') and other.owner == self:
+                return
+            if self.state_machine.cur_state == self.DEFENSE:
+                return
+            if self.state_machine.cur_state == self.HIT:
+                return
+
+            damage = SPECIAL_ATTACK_DAMAGE
+            knockback_distance = SPECIAL_ATTACK_KNOCKBACK
+            hitstun_frames = HITSTUN_FRAMES_SPECIAL
+            hitstop_frames = HITSTOP_FRAMES_SPECIAL
+            will_knockdown = True
+
+            attacker = getattr(other, 'character', None)
+            if attacker is not None and hasattr(attacker, 'config'):
+                cfg = attacker.config
+
+                if hasattr(cfg, 'special_attack_data'):
+                    data_list = cfg.special_attack_data
+                    if isinstance(data_list, list) and len(data_list) > 1:
+                        data = data_list[1]  # ★ 두 번째 스페셜
+                        damage = data.get('damage', damage)
+                        knockback_distance = data.get('knockback', knockback_distance)
+                        hitstun_frames = data.get('hitstun_frames', hitstun_frames)
+                        hitstop_frames = data.get('hitstop_frames', hitstop_frames)
+                        will_knockdown = data.get('knockdown', will_knockdown)
+
+            knockback_dir = 0
+            if knockback_distance != 0 and attacker is not None:
+                if attacker.x > self.x:
+                    knockback_dir = -1
+                elif attacker.x < self.x:
+                    knockback_dir = 1
+                else:
+                    knockback_dir = -self.face_dir
+
+            self.hp -= damage
+            game_framework.add_hitstop(hitstop_frames)
+            self.take_hit(
+                is_knockback=will_knockdown,
+                knockback_distance=knockback_distance,
+                knockback_dir=knockback_dir,
+                hitstun_frames=hitstun_frames,
+                will_knockdown=will_knockdown
+            )
+
 
         elif group == 'character:shuriken':
             if hasattr(other, 'owner') and other.owner == self:
