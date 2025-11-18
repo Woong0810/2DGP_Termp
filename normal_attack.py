@@ -108,13 +108,10 @@ class NormalAttack:
         self.segment_move_elapsed = 0.0
         self.segment_move_speed = 0.0
 
-        if self.from_run or self.up_attack or self.down_attack:
-            return
-
         cfg = getattr(self.character, 'config', None)
         if cfg is None:
             return
-        if getattr(cfg, 'name', None) != "Naruto":
+        if self.from_run or self.up_attack or self.down_attack:
             return
         if not hasattr(cfg, 'normal_attack_data'):
             return
