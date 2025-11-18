@@ -48,20 +48,10 @@ class SpecialAttack:
                 self.character.state_machine.handle_event(('SPECIAL_ATTACK_END', None))
         else:
             special_frames = self.character.config.special_attack_frames
-            last_4_start = len(special_frames) - 4
-            skip_before_last_4 = last_4_start - 3
-
             self.character.frame += len(special_frames) * ACTION_PER_TIME * SPECIAL_ATTACK_ANIMATION_SPEED * game_framework.frame_time
 
-            if skip_before_last_4 - 3 <= self.character.frame < last_4_start:
-                self.character.frame = last_4_start
-
             if self.character.frame >= len(special_frames):
-                if self.loop_count < SPECIAL_ATTACK_LOOP_COUNT:
-                    self.character.frame = last_4_start
-                    self.loop_count += 1
-                else:
-                    self.character.state_machine.handle_event(('SPECIAL_ATTACK_END', None))
+                self.character.state_machine.handle_event(('SPECIAL_ATTACK_END', None))
 
     def draw(self):
         if self.character.config.name == "Itachi":
@@ -148,4 +138,3 @@ class SpecialAttack:
 
     def handle_collision(self, group, other):
         pass
-
