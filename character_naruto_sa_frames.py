@@ -78,11 +78,11 @@ FRAMES = [
     {'left':   2, 'bottom': 3765, 'width': 285, 'height': 233},  # 50
     {'left': 290, 'bottom': 3765, 'width': 285, 'height': 233},  # 51
     # row 26
-    {'left':   2, 'bottom': 3529, 'width': 285, 'height': 233},  # 52
-    {'left': 290, 'bottom': 3529, 'width': 285, 'height': 233},  # 53
+    {'left':   2, 'bottom': 3555, 'width': 285, 'height': 233},  # 52
+    {'left': 290, 'bottom': 3555, 'width': 285, 'height': 233},  # 53
     # row 27
-    {'left':   2, 'bottom': 3293, 'width': 285, 'height': 233},  # 54
-    {'left': 290, 'bottom': 3293, 'width': 285, 'height': 233},  # 55
+    {'left':   2, 'bottom': 3303, 'width': 285, 'height': 233},  # 54
+    {'left': 290, 'bottom': 3303, 'width': 285, 'height': 233},  # 55
     # row 28
     {'left':   2, 'bottom': 3057, 'width': 285, 'height': 233},  # 56
     {'left': 290, 'bottom': 3057, 'width': 285, 'height': 233},  # 57
@@ -117,8 +117,8 @@ FRAMES = [
     {'left':   2, 'bottom':  697, 'width': 285, 'height': 233},  # 76
     {'left': 290, 'bottom':  697, 'width': 285, 'height': 233},  # 77
     # row 39
-    {'left':   2, 'bottom':  461, 'width': 285, 'height': 233},  # 78
-    {'left': 290, 'bottom':  461, 'width': 285, 'height': 233},  # 79
+    {'left':   2, 'bottom':  473, 'width': 285, 'height': 233},  # 78
+    {'left': 290, 'bottom':  473, 'width': 285, 'height': 233},  # 79
     # row 40
     {'left':   2, 'bottom':  225, 'width': 285, 'height': 233},  # 80
     {'left': 290, 'bottom':  225, 'width': 285, 'height': 233},  # 81
