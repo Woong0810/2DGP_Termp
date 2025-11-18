@@ -113,7 +113,7 @@ class SpecialAttack:
         target = self.target
         if target is None or target.hp <= 0:
             return
-        # 나루토 스페셜 1 데미지 / 히트스톱 / 히트스턴 정보 가져오기
+
         data = None
         if hasattr(self.character.config, 'special_attack_data'):
             sad = self.character.config.special_attack_data
@@ -122,36 +122,60 @@ class SpecialAttack:
 
         damage = data.get('damage', 15) if data else 15
         hitstop_frames = data.get('hitstop_frames', 6) if data else 6
-        hitstun_frames = data.get('hitstun_frames', 32) if data else 32
 
-        # 첫 타 (43프레임 근처): 기존 충돌 처리로 피격 상태(HIT) 진입
         if frame_int == 43:
             target.naruto_special_chain_active = True
-            target.handle_collision('special_attack:character', self)
+
+            dir1 = self.character.face_dir
+            target.take_hit(
+                is_knockback=True,
+                knockback_distance=40,
+                knockback_dir=dir1,
+                hitstun_frames=30,
+                will_knockdown=False
+            )
+            target.hp = max(0, target.hp - damage)
+            game_framework.add_hitstop(hitstop_frames)
             return
 
         if not hasattr(target, 'HIT') or target.state_machine.cur_state != target.HIT:
             return
         hit_state = target.HIT
 
-        if frame_int in (44, 67, 73):
+        if frame_int == 44:
+            dir2 = -self.character.face_dir
+            target.take_hit(
+                is_knockback=True,
+                knockback_distance=40,
+                knockback_dir=dir2,
+                hitstun_frames=30,
+                will_knockdown=False
+            )
             hit_state.naruto_replay_hit()
+            target.hp = max(0, target.hp - damage)
+            game_framework.add_hitstop(hitstop_frames)
+            return
+
         if frame_int == 59:
-            # 한 번만 위로 띄워서 공중에 고정
-            target.y += 100  # 필요하면 값 조절
+            target.y += 100
             hit_state.naruto_start_air_lock()
             hit_state.naruto_replay_hit()
+            target.hp = max(0, target.hp - damage)
+            game_framework.add_hitstop(hitstop_frames)
+            return
+
+        if frame_int in (67, 73):
+            hit_state.naruto_replay_hit()
+            target.hp = max(0, target.hp - damage)
+            game_framework.add_hitstop(hitstop_frames)
+            return
+
         if frame_int == 78:
-            # 더 이상 연속 히트 모드 아님
-            target.naruto_special_chain_active = False
             hit_state.naruto_end_chain_with_knockdown()
+            target.hp = max(0, target.hp - damage)
+            game_framework.add_hitstop(hitstop_frames)
+            return
 
-        target.hp -= damage
-        if target.hp < 0:
-            target.hp = 0
-
-        game_framework.add_hitstop(hitstop_frames)
-        hit_state.elapsed_time = 0.0
 
     def draw(self):
         if self.character.config.name == "Itachi":
