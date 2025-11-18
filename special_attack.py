@@ -1,5 +1,5 @@
 from pico2d import draw_rectangle, load_image
-from character_config import ACTION_PER_TIME, SPECIAL_ATTACK_ANIMATION_SPEED, SPECIAL_ATTACK_LOOP_COUNT
+from character_config import ACTION_PER_TIME, SPECIAL_ATTACK_ANIMATION_SPEED
 import game_framework
 import game_world
 
@@ -14,9 +14,19 @@ class SpecialAttack:
         if hasattr(self.character.config, 'special_attack_image_path') and self.character.config.special_attack_image_path:
             self.special_image = load_image(self.character.config.special_attack_image_path)
 
+        self.target = None  # 락온된 상대
+        self.naruto_hit_frames = [43, 44, 59, 67, 73, 78]
+        self.naruto_hit_done = {f: False for f in self.naruto_hit_frames}
+        self.prev_frame_int = 0
+
     def enter(self, e):
         self.character.frame = 0
         self.loop_count = 0
+        self.prev_frame_int = 0
+
+        if self.character.config.name == "Naruto":
+            self.target = None
+            self.naruto_hit_done = {f: False for f in self.naruto_hit_frames}
 
         if self.character.config.name == "Itachi":
             from amaterasu import Amaterasu
@@ -35,6 +45,8 @@ class SpecialAttack:
                 pass
             self.amaterasu = None
 
+        self.target = None
+
     def do(self):
         if self.character.config.name == "Itachi":
             char_frames = self.character.config.special_attack_frames
@@ -46,15 +58,96 @@ class SpecialAttack:
 
             if not self.amaterasu or self.amaterasu not in game_world.world[1]:
                 self.character.state_machine.handle_event(('SPECIAL_ATTACK_END', None))
+
         else:
             special_frames = self.character.config.special_attack_frames
+
+            prev_int = int(self.character.frame)
             self.character.frame += len(special_frames) * ACTION_PER_TIME * SPECIAL_ATTACK_ANIMATION_SPEED * game_framework.frame_time
+            cur_int = int(self.character.frame)
+
+            # 나루토 스페셜 1 전용 로직 (충돌은 탐색으로만 처리, 실제 데미지는 프레임에 따라 직접 처리)
+            if self.character.config.name == "Naruto":
+                self._update_naruto_special1(prev_int, cur_int)
 
             if self.character.frame >= len(special_frames):
                 self.character.state_machine.handle_event(('SPECIAL_ATTACK_END', None))
 
+            self.prev_frame_int = cur_int
+
+    def is_search_phase(self):
+        if self.character.config.name != "Naruto":
+            return False
+        return self.target is None and int(self.character.frame) < 43
+
+    def _update_naruto_special1(self, prev_frame_int, cur_frame_int):
+        if self.target is not None:
+            if self.target.x > self.character.x:
+                self.character.face_dir = 1
+            elif self.target.x < self.character.x:
+                self.character.face_dir = -1
+
+            # 상대 근처까지 이동
+            desired_offset_x = 40  # 두 캐릭터 사이 거리
+            desired_x = self.target.x - self.character.face_dir * desired_offset_x
+            dx = desired_x - self.character.x
+
+            move_speed = 600
+            max_move = move_speed * game_framework.frame_time
+
+            if abs(dx) <= max_move:
+                self.character.x = desired_x
+            else:
+                self.character.x += max_move if dx > 0 else -max_move
+
+        # 특정 프레임에서만 히트 판정
+        for f in self.naruto_hit_frames:
+            if self.naruto_hit_done.get(f, False):
+                continue
+            # prev < f <= cur 인 순간에 딱 한 번만 히트
+            if prev_frame_int < f <= cur_frame_int:
+                self._naruto_apply_hit(f)
+                self.naruto_hit_done[f] = True
+
+    def _naruto_apply_hit(self, frame_int):
+        target = self.target
+        if target is None or target.hp <= 0:
+            return
+        # 나루토 스페셜 1 데미지 / 히트스톱 / 히트스턴 정보 가져오기
+        data = None
+        if hasattr(self.character.config, 'special_attack_data'):
+            sad = self.character.config.special_attack_data
+            if isinstance(sad, list) and len(sad) > 0:
+                data = sad[0]
+
+        damage = data.get('damage', 15) if data else 15
+        hitstop_frames = data.get('hitstop_frames', 6) if data else 6
+        hitstun_frames = data.get('hitstun_frames', 32) if data else 32
+
+        # 첫 타 (43프레임 근처): 기존 충돌 처리로 피격 상태(HIT) 진입
+        if frame_int == 43:
+            target.handle_collision('special_attack:character', self)
+            target.x += self.character.face_dir * 20  # 약간 밀려나는 효과
+            return
+        # 59 프레임: 공중으로 띄우기
+        if frame_int == 59:
+            target.y += 100
+
+        # 데미지 누적
+        target.hp -= damage
+        if target.hp < 0:
+            target.hp = 0
+
+        game_framework.add_hitstop(hitstop_frames)
+
+        # 계속 얻어맞는 느낌을 위해 HIT 상태 시간 초기화
+        if hasattr(target, 'HIT') and target.state_machine.cur_state == target.HIT:
+            hit_state = target.HIT
+            hit_state.elapsed_time = 0.0
+
     def draw(self):
         if self.character.config.name == "Itachi":
+            # 이타치 캐릭터 애니메이션
             char_frames = self.character.config.special_attack_frames
 
             char_idx = min(int(self.character.frame), len(char_frames) - 1)
@@ -96,9 +189,42 @@ class SpecialAttack:
                 image_to_use.clip_draw(l, b, w, h, self.character.x, draw_y, draw_w, draw_h)
             else:
                 image_to_use.clip_composite_draw(l, b, w, h, 0.0, 'h',
-                                                     self.character.x, draw_y, draw_w, draw_h)
+                                                 self.character.x, draw_y, draw_w, draw_h)
 
         draw_rectangle(*self.get_bb())
+
+    def _get_bb_naruto(self):
+        current = int(self.character.frame)
+
+        # 아직 타겟을 못 잡았고, 탐색 프레임 구간이면 큰 박스로 검색
+        SEARCH_END_FRAME = 43
+        if self.target is None and current < SEARCH_END_FRAME:
+            if hasattr(self.character.config, 'special_attack_frames_data') and self.character.config.special_attack_frames_data:
+                all_frames = self.character.config.special_attack_frames_data
+                frame_idx = max(0, min(current, len(all_frames) - 1))
+                frame = all_frames[frame_idx]
+            else:
+                all_frames = self.character.config.frames
+                frame_indices = self.character.config.special_attack_frames
+                idx = max(0, min(current, len(frame_indices) - 1))
+                frame_idx = frame_indices[idx]
+                frame = all_frames[frame_idx]
+
+            hb = dict(self.character.config.hitbox_special_attack)
+            hb['scale_x'] *= 1.6
+            hb['scale_y'] *= 1.2
+
+            hw = frame['width'] * self.character.config.scale_x * hb['scale_x'] / 2
+            hh = frame['height'] * self.character.config.scale_y * hb['scale_y'] / 2
+            return (
+                self.character.x - hw + hb['x_offset'],
+                self.character.y - hh + hb['y_offset'],
+                self.character.x + hw + hb['x_offset'],
+                self.character.y + hh + hb['y_offset'],
+            )
+
+        # 탐색 구간 종료: 실제 타격은 코드로 처리 → 히트박스 없음
+        return (0, 0, 0, 0)
 
     def get_bb(self):
         if self.character.config.name == "Itachi":
@@ -106,7 +232,10 @@ class SpecialAttack:
                 return self.amaterasu.get_bb()
             else:
                 return (0, 0, 0, 0)
+        elif self.character.config.name == "Naruto":
+            return self._get_bb_naruto()
         else:
+            # 기타 캐릭터용 기본 스페셜 히트박스 (기존 로직)
             threshold = 120
             if self.character.frame < threshold:
                 return (0, 0, 0, 0)
@@ -124,17 +253,20 @@ class SpecialAttack:
                 frame_idx = special_attack_frames[current_frame]
                 frame = all_frames[frame_idx]
 
-        frame = all_frames[frame_idx]
-
-        hb = self.character.config.hitbox_special_attack
-        hw = frame['width'] * self.character.config.scale_x * hb['scale_x'] / 2
-        hh = frame['height'] * self.character.config.scale_y * hb['scale_y'] / 2
-        return (
-            self.character.x - hw + hb['x_offset'],
-            self.character.y - hh + hb['y_offset'],
-            self.character.x + hw + hb['x_offset'],
-            self.character.y + hh + hb['y_offset']
-        )
+            hb = self.character.config.hitbox_special_attack
+            hw = frame['width'] * self.character.config.scale_x * hb['scale_x'] / 2
+            hh = frame['height'] * self.character.config.scale_y * hb['scale_y'] / 2
+            return (
+                self.character.x - hw + hb['x_offset'],
+                self.character.y - hh + hb['y_offset'],
+                self.character.x + hw + hb['x_offset'],
+                self.character.y + hh + hb['y_offset']
+            )
 
     def handle_collision(self, group, other):
-        pass
+        # 충돌 처리로 락온만
+        if group == 'special_attack:character' and self.character.config.name == "Naruto":
+            if self.target is None and self.is_search_phase():
+                self.target = other
+        # 실제 데미지/히트 처리는 _naruto_apply_hit 쪽에서
+        return
