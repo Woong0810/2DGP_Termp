@@ -494,11 +494,11 @@ class JiraiyaConfig(CharacterConfig):
         self.draw_offset_y = 0
 
         # TODO: Jiraiya의 프레임 인덱스 설정 (나중에 추가)
-        self.idle_frames = list(range(0, 0 + 23))
+        self.idle_frames = list(range(54, 54 + 4))
         self.run_frames = list(range(39, 39 + 6))
         self.normal_attack_frames = list(range(0, 23))
         self.normal_attack_segments = [(0, 4), (5, 12), (6, 22)]
-        self.run_attack_segments = [(61, 73)]
+        self.run_attack_segments = [(28, 33)]
         self.up_attack_segments = [(48, 52)]
         self.down_attack_segments = [(271, 278)]
         self.jump_attack_segments = [(76, 79), (80, 82)]
