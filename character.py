@@ -470,6 +470,12 @@ class Character:
             )
 
         elif group == 'special_attack:character':
+            if hasattr(other, 'is_search_phase') and callable(getattr(other, 'is_search_phase', None)):
+                try:
+                    if other.is_search_phase():
+                        return
+                except:
+                    pass
             if hasattr(other, 'owner') and other.owner == self:
                 return
             if self.state_machine.cur_state == self.DEFENSE:
