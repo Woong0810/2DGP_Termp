@@ -127,11 +127,17 @@ class SpecialAttack:
         # 첫 타 (43프레임 근처): 기존 충돌 처리로 피격 상태(HIT) 진입
         if frame_int == 43:
             target.handle_collision('special_attack:character', self)
-            target.x += self.character.face_dir * 20  # 약간 밀려나는 효과
+            target.x += self.character.face_dir * 30  # 약간 밀려나는 효과
+            game_framework.add_hitstop(hitstop_frames)
+            return
+        if frame_int == 44:
+            target.handle_collision('special_attack:character', self)
+            target.x -= self.character.face_dir * 30  # 약간 밀려나는 효과
+            game_framework.add_hitstop(hitstop_frames)
             return
         # 59 프레임: 공중으로 띄우기
         if frame_int == 59:
-            target.y += 100
+            target.y += 130
 
         # 데미지 누적
         target.hp -= damage
