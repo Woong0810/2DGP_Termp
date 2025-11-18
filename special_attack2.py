@@ -18,7 +18,7 @@ class SpecialAttack2:
         self.character.frame = 0
         self.loop_count = 0
         self.frames = getattr(self.character.config, 'special_attack2_frames', [])
-        game_world.add_collision_pairs('special_attack:character', self, None)
+        game_world.add_collision_pairs('special_attack2:character', self, None)
 
     def exit(self, e):
         game_world.remove_collision_object(self)

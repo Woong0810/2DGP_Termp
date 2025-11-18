@@ -42,6 +42,8 @@ def init():
     game_world.add_collision_pairs('jump_attack:character', None, player2)
     game_world.add_collision_pairs('special_attack:character', None, player1)
     game_world.add_collision_pairs('special_attack:character', None, player2)
+    game_world.add_collision_pairs('special_attack2:character', None, player1)
+    game_world.add_collision_pairs('special_attack2:character', None, player2)
     game_world.add_collision_pairs('ranged_attack:character', None, player1)
     game_world.add_collision_pairs('ranged_attack:character', None, player2)
     game_world.add_collision_pairs('character:shuriken', player1, None)
