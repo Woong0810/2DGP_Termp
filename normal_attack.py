@@ -66,13 +66,7 @@ class NormalAttack:
         game_world.remove_collision_object(self)
 
     def do(self):
-        # 충돌 후 유지 중이면 프레임 고정 및 시간 감소
-        if self.collision_hold_remaining > 0.0:
-            self.character.frame = self.end_frame
-            self.collision_hold_remaining -= game_framework.frame_time
-            if self.collision_hold_remaining <= 0.0:
-                self.character.state_machine.handle_event(('SEGMENT_END', None))
-            return
+
 
         if self.segment_move_speed != 0.0:
             self.segment_move_elapsed += game_framework.frame_time
