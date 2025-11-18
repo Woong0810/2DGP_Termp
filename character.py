@@ -471,12 +471,12 @@ class Character:
                 will_knockdown=will_knockdown
             )
 
+
+
         elif group == 'special_attack:character':
-            if hasattr(other, 'character') and getattr(other.character, 'config', None) \
-                    and other.character.config.name == "Naruto":
-                if hasattr(other, 'is_search_phase') and callable(other.is_search_phase):
-                    if other.is_search_phase():
-                        return
+            attacker = getattr(other, 'character', None)
+            if attacker and hasattr(attacker, 'config') and attacker.config.name == "Naruto":
+                return
             if hasattr(other, 'owner') and other.owner == self:
                 return
             if self.state_machine.cur_state == self.DEFENSE:
@@ -490,10 +490,8 @@ class Character:
             hitstop_frames = HITSTOP_FRAMES_SPECIAL
             will_knockdown = True
 
-            attacker = getattr(other, 'character', None)
             if attacker is not None and hasattr(attacker, 'config'):
                 cfg = attacker.config
-
                 if hasattr(cfg, 'special_attack_data'):
                     data_list = cfg.special_attack_data
                     if isinstance(data_list, list) and len(data_list) > 0:
@@ -522,6 +520,7 @@ class Character:
                 hitstun_frames=hitstun_frames,
                 will_knockdown=will_knockdown
             )
+
 
         elif group == 'special_attack2:character':
             if hasattr(other, 'owner') and other.owner == self:

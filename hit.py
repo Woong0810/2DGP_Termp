@@ -18,8 +18,9 @@ class Hit:
         self.will_knockdown = False
 
         self.naruto_chain = False
-        self.naruto_chain_hold = False
-        self.naruto_chain_air_lock = False
+        self.naruto_hold_last = False
+        self.naruto_air_lock = False
+        self.naruto_force_knockdown = False
 
     def enter(self, event):
         self.character.frame = 0
@@ -27,8 +28,9 @@ class Hit:
         self.is_lying_down = False
 
         self.naruto_chain = False
-        self.naruto_chain_hold = False
-        self.naruto_chain_air_lock = False
+        self.naruto_hold_last = False
+        self.naruto_air_lock = False
+        self.naruto_force_knockdown = False
 
         prev_state = self.character.state_machine.prev_state
         if prev_state == self.character.JUMP or prev_state == self.character.JUMP_ATTACK:
@@ -56,9 +58,9 @@ class Hit:
             self.will_knockdown = False
         self.vy = 0.0
 
-        if hasattr(self.character, 'naruto_special_chain_active') and self.character.naruto_special_chain_active:
+        if getattr(self.character, 'naruto_special_chain_active', False):
             self.naruto_chain = True
-            self.naruto_chain_hold = True
+            self.naruto_hold_last = True
 
         game_world.add_collision_pairs('normal_attack:character', None, self.character)
         game_world.add_collision_pairs('jump_attack:character', None, self.character)
@@ -83,18 +85,18 @@ class Hit:
             if self.was_in_air:
                 _, prev_bottom, _, _ = self.get_bb()
 
+            if self.naruto_chain and self.naruto_air_lock:
+                return
+
             if self.elapsed_time < self.hit_duration:
                 knockback_frames = self.character.config.knockback_frames
                 frames_per_action = len(knockback_frames)
-                self.character.frame = (self.character.frame
-                                        +frames_per_action * ACTION_PER_TIME
+                self.character.frame = (self.character.frame + frames_per_action * ACTION_PER_TIME
                                         * HIT_ANIMATION_SPEED * dt ) % frames_per_action
-
                 if self.was_in_air and hasattr(self.character, 'stage') and self.character.stage is not None:
                     self.vy -= GRAVITY_PPS2 * dt
                     self.character.y += self.vy * dt
                     self.check_landing(prev_bottom)
-
             else:
                 if self.will_knockdown:
                     if self.elapsed_time < self.hit_duration + KNOCKBACK_DOWN_TIME:
@@ -109,23 +111,24 @@ class Hit:
                         self.character.state_machine.add_event(('RESUME_JUMP', self.ground_y))
                     else:
                         self.character.state_machine.add_event(('HIT_END', 0))
-
         else:
             hit_frames = self.character.config.hit_frames
             frames_per_action = len(hit_frames)
 
             if self.naruto_chain:
-                if self.elapsed_time < self.hit_duration:
-                    self.character.frame = (self.character.frame + frames_per_action * ACTION_PER_TIME
-                                            * HIT_ANIMATION_SPEED * dt) % frames_per_action
+                if not self.naruto_hold_last:
+                    self.character.frame = ( self.character.frame + frames_per_action * ACTION_PER_TIME
+                                             * HIT_ANIMATION_SPEED * dt ) % frames_per_action
+                    if self.elapsed_time >= self.hit_duration:
+                        self.naruto_hold_last_frame()
+                        if frames_per_action > 0:
+                            self.character.frame = frames_per_action - 1
                 else:
-                    if self.naruto_chain_hold and frames_per_action > 0:
+                    if frames_per_action > 0:
                         self.character.frame = frames_per_action - 1
                 return
-
-            self.character.frame = (self.character.frame + frames_per_action * ACTION_PER_TIME
-                                    * HIT_ANIMATION_SPEED * dt) % frames_per_action
-
+            self.character.frame = ( self.character.frame + frames_per_action * ACTION_PER_TIME
+                                     * HIT_ANIMATION_SPEED * dt ) % frames_per_action
             if self.elapsed_time >= self.hit_duration:
                 if self.was_in_air:
                     self.character.state_machine.add_event(('RESUME_JUMP', self.ground_y))
@@ -133,24 +136,28 @@ class Hit:
                     self.character.state_machine.add_event(('HIT_END', 0))
 
     def naruto_start_air_lock(self):
-        self.naruto_chain_air_lock = True   # 공중에 띄워놓고 고정
+        self.naruto_air_lock = True
+        self.vy = 0.0
 
     def naruto_replay_hit(self):    # 추가 히트가 들어올 때, 히트 애니메이션을 처음부터 다시 재생
         self.elapsed_time = 0.0
         self.character.frame = 0
+        self.naruto_hold_last = False
+
+    def naruto_hold_last_frame(self):
+        self.naruto_hold_last = True
 
     def naruto_end_chain_with_knockdown(self):  # 공중에 떠있다가 떨어지면서 넘어지는 연출
         self.naruto_chain = False
-        self.naruto_chain_hold = False
-        self.naruto_chain_air_lock = False
-
-        self.was_in_air = True
+        self.naruto_air_lock = False
+        self.naruto_hold_last = False
+        self.naruto_force_knockdown = True
+        self.character.naruto_special_chain_active = False
 
         self.is_knockback = True
-        self.knockback_distance = 0
-        self.knockback_dir = 0
-
-        # 시간 초기화해서 knockback 타이머 다시 시작
+        self.will_knockdown = True
+        self.was_in_air = True
+        self.vy = 0.0
         self.elapsed_time = 0.0
 
     def check_landing(self, prev_bottom):
@@ -161,8 +168,7 @@ class Hit:
 
         if hasattr(self.character.stage, 'find_landing_platform'):
             ground_top = self.character.stage.find_landing_platform(
-                left, prev_bottom, right, bottom, self.vy
-            )
+                left, prev_bottom, right, bottom, self.vy )
         else:
             ground_top = None
 
@@ -173,6 +179,10 @@ class Hit:
             self.vy = 0.0
             self.was_in_air = False
             self.ground_y = ground_top
+        if self.is_knockback and self.was_in_air:
+            if self.naruto_force_knockdown:
+                self.character.state_machine.add_event(('HIT_END', 0))
+                return
 
     def draw(self):
         if self.is_knockback:
