@@ -128,12 +128,14 @@ class SpecialAttack:
 
             dir1 = self.character.face_dir
             target.take_hit(
-                is_knockback=True,
-                knockback_distance=40,
-                knockback_dir=dir1,
+                is_knockback=False,
+                knockback_distance=0,
+                knockback_dir=0,
                 hitstun_frames=30,
                 will_knockdown=False
             )
+            # 2) x좌표를 직접 밀어서 넉백처럼 보이게
+            target.x += dir1 * 40
             target.hp = max(0, target.hp - damage)
             game_framework.add_hitstop(hitstop_frames)
             return
@@ -144,13 +146,8 @@ class SpecialAttack:
 
         if frame_int == 44:
             dir2 = -self.character.face_dir
-
-            hit_state.is_knockback = True
-            hit_state.knockback_distance = 35
-            hit_state.knockback_dir = dir2
-            hit_state.elapsed_time = 0.0
+            target.x += dir2 * 40
             hit_state.naruto_replay_hit()
-
             target.hp = max(0, target.hp - damage)
             game_framework.add_hitstop(hitstop_frames)
             return
@@ -158,12 +155,7 @@ class SpecialAttack:
         if frame_int == 59:
             target.y += 120
 
-            hit_state.was_in_air = True
-            hit_state.vy = 0.0  # 바로 떨어지지 않게 0으로 시작
-
-            hit_state.naruto_start_air_lock()
             hit_state.naruto_replay_hit()
-
             target.hp = max(0, target.hp - damage)
             game_framework.add_hitstop(hitstop_frames)
             return
