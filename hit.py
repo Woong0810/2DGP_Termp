@@ -93,6 +93,30 @@ class Hit:
             if self.naruto_chain and self.naruto_air_lock:
                 return
 
+            if self.naruto_force_knockdown:
+                knockback_frames = self.character.config.knockback_frames
+                if len(knockback_frames) > 0:
+                    self.character.frame = len(knockback_frames) - 1
+
+                if self.was_in_air and hasattr(self.character, 'stage') and self.character.stage is not None:
+                    self.vy -= 2 * GRAVITY_PPS2 * dt
+                    self.character.y += self.vy * dt
+                    self.check_landing(prev_bottom)
+
+                if self.was_in_air:
+                    return
+
+                if not self.is_lying_down:
+                    self.is_lying_down = True
+                    self.elapsed_time = 0.0
+                    return
+
+                if self.elapsed_time < KNOCKBACK_DOWN_TIME:
+                    return
+                else:
+                    self.character.state_machine.add_event(('STAND_UP', 0))
+                    return
+
             if self.elapsed_time < self.hit_duration:
                 knockback_frames = self.character.config.knockback_frames
                 frames_per_action = len(knockback_frames)
