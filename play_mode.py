@@ -32,7 +32,7 @@ def init():
     player1 = Character(NarutoConfig(), key_bindings=PLAYER1_KEY_BINDINGS, x=200, y=30, stage=background)
     game_world.add_object(player1, 1)
 
-    player2 = Character(JiraiyaConfig(), key_bindings=PLAYER2_KEY_BINDINGS, x=600, y=30, stage=background)
+    player2 = Character(ItachiConfig(), key_bindings=PLAYER2_KEY_BINDINGS, x=600, y=30, stage=background)
     player2.face_dir = -1
     game_world.add_object(player2, 1)
 
