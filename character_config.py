@@ -493,24 +493,26 @@ class JiraiyaConfig(CharacterConfig):
         self.scale_y = 1.1
         self.draw_offset_y = 0
 
+        self.knockback_draw_offset_y = -15
+
         # TODO: Jiraiya의 프레임 인덱스 설정 (나중에 추가)
         self.idle_frames = list(range(54, 54 + 4))
         self.run_frames = list(range(39, 39 + 6))
-        self.normal_attack_frames = list(range(0, 23))
-        self.normal_attack_segments = [(0, 4), (5, 12), (6, 22)]
-        self.run_attack_segments = [(28, 33)]
-        self.up_attack_segments = [(48, 52)]
-        self.down_attack_segments = [(271, 278)]
-        self.jump_attack_segments = [(76, 79), (80, 82)]
-        self.jump_frames = [20, 21]
-        self.defense_frames = [19]
+        self.normal_attack_frames = list(range(0, 34))
+        self.normal_attack_segments = [(0, 4), (5, 12), (28, 33)]
+        self.run_attack_segments = [(50, 51)] # 상대 위치로 순간 이동 후 점프 공격?
+        self.up_attack_segments = [(24, 28)]
+        self.down_attack_segments = [] # 불 나가게?
+        self.jump_attack_segments = [(13, 22), (34, 38)]
+        self.jump_frames = [48, 49]
+        self.defense_frames = [69]
         self.special_attack_frames = list(range(0, 84))
         self.special_attack2_frames = list(range(252, 252 + 39))
-        self.ranged_attack_frames = list(range(30, 30 + 3))
-        self.hit_frames = [54, 55]
-        self.knockback_frames = [53, 56, 57, 58, 59]
-        self.stand_up_frames = [60, 18, 17, 16]
-        self.dash_frames = list(range(101, 101 + 6))
+        self.ranged_attack_frames = list(range(69, 69 + 4))
+        self.hit_frames = [58, 59]
+        self.knockback_frames = [60, 65, 64, 63, 62, 61]
+        self.stand_up_frames = [68, 45]
+        self.dash_frames = list(range(87, 87 + 2))
 
         # 지라이야 전용 히트박스 설정
         self.hitbox_idle = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
