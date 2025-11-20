@@ -167,6 +167,20 @@ class SpecialAttack:
             return
 
         if frame_int == 78:
+            if target.state_machine.cur_state is not getattr(target, 'HIT', None):
+                # 강제 히트 진입 (넉다운용)
+                target.take_hit(
+                    is_knockback=True,
+                    knockback_distance=0,
+                    knockback_dir=0,
+                    hitstun_frames=30,
+                    will_knockdown=True
+                )
+
+            hit_state = getattr(target, 'HIT', None)
+            if hit_state is None:
+                return
+
             hit_state.naruto_end_chain_with_knockdown()
             target.hp = max(0, target.hp - damage)
             game_framework.add_hitstop(hitstop_frames)
