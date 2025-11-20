@@ -76,6 +76,11 @@ class Hit:
         dt = game_framework.frame_time
         self.elapsed_time += dt
 
+        if self.naruto_force_knockdown:
+            self.is_knockback = True
+            self.will_knockdown = True
+            self.was_in_air = True
+
         if self.knockback_distance != 0 and self.elapsed_time < self.hit_duration:
             push_speed = self.knockback_distance / self.hit_duration
             self.character.x += self.knockback_dir * push_speed * dt
@@ -130,6 +135,10 @@ class Hit:
             self.character.frame = ( self.character.frame + frames_per_action * ACTION_PER_TIME
                                      * HIT_ANIMATION_SPEED * dt ) % frames_per_action
             if self.elapsed_time >= self.hit_duration:
+                if (self.naruto_chain or
+                        self.naruto_force_knockdown or
+                        getattr(self.character, 'naruto_special_chain_active', False)):
+                    return
                 if self.was_in_air:
                     self.character.state_machine.add_event(('RESUME_JUMP', self.ground_y))
                 else:
