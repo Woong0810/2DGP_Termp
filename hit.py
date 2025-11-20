@@ -112,10 +112,11 @@ class Hit:
                     else:
                         self.character.state_machine.add_event(('STAND_UP', 0))
                 else:
-                    if self.was_in_air:
-                        self.character.state_machine.add_event(('RESUME_JUMP', self.ground_y))
-                    else:
-                        self.character.state_machine.add_event(('HIT_END', 0))
+                    if not self.naruto_force_knockdown:
+                        if self.was_in_air:
+                            self.character.state_machine.add_event(('RESUME_JUMP', self.ground_y))
+                        else:
+                            self.character.state_machine.add_event(('HIT_END', 0))
         else:
             hit_frames = self.character.config.hit_frames
             frames_per_action = len(hit_frames)
@@ -135,9 +136,8 @@ class Hit:
             self.character.frame = ( self.character.frame + frames_per_action * ACTION_PER_TIME
                                      * HIT_ANIMATION_SPEED * dt ) % frames_per_action
             if self.elapsed_time >= self.hit_duration:
-                if (self.naruto_chain or
-                        self.naruto_force_knockdown or
-                        getattr(self.character, 'naruto_special_chain_active', False)):
+                if (self.naruto_chain or self.naruto_force_knockdown or
+                 getattr(self.character, 'naruto_special_chain_active', False)):
                     return
                 if self.was_in_air:
                     self.character.state_machine.add_event(('RESUME_JUMP', self.ground_y))
@@ -187,10 +187,6 @@ class Hit:
             self.vy = 0.0
             self.was_in_air = False
             self.ground_y = ground_top
-        if self.is_knockback and self.was_in_air:
-            if self.naruto_force_knockdown:
-                self.character.state_machine.add_event(('HIT_END', 0))
-                return
 
     def draw(self):
         if self.is_knockback:
