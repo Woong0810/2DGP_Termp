@@ -363,7 +363,10 @@ class Character:
             return
 
         if group == 'normal_attack:character':
+            attacker = getattr(other, 'character', None)
             if self.state_machine.cur_state == self.DEFENSE:
+                if attacker is not None:
+                    self.block_attacker_on_guard(attacker)
                 return
             if self.state_machine.cur_state == self.HIT:
                 return
@@ -373,8 +376,6 @@ class Character:
             hitstun_frames = HITSTUN_FRAMES_NORMAL
             hitstop_frames = HITSTOP_FRAMES_NORMAL
             will_knockdown = False
-
-            attacker = getattr(other, 'character', None)
 
             if attacker is not None and hasattr(attacker, 'config'):
                 cfg = attacker.config
@@ -425,8 +426,12 @@ class Character:
             )
 
         elif group == 'jump_attack:character':
+            attacker = getattr(other, 'character', None)
             if self.state_machine.cur_state == self.DEFENSE:
-                return
+                if self.state_machine.cur_state == self.DEFENSE:
+                    if attacker is not None:
+                        self.block_attacker_on_guard(attacker)
+                    return
             if self.state_machine.cur_state == self.HIT:
                 return
 
@@ -436,7 +441,6 @@ class Character:
             hitstop_frames = HITSTOP_FRAMES_JUMP
             will_knockdown = False
 
-            attacker = getattr(other, 'character', None)
             if attacker is not None and hasattr(attacker, 'config'):
                 cfg = attacker.config
                 if hasattr(cfg, 'jump_attack_data'):
@@ -480,6 +484,8 @@ class Character:
             if hasattr(other, 'owner') and other.owner == self:
                 return
             if self.state_machine.cur_state == self.DEFENSE:
+                if attacker is not None:
+                    self.block_attacker_on_guard(attacker)
                 return
             if self.state_machine.cur_state == self.HIT:
                 return
@@ -521,11 +527,13 @@ class Character:
                 will_knockdown=will_knockdown
             )
 
-
         elif group == 'special_attack2:character':
+            attacker = getattr(other, 'character', None)
             if hasattr(other, 'owner') and other.owner == self:
                 return
             if self.state_machine.cur_state == self.DEFENSE:
+                if attacker is not None:
+                    self.block_attacker_on_guard(attacker)
                 return
             if self.state_machine.cur_state == self.HIT:
                 return
@@ -536,7 +544,6 @@ class Character:
             hitstop_frames = HITSTOP_FRAMES_SPECIAL
             will_knockdown = True
 
-            attacker = getattr(other, 'character', None)
             if attacker is not None and hasattr(attacker, 'config'):
                 cfg = attacker.config
 
@@ -571,9 +578,12 @@ class Character:
 
 
         elif group == 'character:shuriken':
+            attacker = getattr(other, 'character', None)
             if hasattr(other, 'owner') and other.owner == self:
                 return
             if self.state_machine.cur_state == self.DEFENSE:
+                if attacker is not None:
+                    self.block_attacker_on_guard(attacker)
                 return
             if self.state_machine.cur_state == self.HIT:
                 return
@@ -616,3 +626,18 @@ class Character:
 
         if self.hp < 0:
             self.hp = 0
+
+    def block_attacker_on_guard(self, attacker):
+        l_def, b_def, r_def, t_def = self.get_bb()
+        l_att, b_att, r_att, t_att = attacker.get_bb()
+        margin = 1.0
+
+        if attacker.face_dir > 0:
+            overlap = r_att - l_def
+            if overlap > 0:
+                attacker.x -= overlap + margin
+        elif attacker.face_dir < 0:
+            overlap = r_def - l_att
+            if overlap > 0:
+                attacker.x += overlap + margin
+
