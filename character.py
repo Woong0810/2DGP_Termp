@@ -54,7 +54,6 @@ class Character:
         self.stage = stage
 
         self.accum_time = 0.0
-        self.frame_duration = 0.1  # 기본값, 상태별로 변경 가능
         self.debug_draw = True  # 디버그 모드: 바운딩 박스 표시
 
         self.up_pressed = False
@@ -291,10 +290,10 @@ class Character:
 
         if in_attack_state:
             if event.type == SDL_KEYDOWN and event.key == self.key_bindings['dash']:
-                # 점프 공격 중에는 대쉬 사용 불가
                 if self.state_machine.cur_state == self.JUMP_ATTACK:
                     return
-                pass
+                if self.state_machine.cur_state == self.SPECIAL_ATTACK and self.config.name == "Naruto" and getattr(self.SPECIAL_ATTACK, 'target', None) is not None:
+                    return
             else:
                 if self.state_machine.cur_state == self.NORMAL_ATTACK:
                     if event.type == SDL_KEYDOWN and event.key == self.key_bindings['attack']:
