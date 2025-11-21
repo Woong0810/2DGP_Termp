@@ -14,7 +14,7 @@ class SpecialAttack:
         if hasattr(self.character.config, 'special_attack_image_path') and self.character.config.special_attack_image_path:
             self.special_image = load_image(self.character.config.special_attack_image_path)
 
-        self.target = None  # 락온된 상대
+        self.target = None
         self.naruto_hit_frames = [43, 44, 59, 67, 73, 78]
         self.naruto_hit_done = {f: False for f in self.naruto_hit_frames}
         self.prev_frame_int = 0
@@ -39,12 +39,7 @@ class SpecialAttack:
         game_world.remove_collision_object(self)
 
         if self.amaterasu:
-            try:
-                game_world.remove_object(self.amaterasu)
-            except:
-                pass
-            self.amaterasu = None
-
+            game_world.remove_object(self.amaterasu)
         self.target = None
 
     def do(self):
@@ -58,7 +53,6 @@ class SpecialAttack:
 
             if not self.amaterasu or self.amaterasu not in game_world.world[1]:
                 self.character.state_machine.handle_event(('SPECIAL_ATTACK_END', None))
-
         else:
             special_frames = self.character.config.special_attack_frames
 
@@ -68,7 +62,7 @@ class SpecialAttack:
 
             # 나루토 스페셜 1 전용 로직 (충돌은 탐색으로만 처리, 실제 데미지는 프레임에 따라 직접 처리)
             if self.character.config.name == "Naruto":
-                self._update_naruto_special1(prev_int, cur_int)
+                self.update_naruto_special1(prev_int, cur_int)
 
             if self.character.frame >= len(special_frames):
                 self.character.state_machine.handle_event(('SPECIAL_ATTACK_END', None))
@@ -80,14 +74,13 @@ class SpecialAttack:
             return False
         return self.target is None and int(self.character.frame) < 43
 
-    def _update_naruto_special1(self, prev_frame_int, cur_frame_int):
+    def update_naruto_special1(self, prev_frame_int, cur_frame_int):
         if self.target is not None and cur_frame_int < 43:
             if self.target.x > self.character.x:
                 self.character.face_dir = 1
             elif self.target.x < self.character.x:
                 self.character.face_dir = -1
 
-            # 상대 근처까지 이동
             desired_offset_x = 40  # 두 캐릭터 사이 거리
             desired_x = self.target.x - self.character.face_dir * desired_offset_x
             dx = desired_x - self.character.x
@@ -134,7 +127,7 @@ class SpecialAttack:
                 hitstun_frames=30,
                 will_knockdown=False
             )
-            # 2) x좌표를 직접 밀어서 넉백처럼 보이게
+            # x좌표를 직접 밀어서 넉백처럼 보이게
             target.x += dir1 * 40
             target.hp = max(0, target.hp - damage)
             game_framework.add_hitstop(hitstop_frames)
