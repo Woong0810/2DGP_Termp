@@ -283,8 +283,9 @@ class Character:
         # 공격 상태 여부 판단 (입력 제한 처리용)
         in_attack_state = self.state_machine.cur_state in (self.NORMAL_ATTACK, self.JUMP_ATTACK, self.SPECIAL_ATTACK, self.SPECIAL_ATTACK2, self.RANGED_ATTACK)
 
-        # HIT 상태: dash 외 입력 무시
         if self.state_machine.cur_state == self.HIT:
+            if getattr(self, 'naruto_special_chain_active', False):
+                return
             if not (event.type == SDL_KEYDOWN and event.key == self.key_bindings['dash']):
                 return
 
