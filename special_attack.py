@@ -7,7 +7,6 @@ class SpecialAttack:
     def __init__(self, character):
         self.character = character
         self.owner = character
-        self.loop_count = 0
         self.amaterasu = None
 
         self.special_image = None
@@ -21,7 +20,6 @@ class SpecialAttack:
 
     def enter(self, e):
         self.character.frame = 0
-        self.loop_count = 0
         self.prev_frame_int = 0
 
         if self.character.config.name == "Naruto":
