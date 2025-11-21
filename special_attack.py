@@ -117,8 +117,6 @@ class SpecialAttack:
         hitstop_frames = data.get('hitstop_frames', 6) if data else 6
 
         if frame_int == 43:
-            target.naruto_special_chain_active = True
-
             dir1 = self.character.face_dir
             target.take_hit(
                 is_knockback=False,
@@ -289,4 +287,12 @@ class SpecialAttack:
         if group == 'special_attack:character' and self.character.config.name == "Naruto":
             if self.target is None and self.is_search_phase():
                 self.target = other
-        return
+                other.naruto_special_chain_active = True
+
+                other.take_hit(
+                    is_knockback=False,
+                    knockback_distance=0,
+                    knockback_dir=0,
+                    hitstun_frames=30,
+                    will_knockdown=False
+                )
