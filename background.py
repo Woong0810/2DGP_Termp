@@ -55,7 +55,7 @@ class Background:
             if right <= b_left or left >= b_right:
                 continue
 
-            if bottom >= b_top - tolerance and bottom <= b_top + tolerance:
+            if b_top - tolerance <= bottom <= b_top + tolerance:
                 if best_top is None or b_top > best_top:
                     best_top = b_top
 

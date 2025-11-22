@@ -84,7 +84,6 @@ def resume_jump(e):
 def fall(e):
     return e[0] == 'FALL'
 
-# 키 바인딩을 받아서 체크
 def key_down(key_code):
     def check(e):
         return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == key_code

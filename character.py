@@ -36,24 +36,20 @@ import game_framework
 
 class Character:
     def __init__(self, character_config=None, key_bindings=None, x=400, y=90, stage=None):
-        # 캐릭터 설정 (기본값: Naruto)
         self.config = character_config if character_config else NarutoConfig()
 
-        # 키 바인딩 (플레이어별로 외부에서 주입)
         self.key_bindings = key_bindings
         if self.key_bindings is None:
-            # 기본값: Player 1 키 바인딩
             from player_config import PLAYER1_KEY_BINDINGS
             self.key_bindings = PLAYER1_KEY_BINDINGS
 
         self.x, self.y = x, y
         self.frame = 0
         self.face_dir = 1
-        self.dir = 0  # RUN 상태에서 사용할 방향
+        self.dir = 0
         self.image = load_image(self.config.image_path)
         self.stage = stage
 
-        self.accum_time = 0.0
         self.debug_draw = True  # 디버그 모드: 바운딩 박스 표시
 
         self.up_pressed = False
@@ -82,8 +78,6 @@ class Character:
 
         self.naruto_special_chain_active = False
 
-        # 키 바인딩 기반 rules 생성
-        from event_to_string import key_down, key_up
         kb = self.key_bindings
         idle_rules = {
             key_down(kb['attack']): self.NORMAL_ATTACK,
@@ -94,12 +88,10 @@ class Character:
             key_down(kb.get('special2', -1)): self.SPECIAL_ATTACK2,
             key_down(kb['ranged']): self.RANGED_ATTACK,
             key_down(kb['dash']): self.DASH,
+            key_down(kb['jump_key']): self.JUMP,
             fall: self.JUMP,
             take_hit: self.HIT
         }
-        if 'jump_key' in kb:
-            idle_rules[key_down(kb['jump_key'])] = self.JUMP
-
         run_rules = {
             key_up(kb['right']): self.IDLE,
             key_up(kb['left']): self.IDLE,
@@ -109,12 +101,10 @@ class Character:
             key_down(kb.get('special2', -1)): self.SPECIAL_ATTACK2,
             key_down(kb['ranged']): self.RANGED_ATTACK,
             key_down(kb['dash']): self.DASH,
+            key_down(kb['jump_key']): self.JUMP,
             fall: self.JUMP,
             take_hit: self.HIT
         }
-        if 'jump_key' in kb:
-            run_rules[key_down(kb['jump_key'])] = self.JUMP
-
         attack_rules = {
             segment_end: self.IDLE,
             key_down(kb['down']): self.DEFENSE,
@@ -122,17 +112,14 @@ class Character:
             key_down(kb.get('special2', -1)): self.SPECIAL_ATTACK2,
             key_down(kb['ranged']): self.RANGED_ATTACK,
             key_down(kb['dash']): self.DASH,
+            key_down(kb['jump_key']): self.JUMP,
             take_hit: self.HIT
         }
-        if 'jump_key' in kb:
-            attack_rules[key_down(kb['jump_key'])] = self.JUMP
-
         jump_rules = {
             key_down(kb['attack']): self.JUMP_ATTACK,
             landed: self.IDLE,
             take_hit: self.HIT
         }
-
         defense_rules = {
             key_up(kb['down']): self.IDLE,
             key_down(kb['attack']): self.NORMAL_ATTACK,
@@ -142,7 +129,6 @@ class Character:
             key_down(kb['dash']): self.DASH,
             take_hit: self.HIT
         }
-
         self.state_machine = StateMachine(
             self.IDLE,
             {
@@ -185,16 +171,12 @@ class Character:
                 }
             }
         )
-
-        if self.stage is not None and hasattr(self.stage, 'get_ground_top_under'):
-            self.align_to_stage()
+        self.align_to_stage()
 
     def align_to_stage(self):
-        if self.stage is None or not hasattr(self.stage, 'get_ground_top_under'):
+        if self.stage is None:
             return
-
         left, bottom, right, top = self.get_bb()
-
         ground_top = self.stage.get_ground_top_under(left, bottom, right, tolerance=100)
         if ground_top is None:
             return
@@ -203,7 +185,7 @@ class Character:
         self.y += dy
 
     def take_hit(self, is_knockback=False,
-                 knockback_distance=50,
+                 knockback_distance=0,
                  knockback_dir=None,
                  hitstun_frames=None,
                  will_knockdown=False):
@@ -226,7 +208,6 @@ class Character:
     def update(self):
         self.state_machine.update()
 
-        # 무적 시간 감소
         import game_framework
         if self.invincible_time > 0:
             self.invincible_time -= game_framework.frame_time
@@ -239,16 +220,15 @@ class Character:
             self.draw_bb()
 
     def get_bb(self):
-        # 현재 상태의 바운딩 박스 반환
         return self.state_machine.get_bb()
 
     def get_feet_bb(self):
         all_frames = self.config.frames
         idle_frames = self.config.idle_frames
-        frame_idx = idle_frames[0]  # 첫 idle 프레임 기준으로 고정
+        frame_idx = idle_frames[0]
         frame = all_frames[frame_idx]
 
-        hb = self.config.hitbox_idle  # 발 기준은 idle 히트박스를 기준으로
+        hb = self.config.hitbox_idle
         hw = frame['width'] * self.config.scale_x * hb['scale_x'] / 2
         hh = frame['height'] * self.config.scale_y * hb['scale_y'] / 2
 
@@ -260,16 +240,13 @@ class Character:
         return left, bottom, right, top
 
     def draw_bb(self):
-        # 디버그용: 바운딩 박스 그리기
         self.state_machine.draw_bb()
 
     def handle_event(self, event):
-        # 키 바인딩이 있는 경우, 자신의 키인지 확인
         if self.key_bindings:
             if not self.is_my_key(event):
                 return
 
-        # up/down 상태는 공격 중에도 항상 추적
         if event.type == SDL_KEYDOWN and event.key == self.key_bindings['up']:
             self.up_pressed = True
         elif event.type == SDL_KEYUP and event.key == self.key_bindings['up']:
@@ -280,7 +257,6 @@ class Character:
         elif event.type == SDL_KEYUP and event.key == self.key_bindings['down']:
             self.down_pressed = False
 
-        # 공격 상태 여부 판단 (입력 제한 처리용)
         in_attack_state = self.state_machine.cur_state in (self.NORMAL_ATTACK, self.JUMP_ATTACK, self.SPECIAL_ATTACK, self.SPECIAL_ATTACK2, self.RANGED_ATTACK)
 
         if self.state_machine.cur_state == self.HIT:
@@ -343,16 +319,13 @@ class Character:
                 elif event.key == self.key_bindings['right'] and self.JUMP.dir == 1:
                     self.JUMP.dir = 0
 
-        # 상태머신에 이벤트 전달
         self.state_machine.handle_event(('INPUT', event))
 
     def is_my_key(self, event):
         if not self.key_bindings:
-            return True  # 키 바인딩이 없으면 모든 키 허용
-        # 키 이벤트만 체크
+            return True
         if event.type not in (SDL_KEYDOWN, SDL_KEYUP):
             return False
-        # 자신의 키 바인딩에 포함된 키인지 확인
         return event.key in self.key_bindings.values()
 
     def set_opponent(self, opponent):
@@ -474,8 +447,6 @@ class Character:
                 hitstun_frames=hitstun_frames,
                 will_knockdown=will_knockdown
             )
-
-
 
         elif group == 'special_attack:character':
             attacker = getattr(other, 'character', None)
