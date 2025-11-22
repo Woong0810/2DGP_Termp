@@ -1,133 +1,60 @@
 from PIL import Image
-import json
 
-def extract_frames_from_transparent(image_path):
-    """투명 배경 이미지에서 프레임 정보를 추출합니다."""
-    img = Image.open(image_path)
-    img = img.convert('RGBA')
-    width, height = img.size
+# 네가 실제 게임에서 쓰는 원본 PNG 경로
+IMAGE_PATH = r"C:\Users\user\Documents\GitHub\2DGP_Termp\character_naruto_sa_2.png"
 
-    print(f"\n처리 중: {image_path}")
-    print(f"이미지 크기: {width} x {height}")
+# 최소 너비(픽셀) – 노이즈 같은 얇은 세그먼트는 무시하고 싶으면 5~8 정도로 올려도 됨
+MIN_WIDTH = 3
 
-    # 각 행을 스캔하여 프레임 찾기
-    frames = []
-    y = 0
+img = Image.open(IMAGE_PATH).convert("RGBA")
+w, h = img.size
+pixels = img.load()
 
-    while y < height:
-        # 현재 y에서 불투명 픽셀이 있는지 확인
-        has_content = False
-        for x in range(width):
-            if y < height:
-                pixel = img.getpixel((x, y))
-                if pixel[3] > 0:  # 알파 채널이 0보다 크면
-                    has_content = True
-                    break
+def column_has_sprite(x):
+    """해당 x열에 투명 아닌 픽셀이 하나라도 있으면 True"""
+    for y in range(h):
+        r, g, b, a = pixels[x, y]
+        if a > 10:          # 알파가 0이 아니면 스프라이트라고 가정
+            return True
+    return False
 
-        if not has_content:
-            y += 1
-            continue
+segments = []
+in_seg = False
+start = 0
 
-        # 프레임의 상단을 찾음
-        frame_top = y
+for x in range(w):
+    if column_has_sprite(x):
+        if not in_seg:
+            in_seg = True
+            start = x
+    else:
+        if in_seg:
+            in_seg = False
+            width = x - start
+            if width >= MIN_WIDTH:
+                segments.append((start, width))
 
-        # 프레임의 하단을 찾음
-        frame_bottom = frame_top
-        while frame_bottom < height:
-            row_has_content = False
-            for x in range(width):
-                if frame_bottom < height:
-                    pixel = img.getpixel((x, frame_bottom))
-                    if pixel[3] > 0:
-                        row_has_content = True
-                        break
-            if not row_has_content:
-                break
-            frame_bottom += 1
+# 마지막 세그먼트 닫기
+if in_seg:
+    width = w - start
+    if width >= MIN_WIDTH:
+        segments.append((start, width))
 
-        # 이 행에서 모든 프레임 찾기
-        x = 0
-        while x < width:
-            # 불투명 픽셀 찾기
-            has_pixel = False
-            for check_y in range(frame_top, frame_bottom):
-                if check_y < height and x < width:
-                    pixel = img.getpixel((x, check_y))
-                    if pixel[3] > 0:
-                        has_pixel = True
-                        break
+print(f"총 세그먼트 개수: {len(segments)}")
+frames = []
+for i, (left, width) in enumerate(segments):
+    frames.append({
+        "left": left,
+        "bottom": 0,
+        "width": width,
+        "height": h
+    })
 
-            if not has_pixel:
-                x += 1
-                continue
+for i, f in enumerate(frames):
+    print(i, f)
 
-            # 프레임의 왼쪽 찾음
-            frame_left = x
-
-            # 프레임의 오른쪽 찾음
-            frame_right = frame_left
-            while frame_right < width:
-                col_has_content = False
-                for check_y in range(frame_top, frame_bottom):
-                    if check_y < height and frame_right < width:
-                        pixel = img.getpixel((frame_right, check_y))
-                        if pixel[3] > 0:
-                            col_has_content = True
-                            break
-                if not col_has_content:
-                    break
-                frame_right += 1
-
-            # 프레임 정보 저장 (Pico2D 좌표계: bottom-left 기준)
-            frame_width = frame_right - frame_left
-            frame_height = frame_bottom - frame_top
-
-            if frame_width > 0 and frame_height > 0:
-                frames.append({
-                    'left': frame_left,
-                    'bottom': height - frame_bottom,  # Pico2D는 bottom-left 기준
-                    'width': frame_width,
-                    'height': frame_height
-                })
-
-            x = frame_right + 1
-
-        y = frame_bottom + 1
-
-    return frames
-
-# 3개의 이미지에서 프레임 추출
-image_files = [
-    'character_naruto_1.png',
-    'character_naruto_2.png',
-    'character_naruto_3.png'
-]
-
-all_frames = []
-
-for img_file in image_files:
-    try:
-        frames = extract_frames_from_transparent(img_file)
-        print(f"추출된 프레임 수: {len(frames)}")
-        all_frames.extend(frames)
-    except Exception as e:
-        print(f"오류 발생 ({img_file}): {e}")
-
-print(f"\n총 추출된 프레임 수: {len(all_frames)}")
-
-# 결과를 파이썬 파일로 저장
-output_file = 'character_temp_frames_v3.py'
-with open(output_file, 'w', encoding='utf-8') as f:
-    f.write("# Auto-generated frame data for character_temp\n")
-    f.write("FRAMES = [\n")
-    for frame in all_frames:
-        f.write(f"    {frame},\n")
-    f.write("]\n")
-
-print(f"\n프레임 정보가 '{output_file}'에 저장되었습니다.")
-
-# 처음 10개 프레임 출력
-print("\n처음 10개 프레임:")
-for i, frame in enumerate(all_frames[:10]):
-    print(f"  Frame {i}: {frame}")
-
+# 필요하면 파이썬 리스트로 저장할 수 있게 한 번에 출력
+print("\nframes_data = [")
+for f in frames:
+    print(f"    {f},")
+print("]")
