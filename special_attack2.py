@@ -7,17 +7,14 @@ class SpecialAttack2:
     def __init__(self, character):
         self.character = character
         self.owner = character
-        self.loop_count = 0
+        self.frames = getattr(self.character.config, 'special_attack2_frames', [])
 
-        # 별도 이미지가 있는 경우 로드 (이타치 등)
         self.special_image = None
         if hasattr(self.character.config, 'special_attack2_image_path') and self.character.config.special_attack2_image_path:
             self.special_image = load_image(self.character.config.special_attack2_image_path)
 
     def enter(self, e):
         self.character.frame = 0
-        self.loop_count = 0
-        self.frames = getattr(self.character.config, 'special_attack2_frames', [])
         game_world.add_collision_pairs('special_attack2:character', self, None)
 
     def exit(self, e):
