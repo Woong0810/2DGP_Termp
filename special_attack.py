@@ -58,21 +58,15 @@ class SpecialAttack:
             self.character.frame += len(special_frames) * ACTION_PER_TIME * SPECIAL_ATTACK_ANIMATION_SPEED * game_framework.frame_time
             cur_int = int(self.character.frame)
 
-            # 나루토 스페셜 1 전용 로직 (충돌은 탐색으로만 처리, 실제 데미지는 프레임에 따라 직접 처리)
             if self.character.config.name == "Naruto":
-                self.update_naruto_special1(prev_int, cur_int)
+                self.update_naruto_special(prev_int, cur_int)
 
             if self.character.frame >= len(special_frames):
                 self.character.state_machine.handle_event(('SPECIAL_ATTACK_END', None))
 
             self.prev_frame_int = cur_int
 
-    def is_search_phase(self):
-        if self.character.config.name != "Naruto":
-            return False
-        return self.target is None and int(self.character.frame) < 43
-
-    def update_naruto_special1(self, prev_frame_int, cur_frame_int):
+    def update_naruto_special(self, prev_frame_int, cur_frame_int):
         if self.target is not None and cur_frame_int < 43:
             if self.target.x > self.character.x:
                 self.character.face_dir = 1
@@ -113,8 +107,9 @@ class SpecialAttack:
             if isinstance(sad, list) and len(sad) > 0:
                 data = sad[0]
 
-        damage = data.get('damage', 15) if data else 15
-        hitstop_frames = data.get('hitstop_frames', 6) if data else 6
+        damage = data.get('damage', 5) if data else 5
+        hitstun_frames = data.get('hitstun_frames', 32) if data else 32
+        hitstop_frames = data.get('hitstop_frames', 15) if data else 15
 
         if frame_int == 43:
             dir1 = self.character.face_dir
@@ -122,7 +117,7 @@ class SpecialAttack:
                 is_knockback=False,
                 knockback_distance=0,
                 knockback_dir=0,
-                hitstun_frames=30,
+                hitstun_frames=hitstun_frames,
                 will_knockdown=False
             )
             # x좌표를 직접 밀어서 넉백처럼 보이게
@@ -159,7 +154,7 @@ class SpecialAttack:
                 is_knockback=True,
                 knockback_distance=0,
                 knockback_dir=0,
-                hitstun_frames=30,
+                hitstun_frames=hitstun_frames,
                 will_knockdown=True
             )
             hit_state.naruto_end_chain_with_knockdown()
@@ -218,17 +213,15 @@ class SpecialAttack:
     def get_bb_naruto(self):
         current = int(self.character.frame)
 
-        SEARCH_END_FRAME = 1
-        if self.target is None and current < SEARCH_END_FRAME:
+        if self.target is None and current == 0:
+            special_frames = self.character.config.special_attack_frames
             if hasattr(self.character.config, 'special_attack_frames_data') and self.character.config.special_attack_frames_data:
                 all_frames = self.character.config.special_attack_frames_data
-                frame_idx = max(0, min(current, len(all_frames) - 1))
+                frame_idx = special_frames[0]
                 frame = all_frames[frame_idx]
             else:
                 all_frames = self.character.config.frames
-                frame_indices = self.character.config.special_attack_frames
-                idx = max(0, min(current, len(frame_indices) - 1))
-                frame_idx = frame_indices[idx]
+                frame_idx = special_frames[0]
                 frame = all_frames[frame_idx]
 
             hb = dict(self.character.config.hitbox_special_attack)
@@ -283,9 +276,9 @@ class SpecialAttack:
             )
 
     def handle_collision(self, group, other):
-        # 아직은 나루토만
         if group == 'special_attack:character' and self.character.config.name == "Naruto":
-            if self.target is None and self.is_search_phase():
+            cur = int(self.character.frame)
+            if self.target is None and cur == 0:
                 self.target = other
                 other.naruto_special_chain_active = True
 
