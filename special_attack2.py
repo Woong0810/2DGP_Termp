@@ -104,7 +104,6 @@ class SpecialAttack2:
                 knockback_dir = -1
             else:
                 knockback_dir = -self.character.face_dir
-            target.x += knockback_dir * knockback
             target.take_hit(
                 is_knockback=True,
                 knockback_distance=knockback,

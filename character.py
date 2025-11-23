@@ -159,7 +159,8 @@ class Character:
                     hit_end: self.IDLE,
                     stand_up: self.STAND_UP,
                     key_down(kb['dash']): self.DASH,
-                    resume_jump: self.JUMP
+                    resume_jump: self.JUMP,
+                    take_hit: self.HIT
                 },
                 self.STAND_UP: {
                     stand_up_end: self.IDLE
