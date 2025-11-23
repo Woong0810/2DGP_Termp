@@ -298,7 +298,7 @@ class NarutoConfig(CharacterConfig):
             },
             {
                 'name': 'naruto_special_A_2',
-                'damage': 1,
+                'damage': 3.5,
                 'hitstop_frames': 20,
                 'hitstun_frames': 40,
                 'knockback': 0,
