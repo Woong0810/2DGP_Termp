@@ -7,6 +7,7 @@ from character_itachi_sa_frames import FRAMES as ITACHI_SPECIAL_FRAMES
 from characters_jiraiya_frames import FRAMES as JIRAIYA_FRAMES
 from character_naruto_frames import FRAMES as NARUTO_FRAMES
 from character_naruto_sa_frames import FRAMES as NARUTO_SPECIAL_FRAMES
+from character_naruto_sa_2_frames import FRAMES as NARUTO_SPECIAL2_FRAMES
 
 # ===== 물리 기반 상수 설정 =====
 PIXEL_PER_METER = (10.0 / 0.4)  # 10 pixel = 40 cm
@@ -103,6 +104,8 @@ class CharacterConfig:
 
         # 상태별 전용 오프셋: 넉백 전용 y 오프셋 (기본 0)
         self.knockback_draw_offset_y = 0
+        self.special_attack_offset_y = 0
+        self.special_attack2_offset_y = 0
 
         # 각 동작의 프레임 인덱스 범위
         self.idle_frames = []
@@ -160,6 +163,8 @@ class NarutoConfig(CharacterConfig):
 
         self.special_attack_image_path = "character_naruto_2.png"
         self.special_attack_frames_data = NARUTO_SPECIAL_FRAMES
+        self.special_attack2_image_path = "character_naruto_sa_2.png"
+        self.special_attack2_frames_data = NARUTO_SPECIAL2_FRAMES
 
         # 원본 크기로 출력
         self.scale_x = 1.1
@@ -168,7 +173,7 @@ class NarutoConfig(CharacterConfig):
 
         self.knockback_draw_offset_y = -10
         self.special_attack_offset_y = -10
-        self.special_attack_2_offset_y = 0
+        self.special_attack2_offset_y = 20
 
         self.idle_frames = list(range(0, 0 + 4))
         self.run_frames = list(range(10, 10 + 6))
@@ -181,7 +186,7 @@ class NarutoConfig(CharacterConfig):
         self.jump_frames = [20, 21]
         self.defense_frames = [19]
         self.special_attack_frames = list(range(0, 84))
-        self.special_attack2_frames = list(range(252, 252 + 39))
+        self.special_attack2_frames = list(range(0, 51))
         self.ranged_attack_frames = list(range(30, 30 + 3))
         self.hit_frames = [54, 55]
         self.knockback_frames = [53, 56, 57, 58, 59]
@@ -341,7 +346,7 @@ class ItachiConfig(CharacterConfig):
 
         self.knockback_draw_offset_y = -12
         self.special_attack_offset_y = 0
-        self.special_attack_2_offset_y = -10
+        self.special_attack2_offset_y = -10
 
         # TODO: Itachi의 프레임 인덱스 설정 (나중에 추가)
         self.idle_frames = list(range(88, 88 + 4))

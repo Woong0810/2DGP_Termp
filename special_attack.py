@@ -205,7 +205,7 @@ class SpecialAttack:
             l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
             draw_w = int(w * self.character.config.scale_x)
             draw_h = int(h * self.character.config.scale_y)
-            draw_y = self.character.y + self.character.config.draw_offset_y
+            draw_y = self.character.y + self.character.config.draw_offset_y + self.character.config.special_attack_offset_y
 
             if self.character.face_dir == 1:
                 image_to_use.clip_draw(l, b, w, h, self.character.x, draw_y, draw_w, draw_h)

@@ -49,8 +49,7 @@ class SpecialAttack2:
         draw_w = int(w * self.character.config.scale_x)
         draw_h = int(h * self.character.config.scale_y)
 
-        special_attack2_y_offset = 10
-        draw_y = self.character.y + self.character.config.draw_offset_y + special_attack2_y_offset
+        draw_y = self.character.y + self.character.config.draw_offset_y + self.character.config.special_attack2_offset_y
 
         if self.character.face_dir == 1:
             image.clip_draw(l, b, w, h, self.character.x, draw_y, draw_w, draw_h)
