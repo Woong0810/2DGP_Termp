@@ -301,7 +301,7 @@ class NarutoConfig(CharacterConfig):
                 'damage': 3.5,
                 'hitstop_frames': 20,
                 'hitstun_frames': 40,
-                'knockback': 0,
+                'knockback': 60,
                 'knockdown': False,
             },
         ]

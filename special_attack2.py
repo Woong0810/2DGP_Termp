@@ -93,6 +93,7 @@ class SpecialAttack2:
         damage = data.get('damage', 3.5) if data else 3.5
         hitstop_frames = data.get('hitstop_frames', 20) if data else 20
         hitstun_frames = data.get('hitstun_frames', 40) if data else 40
+        knockback = data.get('knockback', 60) if data else 60
 
         hit_state = getattr(target, 'HIT', None)
 
@@ -103,9 +104,10 @@ class SpecialAttack2:
                 knockback_dir = -1
             else:
                 knockback_dir = -self.character.face_dir
+            target.x += knockback_dir * knockback
             target.take_hit(
                 is_knockback=True,
-                knockback_distance=70,
+                knockback_distance=knockback,
                 knockback_dir=knockback_dir,
                 hitstun_frames=hitstun_frames,
                 will_knockdown=True
