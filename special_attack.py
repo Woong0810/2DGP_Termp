@@ -218,7 +218,7 @@ class SpecialAttack:
     def get_bb_naruto(self):
         current = int(self.character.frame)
 
-        SEARCH_END_FRAME = 43
+        SEARCH_END_FRAME = 1
         if self.target is None and current < SEARCH_END_FRAME:
             if hasattr(self.character.config, 'special_attack_frames_data') and self.character.config.special_attack_frames_data:
                 all_frames = self.character.config.special_attack_frames_data

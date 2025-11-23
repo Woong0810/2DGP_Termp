@@ -13,6 +13,13 @@ class SpecialAttack2:
         if hasattr(self.character.config, 'special_attack2_image_path') and self.character.config.special_attack2_image_path:
             self.special_image = load_image(self.character.config.special_attack2_image_path)
 
+        self.target = None
+        self.naruto_hit_frames = [26, 29, 32, 35, 38, 41, 44, 47, 50]
+        self.naruto_hit_done = {f: False for f in self.naruto_hit_frames}
+
+    def is_naruto(self):
+        return getattr(self.character.config, 'name', '') == "Naruto"
+
     def enter(self, e):
         self.character.frame = 0
         game_world.add_collision_pairs('special_attack2:character', self, None)
@@ -60,8 +67,10 @@ class SpecialAttack2:
     def get_bb(self):
         if not self.frames:
             return (0,0,0,0)
+        if self.is_naruto():
+            return self.get_bb_naruto()
 
-        hb = self.character.config.hitbox_special_attack
+        hb = self.character.config.hitbox_special_attack2
         hb_scale_x = hb['scale_x'] * 0.9
         hb_scale_y = hb['scale_y'] * 0.9
         idx = int(self.character.frame)
@@ -78,14 +87,74 @@ class SpecialAttack2:
         hw = frame['width'] * self.character.config.scale_x * hb_scale_x / 2
         hh = frame['height'] * self.character.config.scale_y * hb_scale_y / 2
 
-        special_attack2_y_offset = 10
+        return (
+            self.character.x - hw + hb['x_offset'],
+            self.character.y - hh + hb['y_offset'] + self.character.config.special_attack2_offset_y,
+            self.character.x + hw + hb['x_offset'],
+            self.character.y + hh + hb['y_offset'] + self.character.config.special_attack2_offset_y
+        )
+
+    def get_bb_naruto(self):
+        cur = int(self.character.frame)
+
+        if self.target is None:
+            if cur != 0:
+                return (0, 0, 0, 0)
+
+            if hasattr(self.character.config, 'special_attack2_frames_data'):
+                frame_idx = self.frames[0]
+                frame = self.character.config.special_attack2_frames_data[frame_idx]
+            else:
+                frame_idx = self.frames[0]
+                frame = self.character.config.frames[frame_idx]
+
+            hb = dict(self.character.config.hitbox_special_attack2)
+            hb['scale_x'] *= 10.0
+            hb['scale_y'] *= 1.0
+            hw = frame['width'] * self.character.config.scale_x * hb['scale_x'] / 2
+            hh = frame['height'] * self.character.config.scale_y * hb['scale_y'] / 2
+
+            return (
+                self.character.x - hw + hb['x_offset'],
+                self.character.y - hh + hb['y_offset'],
+                self.character.x + hw + hb['x_offset'],
+                self.character.y + hh + hb['y_offset']
+            )
+        if cur not in self.naruto_hit_frames:
+            return (0, 0, 0, 0)
+
+        if hasattr(self.character.config,'special_attack2_frames_data'):
+            frame_idx = self.frames[cur]
+            frame = self.character.config.special_attack2_frames_data[frame_idx]
+        else:
+            frame_idx = self.frames[cur]
+            frame = self.character.config.frames[frame_idx]
+
+        hb = self.character.config.hitbox_special_attack
+        hw = frame['width'] * self.character.config.scale_x * hb['scale_x'] / 2
+        hh = frame['height'] * self.character.config.scale_y * hb['scale_y'] / 2
 
         return (
             self.character.x - hw + hb['x_offset'],
-            self.character.y - hh + hb['y_offset'] + special_attack2_y_offset,
+            self.character.y - hh + hb['y_offset'] + self.character.config.special_attack2_offset_y,
             self.character.x + hw + hb['x_offset'],
-            self.character.y + hh + hb['y_offset'] + special_attack2_y_offset
+            self.character.y + hh + hb['y_offset'] + self.character.config.special_attack2_offset_y
         )
 
     def handle_collision(self, group, other):
-        pass
+        if not self.is_naruto():
+            return
+
+        cur = int(self.character.frame)
+        if self.target is None and cur == 0:
+            self.target = other
+
+            if self.target.x > self.character.x:
+                self.character.face_dir = 1
+            elif self.target.x < self.character.x:
+                self.character.face_dir = -1
+
+            offset_x = 50
+            self.character.x = self.target.x - self.character.face_dir * offset_x
+            self.character.y = self.target.y
+            return
