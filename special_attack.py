@@ -99,10 +99,10 @@ class SpecialAttack:
             if self.naruto_hit_done.get(f, False):
                 continue
             if prev_frame_int < f <= cur_frame_int:
-                self._naruto_apply_hit(f)
+                self.naruto_apply_hit(f)
                 self.naruto_hit_done[f] = True
 
-    def _naruto_apply_hit(self, frame_int):
+    def naruto_apply_hit(self, frame_int):
         target = self.target
         if target is None or target.hp <= 0:
             return

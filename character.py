@@ -500,6 +500,11 @@ class Character:
 
         elif group == 'special_attack2:character':
             attacker = getattr(other, 'character', None)
+            if (attacker is not None
+                    and getattr(attacker.config, 'name', '') == 'Naruto'
+                    and attacker.state_machine.cur_state is attacker.SPECIAL_ATTACK2
+                    and int(getattr(attacker, 'frame', 0)) == 0):
+                return
             if hasattr(other, 'owner') and other.owner == self:
                 return
             if self.state_machine.cur_state == self.DEFENSE:
@@ -521,7 +526,7 @@ class Character:
                 if hasattr(cfg, 'special_attack_data'):
                     data_list = cfg.special_attack_data
                     if isinstance(data_list, list) and len(data_list) > 1:
-                        data = data_list[1]  # ★ 두 번째 스페셜
+                        data = data_list[1]
                         damage = data.get('damage', damage)
                         knockback_distance = data.get('knockback', knockback_distance)
                         hitstun_frames = data.get('hitstun_frames', hitstun_frames)
@@ -546,7 +551,6 @@ class Character:
                 hitstun_frames=hitstun_frames,
                 will_knockdown=will_knockdown
             )
-
 
         elif group == 'character:shuriken':
             attacker = getattr(other, 'character', None)

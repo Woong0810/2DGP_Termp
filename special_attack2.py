@@ -22,6 +22,8 @@ class SpecialAttack2:
 
     def enter(self, e):
         self.character.frame = 0
+        self.target = None
+        self.naruto_hit_done = {f: False for f in self.naruto_hit_frames}
         game_world.add_collision_pairs('special_attack2:character', self, None)
 
     def exit(self, e):
