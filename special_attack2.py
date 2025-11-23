@@ -184,10 +184,7 @@ class SpecialAttack2:
     def get_bb_naruto(self):
         cur = int(self.character.frame)
 
-        if self.target is None:
-            if cur != 0:
-                return (0, 0, 0, 0)
-
+        if self.target is None and cur == 0:
             if hasattr(self.character.config, 'special_attack2_frames_data'):
                 frame_idx = self.frames[0]
                 frame = self.character.config.special_attack2_frames_data[frame_idx]
@@ -207,26 +204,7 @@ class SpecialAttack2:
                 self.character.x + hw + hb['x_offset'],
                 self.character.y + hh + hb['y_offset']
             )
-        if cur not in self.naruto_hit_frames:
-            return (0, 0, 0, 0)
-
-        if hasattr(self.character.config,'special_attack2_frames_data'):
-            frame_idx = self.frames[cur]
-            frame = self.character.config.special_attack2_frames_data[frame_idx]
-        else:
-            frame_idx = self.frames[cur]
-            frame = self.character.config.frames[frame_idx]
-
-        hb = self.character.config.hitbox_special_attack
-        hw = frame['width'] * self.character.config.scale_x * hb['scale_x'] / 2
-        hh = frame['height'] * self.character.config.scale_y * hb['scale_y'] / 2
-
-        return (
-            self.character.x - hw + hb['x_offset'],
-            self.character.y - hh + hb['y_offset'] + self.character.config.special_attack2_offset_y,
-            self.character.x + hw + hb['x_offset'],
-            self.character.y + hh + hb['y_offset'] + self.character.config.special_attack2_offset_y
-        )
+        return 0, 0, 0, 0
 
     def handle_collision(self, group, other):
         if not self.is_naruto():
