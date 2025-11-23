@@ -110,6 +110,7 @@ class SpecialAttack:
         damage = data.get('damage', 5) if data else 5
         hitstun_frames = data.get('hitstun_frames', 32) if data else 32
         hitstop_frames = data.get('hitstop_frames', 15) if data else 15
+        knockback = data.get('knockback', 40) if data else 40
 
         if frame_int == 43:
             dir1 = self.character.face_dir
@@ -120,7 +121,6 @@ class SpecialAttack:
                 hitstun_frames=hitstun_frames,
                 will_knockdown=False
             )
-            # x좌표를 직접 밀어서 넉백처럼 보이게
             target.x += dir1 * 40
             target.hp = max(0, target.hp - damage)
             game_framework.add_hitstop(hitstop_frames)
@@ -152,12 +152,12 @@ class SpecialAttack:
         if frame_int == 78:
             target.take_hit(
                 is_knockback=True,
-                knockback_distance=0,
+                knockback_distance=knockback,
                 knockback_dir=0,
                 hitstun_frames=hitstun_frames,
                 will_knockdown=True
             )
-            hit_state.naruto_end_chain_with_knockdown()
+            hit_state.naruto_end_chain_with_knockdown(knockback, self.character.face_dir)
             target.hp = max(0, target.hp - damage)
             game_framework.add_hitstop(hitstop_frames)
             return

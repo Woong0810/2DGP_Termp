@@ -112,7 +112,7 @@ class SpecialAttack2:
                 will_knockdown=True
             )
             if hit_state:
-                hit_state.naruto_end_chain_with_knockdown()
+                hit_state.naruto_end_chain_with_knockdown(knockback, knockback_dir)
             target.hp = max(0, target.hp - damage)
             game_framework.add_hitstop(hitstop_frames)
         else:

@@ -41,7 +41,7 @@ class Background:
             if right <= b_left or left >= b_right:
                 continue
 
-            if prev_bottom >= b_top and bottom <= b_top:
+            if bottom <= b_top <= prev_bottom:
                 if landing_top is None or b_top > landing_top:
                     landing_top = b_top
         return landing_top
