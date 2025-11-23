@@ -145,12 +145,10 @@ class Character:
                 self.DEFENSE: defense_rules,
                 self.SPECIAL_ATTACK: {
                     special_attack_end: self.IDLE,
-                    key_down(kb['dash']): self.DASH,
                     key_down(kb.get('special2', -1)): self.SPECIAL_ATTACK2
                 },
                 self.SPECIAL_ATTACK2: {
                     special_attack2_end: self.IDLE,
-                    key_down(kb['dash']): self.DASH,
                     key_down(kb['special']): self.SPECIAL_ATTACK
                 },
                 self.RANGED_ATTACK: {
@@ -500,10 +498,7 @@ class Character:
 
         elif group == 'special_attack2:character':
             attacker = getattr(other, 'character', None)
-            if (attacker is not None
-                    and getattr(attacker.config, 'name', '') == 'Naruto'
-                    and attacker.state_machine.cur_state is attacker.SPECIAL_ATTACK2
-                    and int(getattr(attacker, 'frame', 0)) == 0):
+            if attacker and hasattr(attacker, 'config') and attacker.config.name == "Naruto":
                 return
             if hasattr(other, 'owner') and other.owner == self:
                 return
