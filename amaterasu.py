@@ -17,7 +17,7 @@ class Amaterasu:
 
         from character_itachi_sa_frames import FRAMES
         self.frames = FRAMES
-        self.effect_frames = list(range(0, 50))
+        self.effect_frames = list(range(0, 42))
 
         # 오너의 스케일 정보 가져오기
         self.scale_x = owner.config.scale_x
@@ -26,7 +26,6 @@ class Amaterasu:
 
     def update(self):
         self.frame += len(self.effect_frames) * ACTION_PER_TIME * SPECIAL_ATTACK_ANIMATION_SPEED * game_framework.frame_time
-
         if self.frame >= len(self.effect_frames):
             game_world.remove_object(self)
 
@@ -38,7 +37,7 @@ class Amaterasu:
         el, eb, ew, eh = effect_frame['left'], effect_frame['bottom'], effect_frame['width'], effect_frame['height']
         effect_draw_w = int(ew * self.scale_x)
         effect_draw_h = int(eh * self.scale_y)
-        draw_y = self.y + self.draw_offset_y
+        draw_y = self.y + self.draw_offset_y + self.owner.config.special_attack_offset_y
 
         if self.face_dir == 1:
             self.image.clip_draw(el, eb, ew, eh, self.x, draw_y, effect_draw_w, effect_draw_h)
