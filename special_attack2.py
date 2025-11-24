@@ -136,8 +136,6 @@ class SpecialAttack2:
                 frame = self.character.config.frames[frame_idx]
 
             hb = dict(self.character.config.hitbox_special_attack2)
-            hb['scale_x'] *= 10.0
-            hb['scale_y'] *= 1.0
             hw = frame['width'] * self.character.config.scale_x * hb['scale_x'] / 2
             hh = frame['height'] * self.character.config.scale_y * hb['scale_y'] / 2
 

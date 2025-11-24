@@ -351,7 +351,7 @@ class ItachiConfig(CharacterConfig):
 
         self.knockback_draw_offset_y = -12
         self.special_attack_offset_y = 40
-        self.special_attack2_offset_y = -10
+        self.special_attack2_offset_y = 0
 
         self.idle_frames = list(range(88, 88 + 4))
         self.run_frames = list(range(30, 30 + 6))
@@ -364,7 +364,7 @@ class ItachiConfig(CharacterConfig):
         self.jump_frames = [44, 45, 46, 47]
         self.defense_frames = [48]
         self.special_attack_frames = list(range(112, 112 + 12))
-        self.special_attack2_frames = list(range(0, 40))
+        self.special_attack2_frames = list(range(0, 60))
         self.ranged_attack_frames = list(range(49, 49 + 3))
         self.hit_frames = [86, 87]
         self.knockback_frames = [85, 69, 70, 71, 72, 73, 74, 75]
@@ -372,9 +372,9 @@ class ItachiConfig(CharacterConfig):
         self.dash_frames = list(range(42, 42 + 2))
 
         self.special1_hit_frames = [7, 11, 13, 15, 17, 19, 21, 25, 28, 31, 34, 37, 41]
-        self.special2_hit_frames = []
+        self.special2_hit_frames = [15, 25, 35, 45, 55]
         self.special1_offset_x = 100
-        self.special2_offset_x = 50
+        self.special2_offset_x = 5
 
         self.hitbox_idle = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_run = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}
@@ -382,7 +382,7 @@ class ItachiConfig(CharacterConfig):
         self.hitbox_normal_attack = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}
         self.hitbox_defense = {'scale_x': 1.0, 'scale_y': 0.95, 'x_offset': 0, 'y_offset': 5}
         self.hitbox_special_attack = {'scale_x': 25.0, 'scale_y': 1.05, 'x_offset': 0, 'y_offset': 5}
-        self.hitbox_special_attack2 = {'scale_x': 1.1, 'scale_y': 1.05, 'x_offset': 0, 'y_offset': 5}
+        self.hitbox_special_attack2 = {'scale_x': 25.0, 'scale_y': 1.05, 'x_offset': 0, 'y_offset': 5}
         self.hitbox_ranged_attack = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}
         self.hitbox_hit = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 0}
 
@@ -479,10 +479,10 @@ class ItachiConfig(CharacterConfig):
             },
             {
                 'name': 'itachi_special_A_2',
-                'damage': 22,
+                'damage': 6,
                 'hitstop_frames': 10,
                 'hitstun_frames': 60,
-                'knockback': 40,
+                'knockback': 60,
                 'knockdown': True,
             },
         ]
