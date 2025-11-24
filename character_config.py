@@ -204,7 +204,7 @@ class NarutoConfig(CharacterConfig):
         self.hitbox_jump = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_normal_attack = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_defense = {'scale_x': 1.0, 'scale_y': 1.0, 'x_offset': 0, 'y_offset': 0}
-        self.hitbox_special_attack = {'scale_x': 1.6, 'scale_y': 1.2, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_special_attack = {'scale_x': 20.0, 'scale_y': 4.0, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_special_attack2 = {'scale_x': 2.0, 'scale_y': 1.0, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_ranged_attack = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_hit = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
@@ -468,21 +468,13 @@ class ItachiConfig(CharacterConfig):
                 'knockdown': True,
             },
         ]
-        self.special_attack_data = {
-            'name': 'itachi_amaterasu',
-            'damage': 18,
-            'hitstop_frames': 6,
-            'hitstun_frames': 45,
-            'knockback': 30,
-            'knockdown': True,
-        }
         self.special_attack_data = [
             {
                 'name': 'itachi_special_A_1',
                 'damage': 2.4,
                 'hitstop_frames': 6,
                 'hitstun_frames': 45,
-                'knockback': 30,
+                'knockback': 60,
                 'knockdown': False,
             },
             {

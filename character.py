@@ -76,7 +76,7 @@ class Character:
         self.STAND_UP = StandUp(self)
         self.DASH = Dash(self)
 
-        self.naruto_special_chain_active = False
+        self.special_chain_active = False
 
         kb = self.key_bindings
         idle_rules = {
@@ -259,7 +259,7 @@ class Character:
         in_attack_state = self.state_machine.cur_state in (self.NORMAL_ATTACK, self.JUMP_ATTACK, self.SPECIAL_ATTACK, self.SPECIAL_ATTACK2, self.RANGED_ATTACK)
 
         if self.state_machine.cur_state == self.HIT:
-            if getattr(self, 'naruto_special_chain_active', False):
+            if getattr(self, 'special_chain_active', False):
                 return
             if not (event.type == SDL_KEYDOWN and event.key == self.key_bindings['dash']):
                 return
@@ -449,104 +449,23 @@ class Character:
 
         elif group == 'special_attack:character':
             attacker = getattr(other, 'character', None)
-            if attacker and hasattr(attacker, 'config') and attacker.config.name == "Naruto":
-                return
             if hasattr(other, 'owner') and other.owner == self:
                 return
+
             if self.state_machine.cur_state == self.DEFENSE:
                 if attacker is not None:
                     self.block_attacker_on_guard(attacker)
                 return
-            if self.state_machine.cur_state == self.HIT:
-                return
-
-            damage = SPECIAL_ATTACK_DAMAGE
-            knockback_distance = SPECIAL_ATTACK_KNOCKBACK
-            hitstun_frames = HITSTUN_FRAMES_SPECIAL
-            hitstop_frames = HITSTOP_FRAMES_SPECIAL
-            will_knockdown = True
-
-            if attacker is not None and hasattr(attacker, 'config'):
-                cfg = attacker.config
-                if hasattr(cfg, 'special_attack_data'):
-                    data_list = cfg.special_attack_data
-                    if isinstance(data_list, list) and len(data_list) > 0:
-                        data = data_list[0]
-                        damage = data.get('damage', damage)
-                        knockback_distance = data.get('knockback', knockback_distance)
-                        hitstun_frames = data.get('hitstun_frames', hitstun_frames)
-                        hitstop_frames = data.get('hitstop_frames', hitstop_frames)
-                        will_knockdown = data.get('knockdown', will_knockdown)
-
-            knockback_dir = 0
-            if knockback_distance != 0 and attacker is not None:
-                if attacker.x > self.x:
-                    knockback_dir = -1
-                elif attacker.x < self.x:
-                    knockback_dir = 1
-                else:
-                    knockback_dir = -self.face_dir
-
-            self.hp -= damage
-            game_framework.add_hitstop(hitstop_frames)
-            self.take_hit(
-                is_knockback=will_knockdown,
-                knockback_distance=knockback_distance,
-                knockback_dir=knockback_dir,
-                hitstun_frames=hitstun_frames,
-                will_knockdown=will_knockdown
-            )
 
         elif group == 'special_attack2:character':
             attacker = getattr(other, 'character', None)
-            if attacker and hasattr(attacker, 'config') and attacker.config.name == "Naruto":
-                return
             if hasattr(other, 'owner') and other.owner == self:
                 return
+
             if self.state_machine.cur_state == self.DEFENSE:
                 if attacker is not None:
                     self.block_attacker_on_guard(attacker)
                 return
-            if self.state_machine.cur_state == self.HIT:
-                return
-
-            damage = SPECIAL_ATTACK_DAMAGE
-            knockback_distance = SPECIAL_ATTACK_KNOCKBACK
-            hitstun_frames = HITSTUN_FRAMES_SPECIAL
-            hitstop_frames = HITSTOP_FRAMES_SPECIAL
-            will_knockdown = True
-
-            if attacker is not None and hasattr(attacker, 'config'):
-                cfg = attacker.config
-
-                if hasattr(cfg, 'special_attack_data'):
-                    data_list = cfg.special_attack_data
-                    if isinstance(data_list, list) and len(data_list) > 1:
-                        data = data_list[1]
-                        damage = data.get('damage', damage)
-                        knockback_distance = data.get('knockback', knockback_distance)
-                        hitstun_frames = data.get('hitstun_frames', hitstun_frames)
-                        hitstop_frames = data.get('hitstop_frames', hitstop_frames)
-                        will_knockdown = data.get('knockdown', will_knockdown)
-
-            knockback_dir = 0
-            if knockback_distance != 0 and attacker is not None:
-                if attacker.x > self.x:
-                    knockback_dir = -1
-                elif attacker.x < self.x:
-                    knockback_dir = 1
-                else:
-                    knockback_dir = -self.face_dir
-
-            self.hp -= damage
-            game_framework.add_hitstop(hitstop_frames)
-            self.take_hit(
-                is_knockback=will_knockdown,
-                knockback_distance=knockback_distance,
-                knockback_dir=knockback_dir,
-                hitstun_frames=hitstun_frames,
-                will_knockdown=will_knockdown
-            )
 
         elif group == 'character:shuriken':
             attacker = getattr(other, 'character', None)
