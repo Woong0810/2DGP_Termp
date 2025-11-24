@@ -168,7 +168,6 @@ class NarutoConfig(CharacterConfig):
         self.special_attack2_image_path = "character_naruto_sa_2.png"
         self.special_attack2_frames_data = NARUTO_SPECIAL2_FRAMES
 
-        # 원본 크기로 출력
         self.scale_x = 1.1
         self.scale_y = 1.2
         self.draw_offset_y = 0
@@ -200,7 +199,6 @@ class NarutoConfig(CharacterConfig):
         self.special1_offset_x = 50
         self.special2_offset_x = 50
 
-        # 나루토 전용 히트박스 설정 (기본값 사용)
         self.hitbox_idle = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_run = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_jump = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
@@ -209,7 +207,7 @@ class NarutoConfig(CharacterConfig):
         self.hitbox_special_attack = {'scale_x': 1.6, 'scale_y': 1.2, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_special_attack2 = {'scale_x': 2.0, 'scale_y': 1.0, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_ranged_attack = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
-        self.hitbox_hit = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}  # 피격 히트박스
+        self.hitbox_hit = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
 
         self.normal_attack_data = [
             {
@@ -347,7 +345,6 @@ class ItachiConfig(CharacterConfig):
         self.special_attack2_image_path = "character_itachi_sa_2.png"
         self.special_attack2_frames_data = ITACHI_SPECIAL2_FRAMES
 
-        # 원본 크기로 출력
         self.scale_x = 1.0
         self.scale_y = 1.0
         self.draw_offset_y = 0
@@ -356,7 +353,6 @@ class ItachiConfig(CharacterConfig):
         self.special_attack_offset_y = 0
         self.special_attack2_offset_y = -10
 
-        # TODO: Itachi의 프레임 인덱스 설정 (나중에 추가)
         self.idle_frames = list(range(88, 88 + 4))
         self.run_frames = list(range(30, 30 + 6))
         self.normal_attack_frames = list(range(0, 13))
@@ -375,12 +371,11 @@ class ItachiConfig(CharacterConfig):
         self.stand_up_frames = [38, 37, 36]
         self.dash_frames = list(range(42, 42 + 2))
 
-        self.special1_hit_frames = []
+        self.special1_hit_frames = [7, 11, 13, 15, 17, 19, 21, 25, 28, 31, 34, 37, 41]
         self.special2_hit_frames = []
-        self.special1_offset_x = 50
+        self.special1_offset_x = 150
         self.special2_offset_x = 50
 
-        # 이타치 전용 히트박스 설정
         self.hitbox_idle = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_run = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}
         self.hitbox_jump = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}
@@ -389,7 +384,7 @@ class ItachiConfig(CharacterConfig):
         self.hitbox_special_attack = {'scale_x': 1.1, 'scale_y': 1.05, 'x_offset': 0, 'y_offset': 5}
         self.hitbox_special_attack = {'scale_x': 1.1, 'scale_y': 1.05, 'x_offset': 0, 'y_offset': 5}
         self.hitbox_ranged_attack = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}
-        self.hitbox_hit = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 0}  # 피격 히트박스
+        self.hitbox_hit = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 0}
 
         self.normal_attack_data = [
             {
@@ -484,7 +479,7 @@ class ItachiConfig(CharacterConfig):
         self.special_attack_data = [
             {
                 'name': 'itachi_special_A_1',
-                'damage': 18,
+                'damage': 2.4,
                 'hitstop_frames': 6,
                 'hitstun_frames': 45,
                 'knockback': 30,
@@ -507,7 +502,6 @@ class JiraiyaConfig(CharacterConfig):
         self.image_path = "Characters_Jiraiya_clean.png"
         self.frames = JIRAIYA_FRAMES
 
-        # 원본 크기로 출력
         self.scale_x = 1.1
         self.scale_y = 1.1
         self.draw_offset_y = 0
@@ -540,7 +534,6 @@ class JiraiyaConfig(CharacterConfig):
         self.special1_offset_x = 50
         self.special2_offset_x = 50
 
-        # 지라이야 전용 히트박스 설정
         self.hitbox_idle = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_run = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_jump = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
@@ -549,9 +542,8 @@ class JiraiyaConfig(CharacterConfig):
         self.hitbox_special_attack = {'scale_x': 1.15, 'scale_y': 1.15, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_special_attack2 = {'scale_x': 1.15, 'scale_y': 1.15, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_ranged_attack = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
-        self.hitbox_hit = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}  # 피격 히트박스
+        self.hitbox_hit = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
 
-# 캐릭터 설정 딕셔너리
 CHARACTER_CONFIGS = {
     "Naruto": NarutoConfig,
     "Itachi": ItachiConfig,
