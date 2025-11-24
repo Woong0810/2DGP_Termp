@@ -33,35 +33,21 @@ class SpecialAttack:
 
     def exit(self, e):
         game_world.remove_collision_object(self)
-
-        if self.amaterasu:
-            game_world.remove_object(self.amaterasu)
         self.target = None
 
     def do(self):
-        if self.character.config.name == "Itachi":
-            char_frames = self.character.config.special_attack_frames
+        special_frames = self.character.config.special_attack_frames
 
-            self.character.frame += len(char_frames) * ACTION_PER_TIME * SPECIAL_ATTACK_ANIMATION_SPEED * game_framework.frame_time
+        prev_int = int(self.character.frame)
+        self.character.frame += len(special_frames) * ACTION_PER_TIME * SPECIAL_ATTACK_ANIMATION_SPEED * game_framework.frame_time
+        cur_int = int(self.character.frame)
 
-            if self.character.frame >= len(char_frames):
-                self.character.frame = 0
+        self.update_special(prev_int, cur_int)
 
-            if not self.amaterasu or self.amaterasu not in game_world.world[1]:
-                self.character.state_machine.handle_event(('SPECIAL_ATTACK_END', None))
-        else:
-            special_frames = self.character.config.special_attack_frames
+        if self.character.frame >= len(special_frames):
+            self.character.state_machine.handle_event(('SPECIAL_ATTACK_END', None))
 
-            prev_int = int(self.character.frame)
-            self.character.frame += len(special_frames) * ACTION_PER_TIME * SPECIAL_ATTACK_ANIMATION_SPEED * game_framework.frame_time
-            cur_int = int(self.character.frame)
-
-            self.update_special(prev_int, cur_int)
-
-            if self.character.frame >= len(special_frames):
-                self.character.state_machine.handle_event(('SPECIAL_ATTACK_END', None))
-
-            self.prev_frame_int = cur_int
+        self.prev_frame_int = cur_int
 
     def update_special(self, prev_frame_int, cur_frame_int):
         for f in self.hit_frames:
@@ -87,56 +73,79 @@ class SpecialAttack:
         hitstop_frames = data.get('hitstop_frames', 15) if data else 15
         knockback = data.get('knockback', 40) if data else 40
 
-        if frame_int == 43:
-            dir1 = self.character.face_dir
-            target.take_hit(
-                is_knockback=False,
-                knockback_distance=0,
-                knockback_dir=0,
-                hitstun_frames=hitstun_frames,
-                will_knockdown=False
-            )
-            target.x += dir1 * 40
-            target.hp = max(0, target.hp - damage)
-            game_framework.add_hitstop(hitstop_frames)
+        if self.character.config.name != "Naruto":
+            hit_state = getattr(target, 'HIT', None)
+
+            if self.hit_frames and frame_int == self.hit_frames[-1]:
+                target.take_hit(
+                    is_knockback=True,
+                    knockback_distance=knockback,
+                    knockback_dir=self.character.face_dir,
+                    hitstun_frames=hitstun_frames,
+                    will_knockdown=True
+                )
+                if hit_state:
+                    hit_state.set_chain_with_knockdown(knockback, self.character.face_dir)
+                target.hp = max(0, target.hp - damage)
+                game_framework.add_hitstop(hitstop_frames)
+            else:
+                if hit_state:
+                    hit_state.replay_hit()
+                target.hp = max(0, target.hp - damage)
+                game_framework.add_hitstop(hitstop_frames)
             return
+        if self.character.config.name == 'Naruto':
+            if frame_int == 43:
+                dir1 = self.character.face_dir
+                target.take_hit(
+                    is_knockback=False,
+                    knockback_distance=0,
+                    knockback_dir=0,
+                    hitstun_frames=hitstun_frames,
+                    will_knockdown=False
+                )
+                target.x += dir1 * 40
+                target.hp = max(0, target.hp - damage)
+                game_framework.add_hitstop(hitstop_frames)
+                return
 
-        hit_state = getattr(target, 'HIT', None)
-        if frame_int == 44:
-            dir2 = -self.character.face_dir
-            target.x += dir2 * 40
-            hit_state.replay_hit()
-            target.hp = max(0, target.hp - damage)
-            game_framework.add_hitstop(hitstop_frames)
-            return
+            hit_state = getattr(target, 'HIT', None)
+            if frame_int == 44:
+                dir2 = -self.character.face_dir
+                target.x += dir2 * 40
+                hit_state.replay_hit()
+                target.hp = max(0, target.hp - damage)
+                game_framework.add_hitstop(hitstop_frames)
+                return
 
-        if frame_int == 59:
-            target.y += 100
+            if frame_int == 59:
+                target.y += 100
 
-            hit_state.replay_hit()
-            target.hp = max(0, target.hp - damage)
-            game_framework.add_hitstop(hitstop_frames)
-            return
+                hit_state.replay_hit()
+                target.hp = max(0, target.hp - damage)
+                game_framework.add_hitstop(hitstop_frames)
+                return
 
-        if frame_int in (67, 73):
-            hit_state.replay_hit()
-            target.hp = max(0, target.hp - damage)
-            game_framework.add_hitstop(hitstop_frames)
-            return
+            if frame_int in (67, 73):
+                hit_state.replay_hit()
+                target.hp = max(0, target.hp - damage)
+                game_framework.add_hitstop(hitstop_frames)
+                return
 
-        if frame_int == 78:
-            target.take_hit(
-                is_knockback=True,
-                knockback_distance=knockback,
-                knockback_dir=0,
-                hitstun_frames=hitstun_frames,
-                will_knockdown=True
-            )
-            hit_state.set_chain_with_knockdown(knockback, self.character.face_dir)
-            target.hp = max(0, target.hp - damage)
-            game_framework.add_hitstop(hitstop_frames)
-            return
-
+            if frame_int == 78:
+                target.take_hit(
+                    is_knockback=True,
+                    knockback_distance=knockback,
+                    knockback_dir=0,
+                    hitstun_frames=hitstun_frames,
+                    will_knockdown=True
+                )
+                hit_state.set_chain_with_knockdown(knockback, self.character.face_dir)
+                target.hp = max(0, target.hp - damage)
+                game_framework.add_hitstop(hitstop_frames)
+                return
+        else:
+            pass
 
     def draw(self):
         if self.character.config.name == "Itachi":
@@ -190,15 +199,13 @@ class SpecialAttack:
 
         if self.target is None and current == 0:
             special_frames = self.character.config.special_attack_frames
-            if hasattr(self.character.config, 'special_attack_frames_data') and self.character.config.special_attack_frames_data:
-                all_frames = self.character.config.special_attack_frames_data
-                frame_idx = special_frames[0]
-                frame = all_frames[frame_idx]
-            else:
-                all_frames = self.character.config.frames
-                frame_idx = special_frames[0]
-                frame = all_frames[frame_idx]
+            all_frames = self.character.config.frames
 
+            if special_frames:
+                frame_idx = special_frames[0]
+            else:
+                frame_idx = 0
+            frame = all_frames[frame_idx]
             hb = dict(self.character.config.hitbox_special_attack)
 
             hw = frame['width'] * self.character.config.scale_x * hb['scale_x'] / 2
@@ -213,34 +220,28 @@ class SpecialAttack:
         return (0, 0, 0, 0)
 
     def get_bb(self):
-        if self.character.config.name == "Itachi":
-            if self.amaterasu:
-                return self.amaterasu.get_bb()
-            else:
-                return (0, 0, 0, 0)
         return self.get_bb_search_special()
 
     def handle_collision(self, group, other):
-        if group == 'special_attack:character' and self.character.config.name == "Naruto":
-            cur = int(self.character.frame)
-            if self.target is None and cur == 0:
-                self.target = other
+        cur = int(self.character.frame)
+        if self.target is None and cur == 0:
+            self.target = other
 
-                if self.target.x > self.character.x:
-                    self.character.face_dir = 1
-                elif self.target.x < self.character.x:
-                    self.character.face_dir = -1
+            if self.target.x > self.character.x:
+                self.character.face_dir = 1
+            elif self.target.x < self.character.x:
+                self.character.face_dir = -1
 
-                offset_x = getattr(self.character.config, 'special1_offset_x', 50)
-                self.character.x = self.target.x - self.character.face_dir * offset_x
-                self.character.y = self.target.y
+            offset_x = getattr(self.character.config, 'special1_offset_x', 50)
+            self.character.x = self.target.x - self.character.face_dir * offset_x
+            self.character.y = self.target.y
 
-                other.naruto_special_chain_active = True
+            other.naruto_special_chain_active = True
 
-                other.take_hit(
-                    is_knockback=False,
-                    knockback_distance=0,
-                    knockback_dir=0,
-                    hitstun_frames=30,
-                    will_knockdown=False
-                )
+            other.take_hit(
+                is_knockback=False,
+                knockback_distance=0,
+                knockback_dir=0,
+                hitstun_frames=30,
+                will_knockdown=False
+            )
