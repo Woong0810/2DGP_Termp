@@ -185,7 +185,7 @@ class SpecialAttack:
 
         draw_rectangle(*self.get_bb())
 
-    def get_bb_naruto(self):
+    def get_bb_search_special(self):
         current = int(self.character.frame)
 
         if self.target is None and current == 0:
@@ -200,8 +200,6 @@ class SpecialAttack:
                 frame = all_frames[frame_idx]
 
             hb = dict(self.character.config.hitbox_special_attack)
-            hb['scale_x'] *= 1.6
-            hb['scale_y'] *= 1.2
 
             hw = frame['width'] * self.character.config.scale_x * hb['scale_x'] / 2
             hh = frame['height'] * self.character.config.scale_y * hb['scale_y'] / 2
@@ -220,35 +218,7 @@ class SpecialAttack:
                 return self.amaterasu.get_bb()
             else:
                 return (0, 0, 0, 0)
-        elif self.character.config.name == "Naruto":
-            return self.get_bb_naruto()
-        else:
-            threshold = 120
-            if self.character.frame < threshold:
-                return (0, 0, 0, 0)
-
-            special_attack_frames = self.character.config.special_attack_frames
-
-            if hasattr(self.character.config, 'special_attack_frames_data') and self.character.config.special_attack_frames_data:
-                all_frames = self.character.config.special_attack_frames_data
-                current_frame = max(0, min(int(self.character.frame), len(all_frames) - 1))
-                frame_idx = current_frame
-                frame = all_frames[frame_idx]
-            else:
-                all_frames = self.character.config.frames
-                current_frame = max(0, min(int(self.character.frame), len(special_attack_frames) - 1))
-                frame_idx = special_attack_frames[current_frame]
-                frame = all_frames[frame_idx]
-
-            hb = self.character.config.hitbox_special_attack
-            hw = frame['width'] * self.character.config.scale_x * hb['scale_x'] / 2
-            hh = frame['height'] * self.character.config.scale_y * hb['scale_y'] / 2
-            return (
-                self.character.x - hw + hb['x_offset'],
-                self.character.y - hh + hb['y_offset'],
-                self.character.x + hw + hb['x_offset'],
-                self.character.y + hh + hb['y_offset']
-            )
+        return self.get_bb_search_special()
 
     def handle_collision(self, group, other):
         if group == 'special_attack:character' and self.character.config.name == "Naruto":

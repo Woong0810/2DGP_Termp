@@ -122,33 +122,9 @@ class SpecialAttack2:
     def get_bb(self):
         if not self.frames:
             return (0,0,0,0)
-        return self.get_bb_naruto()
+        return self.get_bb_search_special()
 
-        hb = self.character.config.hitbox_special_attack2
-        hb_scale_x = hb['scale_x'] * 0.9
-        hb_scale_y = hb['scale_y'] * 0.9
-        idx = int(self.character.frame)
-        if idx >= len(self.frames):
-            idx = len(self.frames) - 1
-
-        if hasattr(self.character.config, 'special_attack2_frames_data') and self.character.config.special_attack2_frames_data:
-            frame_idx = self.frames[idx]
-            frame = self.character.config.special_attack2_frames_data[frame_idx]
-        else:
-            frame_idx = self.frames[idx]
-            frame = self.character.config.frames[frame_idx]
-
-        hw = frame['width'] * self.character.config.scale_x * hb_scale_x / 2
-        hh = frame['height'] * self.character.config.scale_y * hb_scale_y / 2
-
-        return (
-            self.character.x - hw + hb['x_offset'],
-            self.character.y - hh + hb['y_offset'] + self.character.config.special_attack2_offset_y,
-            self.character.x + hw + hb['x_offset'],
-            self.character.y + hh + hb['y_offset'] + self.character.config.special_attack2_offset_y
-        )
-
-    def get_bb_naruto(self):
+    def get_bb_search_special(self):
         cur = int(self.character.frame)
 
         if self.target is None and cur == 0:
