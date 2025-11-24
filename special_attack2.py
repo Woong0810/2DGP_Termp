@@ -163,7 +163,7 @@ class SpecialAttack2:
             self.character.x = self.target.x - self.character.face_dir * offset_x
             self.character.y = self.target.y
 
-            self.target.naruto_special_chain_active = True
+            self.target.special_chain_active = True
             self.target.take_hit(
                 is_knockback=False,
                 knockback_distance=0,

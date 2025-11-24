@@ -55,7 +55,7 @@ class Hit:
             self.will_knockdown = False
         self.vy = 0.0
 
-        if getattr(self.character, 'naruto_special_chain_active', False):
+        if getattr(self.character, 'special_chain_active', False):
             self.chain_active = True
             self.chain_hold_last = True
 
@@ -169,17 +169,17 @@ class Hit:
     def hold_last_frame(self):
         self.chain_hold_last = True
 
-    def set_chain_with_knockdown(self, knockback_distance=60, knockback_dir=0):
+    def set_chain_with_knockdown(self, knockback_distance=60, knockback_dir=0, airborne = False):
         self.chain_active = False
         self.chain_hold_last = False
         self.chain_force_knockdown = True
-        self.character.naruto_special_chain_active = False
+        self.character.special_chain_active = False
 
         self.is_knockback = True
         self.knockback_distance = knockback_distance
         self.knockback_dir = knockback_dir
         self.will_knockdown = True
-        self.was_in_air = True
+        self.was_in_air = airborne
         self.vy = 0.0
         self.elapsed_time = 0.0
 

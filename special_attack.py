@@ -100,7 +100,7 @@ class SpecialAttack:
                     will_knockdown=True
                 )
                 if hit_state:
-                    hit_state.set_chain_with_knockdown(knockback, self.character.face_dir)
+                    hit_state.set_chain_with_knockdown(knockback, self.character.face_dir, False)
                 target.hp = max(0, target.hp - damage)
                 game_framework.add_hitstop(hitstop_frames)
             else:
@@ -155,7 +155,7 @@ class SpecialAttack:
                     hitstun_frames=hitstun_frames,
                     will_knockdown=True
                 )
-                hit_state.set_chain_with_knockdown(knockback, self.character.face_dir)
+                hit_state.set_chain_with_knockdown(knockback, self.character.face_dir, True)
                 target.hp = max(0, target.hp - damage)
                 game_framework.add_hitstop(hitstop_frames)
                 return
