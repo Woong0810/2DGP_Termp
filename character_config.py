@@ -350,7 +350,7 @@ class ItachiConfig(CharacterConfig):
         self.draw_offset_y = 0
 
         self.knockback_draw_offset_y = -12
-        self.special_attack_offset_y = 0
+        self.special_attack_offset_y = 40
         self.special_attack2_offset_y = -10
 
         self.idle_frames = list(range(88, 88 + 4))
@@ -373,7 +373,7 @@ class ItachiConfig(CharacterConfig):
 
         self.special1_hit_frames = [7, 11, 13, 15, 17, 19, 21, 25, 28, 31, 34, 37, 41]
         self.special2_hit_frames = []
-        self.special1_offset_x = 150
+        self.special1_offset_x = 100
         self.special2_offset_x = 50
 
         self.hitbox_idle = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 0}
@@ -381,8 +381,8 @@ class ItachiConfig(CharacterConfig):
         self.hitbox_jump = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}
         self.hitbox_normal_attack = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}
         self.hitbox_defense = {'scale_x': 1.0, 'scale_y': 0.95, 'x_offset': 0, 'y_offset': 5}
-        self.hitbox_special_attack = {'scale_x': 1.1, 'scale_y': 1.05, 'x_offset': 0, 'y_offset': 5}
-        self.hitbox_special_attack = {'scale_x': 1.1, 'scale_y': 1.05, 'x_offset': 0, 'y_offset': 5}
+        self.hitbox_special_attack = {'scale_x': 25.0, 'scale_y': 1.05, 'x_offset': 0, 'y_offset': 5}
+        self.hitbox_special_attack2 = {'scale_x': 1.1, 'scale_y': 1.05, 'x_offset': 0, 'y_offset': 5}
         self.hitbox_ranged_attack = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}
         self.hitbox_hit = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 0}
 
