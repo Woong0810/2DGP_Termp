@@ -17,17 +17,14 @@ class SpecialAttack:
         self.hit_frames = getattr(self.character.config, 'special1_hit_frames', [])
         self.hit_done = {f: False for f in self.hit_frames}
         self.prev_frame_int = 0
+        self.prev_effect_frame_int = 0
 
     def enter(self, e):
         self.character.frame = 0
         self.prev_frame_int = 0
+        self.prev_effect_frame_int = 0
         self.target = None
         self.hit_done = {f: False for f in self.hit_frames}
-
-        if self.character.config.name == "Itachi":
-            from amaterasu import Amaterasu
-            self.amaterasu = Amaterasu(self.character, self.character.x, self.character.y, self.character.face_dir)
-            game_world.add_object(self.amaterasu, 1)
 
         game_world.add_collision_pairs('special_attack:character', self, None)
 
@@ -50,6 +47,18 @@ class SpecialAttack:
         self.prev_frame_int = cur_int
 
     def update_special(self, prev_frame_int, cur_frame_int):
+        if self.character.config.name == "Itachi" and self.amaterasu is not None:
+            prev_effect_int = self.prev_effect_frame_int
+            cur_effect_int = int(self.amaterasu.frame)
+
+            for f in self.hit_frames:
+                if self.hit_done.get(f, False):
+                    continue
+                if prev_effect_int < f <= cur_effect_int:
+                    self.apply_hit_at_frame(f)
+                    self.hit_done[f] = True
+            self.prev_effect_frame_int = cur_effect_int
+            return
         for f in self.hit_frames:
             if self.hit_done.get(f, False):
                 continue
@@ -76,11 +85,17 @@ class SpecialAttack:
         if self.character.config.name != "Naruto":
             hit_state = getattr(target, 'HIT', None)
 
-            if self.hit_frames and frame_int == self.hit_frames[-1]:
+            if frame_int == self.hit_frames[-1]:
+                if self.character.x < target.x:
+                    knockback_dir = 1
+                elif self.character.x > target.x:
+                    knockback_dir = -1
+                else:
+                    knockback_dir = -self.character.face_dir
                 target.take_hit(
                     is_knockback=True,
                     knockback_distance=knockback,
-                    knockback_dir=self.character.face_dir,
+                    knockback_dir=knockback_dir,
                     hitstun_frames=hitstun_frames,
                     will_knockdown=True
                 )
@@ -236,7 +251,12 @@ class SpecialAttack:
             self.character.x = self.target.x - self.character.face_dir * offset_x
             self.character.y = self.target.y
 
-            other.naruto_special_chain_active = True
+            if self.character.config.name == "Itachi":
+                from amaterasu import Amaterasu
+                self.amaterasu = Amaterasu(self.character, self.character.x, self.character.y, self.character.face_dir)
+                game_world.add_object(self.amaterasu, 1)
+
+            other.special_chain_active = True
 
             other.take_hit(
                 is_knockback=False,
