@@ -1,7 +1,3 @@
-"""
-캐릭터별 프레임 설정 정보
-각 캐릭터마다 어떤 동작이 몇 번째 프레임에 있는지 정의
-"""
 from character_itachi_frames import FRAMES as ITACHI_FRAMES
 from character_itachi_sa_frames import FRAMES as ITACHI_SPECIAL_FRAMES
 from characters_jiraiya_frames import FRAMES as JIRAIYA_FRAMES
@@ -89,7 +85,6 @@ HITSTOP_FRAMES_SPECIAL = 6      # 스페셜 / 강한 기술
 HITSTOP_FRAMES_RANGED = 2       # 수리검 등 원거리
 
 class CharacterConfig:
-    """캐릭터 설정 베이스 클래스"""
     def __init__(self):
         self.name = ""
         self.image_path = ""
@@ -102,7 +97,7 @@ class CharacterConfig:
         # 캐릭터 그리기 오프셋 (피벗 차이 보정)
         self.draw_offset_y = 0
 
-        # 상태별 전용 오프셋: 넉백 전용 y 오프셋 (기본 0)
+        # 상태별 전용 오프셋
         self.knockback_draw_offset_y = 0
         self.special_attack_offset_y = 0
         self.special_attack2_offset_y = 0
@@ -115,10 +110,16 @@ class CharacterConfig:
         self.jump_frames = []
         self.defense_frames = []
         self.special_attack_frames = []
-        self.special_attack2_frames = []  # 두번째 필살기 프레임 인덱스 추가
+        self.special_attack2_frames = []
         self.ranged_attack_frames = []
         self.hit_frames = []
         self.dash_frames = []
+
+        # 모든 스페셜 공격을 프레임 단위 타격으로 처리
+        self.special1_hit_frames = []
+        self.special2_hit_frames = []
+        self.special1_offset_x = 50
+        self.special2_offset_x = 50
 
         # 히트박스 설정 (각 상태별 scale_x, scale_y, x_offset, y_offset)
         self.hitbox_idle = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
@@ -193,6 +194,11 @@ class NarutoConfig(CharacterConfig):
         self.knockback_frames = [53, 56, 57, 58, 59]
         self.stand_up_frames = [60, 18, 17, 16]
         self.dash_frames = list(range(101, 101 + 6))
+
+        self.special1_hit_frames = [43, 44, 59, 67, 73, 78]
+        self.special2_hit_frames = [26, 29, 32, 35, 38, 41, 44, 47, 50]
+        self.special1_offset_x = 50
+        self.special2_offset_x = 50
 
         # 나루토 전용 히트박스 설정 (기본값 사용)
         self.hitbox_idle = {'scale_x': 0.7, 'scale_y': 0.8, 'x_offset': 0, 'y_offset': 0}
@@ -369,6 +375,11 @@ class ItachiConfig(CharacterConfig):
         self.stand_up_frames = [38, 37, 36]
         self.dash_frames = list(range(42, 42 + 2))
 
+        self.special1_hit_frames = []
+        self.special2_hit_frames = []
+        self.special1_offset_x = 50
+        self.special2_offset_x = 50
+
         # 이타치 전용 히트박스 설정
         self.hitbox_idle = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_run = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}
@@ -502,6 +513,8 @@ class JiraiyaConfig(CharacterConfig):
         self.draw_offset_y = 0
 
         self.knockback_draw_offset_y = -15
+        self.special_attack_offset_y = 0
+        self.special_attack2_offset_y = 0
 
         # TODO: Jiraiya의 프레임 인덱스 설정 (나중에 추가)
         self.idle_frames = list(range(54, 54 + 4))
@@ -521,6 +534,11 @@ class JiraiyaConfig(CharacterConfig):
         self.knockback_frames = [60, 65, 64, 63, 62, 61]
         self.stand_up_frames = [68, 45]
         self.dash_frames = list(range(87, 87 + 2))
+
+        self.special1_hit_frames = []
+        self.special2_hit_frames = []
+        self.special1_offset_x = 50
+        self.special2_offset_x = 50
 
         # 지라이야 전용 히트박스 설정
         self.hitbox_idle = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
