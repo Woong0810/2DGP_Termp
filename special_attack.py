@@ -14,17 +14,15 @@ class SpecialAttack:
             self.special_image = load_image(self.character.config.special_attack_image_path)
 
         self.target = None
-        self.naruto_hit_frames = [43, 44, 59, 67, 73, 78]
-        self.naruto_hit_done = {f: False for f in self.naruto_hit_frames}
+        self.hit_frames = getattr(self.character.config, 'special1_hit_frames', [])
+        self.hit_done = {f: False for f in self.hit_frames}
         self.prev_frame_int = 0
 
     def enter(self, e):
         self.character.frame = 0
         self.prev_frame_int = 0
-
-        if self.character.config.name == "Naruto":
-            self.target = None
-            self.naruto_hit_done = {f: False for f in self.naruto_hit_frames}
+        self.target = None
+        self.hit_done = {f: False for f in self.hit_frames}
 
         if self.character.config.name == "Itachi":
             from amaterasu import Amaterasu
@@ -58,23 +56,22 @@ class SpecialAttack:
             self.character.frame += len(special_frames) * ACTION_PER_TIME * SPECIAL_ATTACK_ANIMATION_SPEED * game_framework.frame_time
             cur_int = int(self.character.frame)
 
-            if self.character.config.name == "Naruto":
-                self.update_naruto_special(prev_int, cur_int)
+            self.update_special(prev_int, cur_int)
 
             if self.character.frame >= len(special_frames):
                 self.character.state_machine.handle_event(('SPECIAL_ATTACK_END', None))
 
             self.prev_frame_int = cur_int
 
-    def update_naruto_special(self, prev_frame_int, cur_frame_int):
-        for f in self.naruto_hit_frames:
-            if self.naruto_hit_done.get(f, False):
+    def update_special(self, prev_frame_int, cur_frame_int):
+        for f in self.hit_frames:
+            if self.hit_done.get(f, False):
                 continue
             if prev_frame_int < f <= cur_frame_int:
-                self.naruto_apply_hit(f)
-                self.naruto_hit_done[f] = True
+                self.apply_hit_at_frame(f)
+                self.hit_done[f] = True
 
-    def naruto_apply_hit(self, frame_int):
+    def apply_hit_at_frame(self, frame_int):
         target = self.target
         if target is None or target.hp <= 0:
             return
@@ -108,7 +105,7 @@ class SpecialAttack:
         if frame_int == 44:
             dir2 = -self.character.face_dir
             target.x += dir2 * 40
-            hit_state.naruto_replay_hit()
+            hit_state.replay_hit()
             target.hp = max(0, target.hp - damage)
             game_framework.add_hitstop(hitstop_frames)
             return
@@ -116,13 +113,13 @@ class SpecialAttack:
         if frame_int == 59:
             target.y += 100
 
-            hit_state.naruto_replay_hit()
+            hit_state.replay_hit()
             target.hp = max(0, target.hp - damage)
             game_framework.add_hitstop(hitstop_frames)
             return
 
         if frame_int in (67, 73):
-            hit_state.naruto_replay_hit()
+            hit_state.replay_hit()
             target.hp = max(0, target.hp - damage)
             game_framework.add_hitstop(hitstop_frames)
             return
@@ -135,7 +132,7 @@ class SpecialAttack:
                 hitstun_frames=hitstun_frames,
                 will_knockdown=True
             )
-            hit_state.naruto_end_chain_with_knockdown(knockback, self.character.face_dir)
+            hit_state.set_chain_with_knockdown(knockback, self.character.face_dir)
             target.hp = max(0, target.hp - damage)
             game_framework.add_hitstop(hitstop_frames)
             return
@@ -264,7 +261,7 @@ class SpecialAttack:
                 elif self.target.x < self.character.x:
                     self.character.face_dir = -1
 
-                offset_x = 50
+                offset_x = getattr(self.character.config, 'special1_offset_x', 50)
                 self.character.x = self.target.x - self.character.face_dir * offset_x
                 self.character.y = self.target.y
 

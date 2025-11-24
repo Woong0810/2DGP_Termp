@@ -14,18 +14,15 @@ class SpecialAttack2:
             self.special_image = load_image(self.character.config.special_attack2_image_path)
 
         self.target = None
-        self.naruto_hit_frames = [26, 29, 32, 35, 38, 41, 44, 47, 50]
-        self.naruto_hit_done = {f: False for f in self.naruto_hit_frames}
+        self.hit_frames = getattr(self.character.config, 'special2_hit_frames', [])
+        self.hit_done = {f: False for f in self.hit_frames}
         self.prev_frame_int = 0
-
-    def is_naruto(self):
-        return getattr(self.character.config, 'name', '') == "Naruto"
 
     def enter(self, e):
         self.character.frame = 0
         self.target = None
         self.prev_frame_int = 0
-        self.naruto_hit_done = {f: False for f in self.naruto_hit_frames}
+        self.hit_done = {f: False for f in self.hit_frames}
         game_world.add_collision_pairs('special_attack2:character', self, None)
 
     def exit(self, e):
@@ -39,22 +36,21 @@ class SpecialAttack2:
         self.character.frame += len(self.frames) * ACTION_PER_TIME * SPECIAL_ATTACK_ANIMATION_SPEED * game_framework.frame_time
         cur_int = int(self.character.frame)
 
-        if self.is_naruto():
-            self.update_naruto_special(prev_int, cur_int)
+        self.update_special(prev_int, cur_int)
         if self.character.frame >= len(self.frames):
             self.character.state_machine.handle_event(('SPECIAL_ATTACK2_END', None))
             return
         self.prev_frame_int = cur_int
 
-    def update_naruto_special(self, prev_int, cur_int):
-        for f in self.naruto_hit_frames:
-            if self.naruto_hit_done.get(f, False):
+    def update_special(self, prev_int, cur_int):
+        for f in self.hit_frames:
+            if self.hit_done.get(f, False):
                 continue
             if prev_int < f <= cur_int:
-                self.naruto_apply_hit(f)
-                self.naruto_hit_done[f] = True
+                self.apply_hit_at_frame(f)
+                self.hit_done[f] = True
 
-    def naruto_apply_hit(self, frame_int):
+    def apply_hit_at_frame(self, frame_int):
         target = self.target
         if target is None or target.hp <= 0:
             return
@@ -70,7 +66,7 @@ class SpecialAttack2:
 
         hit_state = getattr(target, 'HIT', None)
 
-        if frame_int == self.naruto_hit_frames[-1]:
+        if frame_int == self.hit_frames[-1]:
             if self.character.x < target.x:
                 knockback_dir = 1
             elif self.character.x > target.x:
@@ -85,12 +81,12 @@ class SpecialAttack2:
                 will_knockdown=True
             )
             if hit_state:
-                hit_state.naruto_end_chain_with_knockdown(knockback, knockback_dir)
+                hit_state.set_chain_with_knockdown(knockback, knockback_dir)
             target.hp = max(0, target.hp - damage)
             game_framework.add_hitstop(hitstop_frames)
         else:
             if hit_state:
-                hit_state.naruto_replay_hit()
+                hit_state.replay_hit()
             target.hp = max(0, target.hp - damage)
             game_framework.add_hitstop(hitstop_frames)
 
@@ -126,8 +122,7 @@ class SpecialAttack2:
     def get_bb(self):
         if not self.frames:
             return (0,0,0,0)
-        if self.is_naruto():
-            return self.get_bb_naruto()
+        return self.get_bb_naruto()
 
         hb = self.character.config.hitbox_special_attack2
         hb_scale_x = hb['scale_x'] * 0.9
@@ -179,9 +174,6 @@ class SpecialAttack2:
         return 0, 0, 0, 0
 
     def handle_collision(self, group, other):
-        if not self.is_naruto():
-            return
-
         cur = int(self.character.frame)
         if self.target is None and cur == 0:
             self.target = other
@@ -191,7 +183,7 @@ class SpecialAttack2:
             elif self.target.x < self.character.x:
                 self.character.face_dir = -1
 
-            offset_x = 50
+            offset_x = getattr(self.character.config, 'special2_offset_x', 50)
             self.character.x = self.target.x - self.character.face_dir * offset_x
             self.character.y = self.target.y
 

@@ -17,18 +17,18 @@ class Hit:
         self.hit_duration = HIT_DURATION
         self.will_knockdown = False
 
-        self.naruto_chain = False
-        self.naruto_hold_last = False
-        self.naruto_force_knockdown = False
+        self.chain_active = False
+        self.chain_hold_last = False
+        self.chain_force_knockdown = False
 
     def enter(self, event):
         self.character.frame = 0
         self.elapsed_time = 0.0
         self.is_lying_down = False
 
-        self.naruto_chain = False
-        self.naruto_hold_last = False
-        self.naruto_force_knockdown = False
+        self.chain_active = False
+        self.chain_hold_last = False
+        self.chain_force_knockdown = False
 
         prev_state = self.character.state_machine.prev_state
         if prev_state == self.character.JUMP or prev_state == self.character.JUMP_ATTACK:
@@ -56,8 +56,8 @@ class Hit:
         self.vy = 0.0
 
         if getattr(self.character, 'naruto_special_chain_active', False):
-            self.naruto_chain = True
-            self.naruto_hold_last = True
+            self.chain_active = True
+            self.chain_hold_last = True
 
         game_world.add_collision_pairs('normal_attack:character', None, self.character)
         game_world.add_collision_pairs('jump_attack:character', None, self.character)
@@ -82,7 +82,7 @@ class Hit:
             if self.was_in_air:
                 _, prev_bottom, _, _ = self.get_bb()
 
-            if self.naruto_force_knockdown:
+            if self.chain_force_knockdown:
                 knockback_frames = self.character.config.knockback_frames
                 if len(knockback_frames) > 0:
                     self.character.frame = len(knockback_frames) - 1
@@ -130,7 +130,7 @@ class Hit:
                     else:
                         self.character.state_machine.add_event(('STAND_UP', 0))
                 else:
-                    if not self.naruto_force_knockdown:
+                    if not self.chain_force_knockdown:
                         if self.was_in_air:
                             self.character.state_machine.add_event(('RESUME_JUMP', self.ground_y))
                         else:
@@ -139,12 +139,12 @@ class Hit:
             hit_frames = self.character.config.hit_frames
             frames_per_action = len(hit_frames)
 
-            if self.naruto_chain:
-                if not self.naruto_hold_last:
+            if self.chain_active:
+                if not self.chain_hold_last:
                     self.character.frame = ( self.character.frame + frames_per_action * ACTION_PER_TIME
                                              * HIT_ANIMATION_SPEED * dt ) % frames_per_action
                     if self.elapsed_time >= self.hit_duration:
-                        self.naruto_hold_last_frame()
+                        self.hold_last_frame()
                         if frames_per_action > 0:
                             self.character.frame = frames_per_action - 1
                 else:
@@ -154,25 +154,25 @@ class Hit:
             self.character.frame = ( self.character.frame + frames_per_action * ACTION_PER_TIME
                                      * HIT_ANIMATION_SPEED * dt ) % frames_per_action
             if self.elapsed_time >= self.hit_duration:
-                if self.naruto_chain or self.naruto_force_knockdown:
+                if self.chain_active or self.chain_force_knockdown:
                     return
                 if self.was_in_air:
                     self.character.state_machine.add_event(('RESUME_JUMP', self.ground_y))
                 else:
                     self.character.state_machine.add_event(('HIT_END', 0))
 
-    def naruto_replay_hit(self):
+    def replay_hit(self):
         self.elapsed_time = 0.0
         self.character.frame = 0
-        self.naruto_hold_last = False
+        self.chain_hold_last = False
 
-    def naruto_hold_last_frame(self):
-        self.naruto_hold_last = True
+    def hold_last_frame(self):
+        self.chain_hold_last = True
 
-    def naruto_end_chain_with_knockdown(self, knockback_distance=60, knockback_dir=0):
-        self.naruto_chain = False
-        self.naruto_hold_last = False
-        self.naruto_force_knockdown = True
+    def set_chain_with_knockdown(self, knockback_distance=60, knockback_dir=0):
+        self.chain_active = False
+        self.chain_hold_last = False
+        self.chain_force_knockdown = True
         self.character.naruto_special_chain_active = False
 
         self.is_knockback = True
