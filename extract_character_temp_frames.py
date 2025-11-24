@@ -1,9 +1,13 @@
 from PIL import Image
+import os
 
-# 네가 실제 게임에서 쓰는 원본 PNG 경로
-IMAGE_PATH = r"C:\Users\user\Documents\GitHub\2DGP_Termp\character_naruto_sa_2.png"
+# 추출할 원본 PNG 경로 (이타치 SA 이미지로 변경)
+IMAGE_PATH = r"C:\Users\user\Documents\GitHub\2DGP_Termp\character_itachi_sa.png"
 
-# 최소 너비(픽셀) – 노이즈 같은 얇은 세그먼트는 무시하고 싶으면 5~8 정도로 올려도 됨
+# 생성할 프레임 파일 경로
+OUTPUT_PATH = r"C:\Users\user\Documents\GitHub\2DGP_Termp\character_itachi_sa_frames.py"
+
+# 최소 너비(픽셀) – 노이즈 같은 얇은 세그라멘트는 무시
 MIN_WIDTH = 3
 
 img = Image.open(IMAGE_PATH).convert("RGBA")
@@ -53,8 +57,12 @@ for i, (left, width) in enumerate(segments):
 for i, f in enumerate(frames):
     print(i, f)
 
-# 필요하면 파이썬 리스트로 저장할 수 있게 한 번에 출력
-print("\nframes_data = [")
-for f in frames:
-    print(f"    {f},")
-print("]")
+# 프레임 파일로 저장 (FRAMES = [ ... ])
+with open(OUTPUT_PATH, 'w', encoding='utf-8') as out:
+    out.write("# Auto-generated frame data from extract_character_temp_frames.py\n")
+    out.write("FRAMES = [\n")
+    for f in frames:
+        out.write(f"    {{'left': {f['left']}, 'bottom': {f['bottom']}, 'width': {f['width']}, 'height': {f['height']}}},\n")
+    out.write("]\n")
+
+print(f"프레임 정보를 '{OUTPUT_PATH}'에 저장했습니다.")
