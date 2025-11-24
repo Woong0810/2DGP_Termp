@@ -9,7 +9,7 @@ class Amaterasu:
         self.face_dir = face_dir
         self.frame = 0
 
-        offset_distance = 150
+        offset_distance = 100
         self.x = x + (offset_distance * face_dir)
         self.y = y
 
