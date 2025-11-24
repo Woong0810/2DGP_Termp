@@ -67,28 +67,6 @@ class SpecialAttack:
             self.prev_frame_int = cur_int
 
     def update_naruto_special(self, prev_frame_int, cur_frame_int):
-        if self.target is not None and cur_frame_int < 43:
-            if self.target.x > self.character.x:
-                self.character.face_dir = 1
-            elif self.target.x < self.character.x:
-                self.character.face_dir = -1
-
-            desired_offset_x = 40
-            desired_x = self.target.x - self.character.face_dir * desired_offset_x
-            dx = desired_x - self.character.x
-            desired_y = self.target.y - self.character.face_dir
-            dy = desired_y - self.character.y
-
-            move_speed = 600
-            max_move = move_speed * game_framework.frame_time
-
-            if abs(dx) <= max_move and abs(dy) <= max_move:
-                self.character.x = desired_x
-                self.character.y = desired_y
-            else:
-                self.character.x += max_move if dx > 0 else -max_move
-                self.character.y += max_move if dy > 0 else -max_move
-
         for f in self.naruto_hit_frames:
             if self.naruto_hit_done.get(f, False):
                 continue
@@ -280,6 +258,16 @@ class SpecialAttack:
             cur = int(self.character.frame)
             if self.target is None and cur == 0:
                 self.target = other
+
+                if self.target.x > self.character.x:
+                    self.character.face_dir = 1
+                elif self.target.x < self.character.x:
+                    self.character.face_dir = -1
+
+                offset_x = 50
+                self.character.x = self.target.x - self.character.face_dir * offset_x
+                self.character.y = self.target.y
+
                 other.naruto_special_chain_active = True
 
                 other.take_hit(

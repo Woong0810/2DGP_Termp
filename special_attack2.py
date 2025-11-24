@@ -47,33 +47,6 @@ class SpecialAttack2:
         self.prev_frame_int = cur_int
 
     def update_naruto_special(self, prev_int, cur_int):
-        if self.target is not None and cur_int == 0:
-            target = self.target
-
-            if target.x > self.character.x:
-                self.character.face_dir = 1
-            elif target.x < self.character.x:
-                self.character.face_dir = -1
-
-            desired_offset_x = 40
-            desired_x = target.x - self.character.face_dir * desired_offset_x
-            desired_y = target.y
-
-            move_speed = 600
-            dx = desired_x - self.character.x
-            dy = desired_y - self.character.y
-            max_move = move_speed * game_framework.frame_time
-
-            if abs(dx) <= max_move:
-                self.character.x = desired_x
-            else:
-                self.character.x += max_move if dx > 0 else -max_move
-
-            if abs(dy) <= max_move:
-                self.character.y = desired_y
-            else:
-                self.character.y += max_move if dy > 0 else -max_move
-
         for f in self.naruto_hit_frames:
             if self.naruto_hit_done.get(f, False):
                 continue
