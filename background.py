@@ -2,16 +2,27 @@ from pico2d import load_image, draw_rectangle
 
 
 class Background:
-    def __init__(self):
-        self.image = load_image('background1.png')
+    def __init__(self, stage_index = 0):
+        self.stage_index = stage_index
 
-        self.platforms = [
-            {'left': 0, 'bottom': 0, 'right': 800, 'top': 20},
-            {'left': 0, 'bottom': 180, 'right': 200, 'top': 200},
-            {'left': 300, 'bottom': 180, 'right': 650, 'top': 200},
-            {'left': 360, 'bottom': 240, 'right': 600, 'top': 260},
-            {'left': 730, 'bottom': 180, 'right': 800, 'top': 200},
-        ]
+        if self.stage_index == 0:
+            self.image = load_image('background1.png')
+            self.platforms = [
+                {'left': 0, 'bottom': 0, 'right': 800, 'top': 20},
+                {'left': 0, 'bottom': 180, 'right': 200, 'top': 200},
+                {'left': 300, 'bottom': 180, 'right': 650, 'top': 200},
+                {'left': 360, 'bottom': 240, 'right': 600, 'top': 260},
+                {'left': 730, 'bottom': 180, 'right': 800, 'top': 200},
+            ]
+        else:   # 일단 동일하게
+            self.image = load_image('background1.png')
+            self.platforms = [
+                {'left': 0, 'bottom': 0, 'right': 800, 'top': 20},
+                {'left': 0, 'bottom': 180, 'right': 200, 'top': 200},
+                {'left': 300, 'bottom': 180, 'right': 650, 'top': 200},
+                {'left': 360, 'bottom': 240, 'right': 600, 'top': 260},
+                {'left': 730, 'bottom': 180, 'right': 800, 'top': 200},
+            ]
 
     def update(self):
         pass

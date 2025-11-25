@@ -37,7 +37,8 @@ def set_selected_stage(stage_index):
 
 def init():
     global player1, player2, background, player1_hp_bar, player2_hp_bar, round_timer
-    background = Background()
+
+    background = Background(stage_index = selected_stage_index)
     game_world.add_object(background, 0)
 
     from player_config import PLAYER1_KEY_BINDINGS, PLAYER2_KEY_BINDINGS
