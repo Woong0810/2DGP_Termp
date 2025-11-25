@@ -31,6 +31,9 @@ def set_selected_characters(p1_idx, p2_idx):
     selected_player1_index = p1_idx
     selected_player2_index = p2_idx
 
+def set_selected_stage(stage_index):
+    global selected_stage_index
+    selected_stage_index = stage_index
 
 def init():
     global player1, player2, background, player1_hp_bar, player2_hp_bar, round_timer
