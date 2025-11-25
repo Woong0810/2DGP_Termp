@@ -3,13 +3,12 @@ from pico2d import *
 import game_world
 from background import Background
 from character import Character
-from character_config import NarutoConfig, ItachiConfig, JiraiyaConfig
+from character_config import NarutoConfig, ItachiConfig, JiraiyaConfig, CHARACTER_CONFIGS
 import game_framework
 import title_mode
 from hp_bar import HPBar
 from round_timer import RoundTimer
 import result_mode
-
 
 def handle_events():
     event_list = get_events()
@@ -22,6 +21,17 @@ def handle_events():
             player1.handle_event(event)
             player2.handle_event(event)
 
+CHAR_CONFIG_LIST = list(CHARACTER_CONFIGS.values())
+selected_player1_index = 0
+selected_player2_index = 1
+selected_stage_index = 0
+
+def set_selected_characters(p1_idx, p2_idx):
+    global selected_player1_index, selected_player2_index
+    selected_player1_index = p1_idx
+    selected_player2_index = p2_idx
+
+
 def init():
     global player1, player2, background, player1_hp_bar, player2_hp_bar, round_timer
     background = Background()
@@ -29,10 +39,13 @@ def init():
 
     from player_config import PLAYER1_KEY_BINDINGS, PLAYER2_KEY_BINDINGS
 
-    player1 = Character(NarutoConfig(), key_bindings=PLAYER1_KEY_BINDINGS, x=200, y=30, stage=background)
+    player1_config = CHAR_CONFIG_LIST[selected_player1_index]
+    player2_config = CHAR_CONFIG_LIST[selected_player2_index]
+
+    player1 = Character(player1_config, key_bindings=PLAYER1_KEY_BINDINGS, x=200, y=30, stage=background)
     game_world.add_object(player1, 1)
 
-    player2 = Character(ItachiConfig(), key_bindings=PLAYER2_KEY_BINDINGS, x=600, y=30, stage=background)
+    player2 = Character(player2_config, key_bindings=PLAYER2_KEY_BINDINGS, x=600, y=30, stage=background)
     player2.face_dir = -1
     game_world.add_object(player2, 1)
 
