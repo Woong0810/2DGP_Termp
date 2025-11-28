@@ -88,6 +88,12 @@ class CharacterConfig:
     def __init__(self):
         self.name = ""
         self.image_path = ""
+
+        self.icon_default_path = ""
+        self.icon_unselected_path = ""
+        self.illust_image_path = ""
+        self.name_image_path = ""
+
         self.frames = []  # 전체 프레임 정보
 
         # 캐릭터 스케일 (출력 크기 조정)
@@ -150,6 +156,11 @@ class NarutoConfig(CharacterConfig):
         self.name = "Naruto"
         self.image_path = "character_naruto.png"
         self.frames = NARUTO_FRAMES
+
+        self.icon_default_path = "character_naruto_icon.png"
+        self.icon_unselected_path = "character_naruto_icon_unselected.png"
+        self.illust_image_path = "character_naruto_illust.png"
+        self.name_image_path = "character_naruto_name.png"
 
         self.shuriken = {
             'image_path': 'shuriken.png',
@@ -326,6 +337,11 @@ class ItachiConfig(CharacterConfig):
         self.image_path = "character_itachi.png"
         self.frames = ITACHI_FRAMES
 
+        self.icon_default_path = "character_itachi_icon.png"
+        self.icon_unselected_path = "character_itachi_icon_unselected.png"
+        self.illust_image_path = "character_itachi_illust.png"
+        self.name_image_path = "character_itachi_name.png"
+
         self.shuriken = {
             'image_path': 'shuriken2.png',
             'speed': 600,
@@ -472,7 +488,7 @@ class ItachiConfig(CharacterConfig):
             {
                 'name': 'itachi_special_A_1',
                 'damage': 2.4,
-                'hitstop_frames': 6,
+                'hitstop_frames': 10,
                 'hitstun_frames': 45,
                 'knockback': 60,
                 'knockdown': False,
@@ -480,7 +496,7 @@ class ItachiConfig(CharacterConfig):
             {
                 'name': 'itachi_special_A_2',
                 'damage': 6,
-                'hitstop_frames': 10,
+                'hitstop_frames': 15,
                 'hitstun_frames': 60,
                 'knockback': 60,
                 'knockdown': True,
@@ -493,6 +509,11 @@ class JiraiyaConfig(CharacterConfig):
         self.name = "Jiraiya"
         self.image_path = "Characters_Jiraiya_clean.png"
         self.frames = JIRAIYA_FRAMES
+
+        self.icon_default_path = "character_jiraiya_icon.png"
+        self.icon_unselected_path = "character_jiraiya_icon_unselected.png"
+        self.illust_image_path = "character_jiraiya_illust.png"
+        self.name_image_path = "character_jiraiya_name.png"
 
         self.scale_x = 1.1
         self.scale_y = 1.1
