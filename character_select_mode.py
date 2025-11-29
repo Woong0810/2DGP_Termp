@@ -90,7 +90,7 @@ def init():
     n = len(CHAR_NAMES)
     cx = 400   # 화면 중앙 (800 x 600 기준)
     spacing = 100
-    base_y = 100
+    base_y = 50
 
     icon_positions = []
     for i in range(n):
