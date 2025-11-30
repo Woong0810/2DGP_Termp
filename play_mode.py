@@ -26,6 +26,9 @@ selected_player1_index = 0
 selected_player2_index = 1
 selected_stage_index = 0
 
+player1_icon_image = None
+player2_icon_image = None
+
 def set_selected_characters(p1_idx, p2_idx):
     global selected_player1_index, selected_player2_index
     selected_player1_index = p1_idx
@@ -37,6 +40,7 @@ def set_selected_stage(stage_index):
 
 def init():
     global player1, player2, background, player1_hp_bar, player2_hp_bar, round_timer
+    global player1_icon_image, player2_icon_image
 
     background = Background(stage_index = selected_stage_index)
     game_world.add_object(background, 0)
@@ -76,6 +80,9 @@ def init():
     player2_hp_bar = HPBar(600, 550, character=player2, is_flipped=True)
     game_world.add_object(player2_hp_bar, 2)
 
+    player1_icon_image = load_image(player1_config().icon_default_path)
+    player2_icon_image = load_image(player2_config().icon_default_path)
+
     round_timer = RoundTimer(400, 550, round_time=60)
     game_world.add_object(round_timer, 2)
 
@@ -87,6 +94,8 @@ def update():
 def draw():
     clear_canvas()
     game_world.render()
+    player1_icon_image.draw(40, 550, 60, 60)
+    player2_icon_image.draw(760, 550, 60, 60)
     update_canvas()
 
 def finish():
