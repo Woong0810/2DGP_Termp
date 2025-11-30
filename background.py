@@ -14,8 +14,8 @@ class Background:
                 {'left': 360, 'bottom': 240, 'right': 600, 'top': 260},
                 {'left': 730, 'bottom': 180, 'right': 800, 'top': 200},
             ]
-        else:   # 일단 동일하게
-            self.image = load_image('background1.png')
+        else:
+            self.image = load_image('background2.png')
             self.platforms = [
                 {'left': 0, 'bottom': 0, 'right': 800, 'top': 20},
                 {'left': 0, 'bottom': 180, 'right': 200, 'top': 200},
@@ -28,7 +28,7 @@ class Background:
         pass
 
     def draw(self):
-        self.image.draw(400, 300)
+        self.image.draw(400, 500)
 
         for box in self.platforms:
             draw_rectangle(box['left'], box['bottom'], box['right'], box['top'])
