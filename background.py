@@ -34,7 +34,10 @@ class Background:
         self.image.draw(cx, cy)
 
         for box in self.platforms:
-            draw_rectangle(box['left'], box['bottom'], box['right'], box['top'])
+            left, bottom, right, top = box['left'], box['bottom'], box['right'], box['top']
+            sx1, sy1 = camera.world_to_screen(left, bottom)
+            sx2, sy2 = camera.world_to_screen(right, top)
+            draw_rectangle(sx1, sy1, sx2, sy2)
 
     def get_bb(self):
         b = self.platforms[0]
