@@ -8,11 +8,11 @@ class Background:
         if self.stage_index == 0:
             self.image = load_image('background1.png')
             self.platforms = [
-                {'left': 0, 'bottom': 0, 'right': 800, 'top': 20},
-                {'left': 0, 'bottom': 180, 'right': 200, 'top': 200},
-                {'left': 300, 'bottom': 180, 'right': 650, 'top': 200},
-                {'left': 360, 'bottom': 240, 'right': 600, 'top': 260},
-                {'left': 730, 'bottom': 180, 'right': 800, 'top': 200},
+                {'left': 0, 'bottom': 0, 'right': 2000, 'top': 20},
+                {'left': 470, 'bottom': 180, 'right': 700, 'top': 200},
+                {'left': 870, 'bottom': 240, 'right': 1080, 'top': 260},
+                {'left': 800, 'bottom': 180, 'right': 1150, 'top': 200},
+                {'left': 1230, 'bottom': 180, 'right': 1470, 'top': 200},
             ]
         else:
             self.image = load_image('background2.png')
