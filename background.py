@@ -1,5 +1,5 @@
 from pico2d import load_image, draw_rectangle
-
+from camera import camera
 
 class Background:
     def __init__(self, stage_index = 0):
@@ -23,12 +23,15 @@ class Background:
                 {'left': 360, 'bottom': 240, 'right': 600, 'top': 260},
                 {'left': 730, 'bottom': 180, 'right': 800, 'top': 200},
             ]
+        self.width = self.image.w
+        self.height = self.image.h
 
     def update(self):
         pass
 
     def draw(self):
-        self.image.draw(400, 500)
+        cx, cy = camera.world_to_screen(self.width * 0.5, self.height * 0.5)
+        self.image.draw(cx, cy)
 
         for box in self.platforms:
             draw_rectangle(box['left'], box['bottom'], box['right'], box['top'])
