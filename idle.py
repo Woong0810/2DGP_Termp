@@ -55,12 +55,12 @@ class Idle:
         draw_h = int(h * self.character.config.scale_y)
 
         world_y = self.character.y + self.character.config.draw_offset_y
-        sx, sy = camera.world_to_screen(self.character.x, world_y)
+        self.sx, self.sy = camera.world_to_screen(self.character.x, world_y)
 
         if self.character.face_dir == 1:
-            self.character.image.clip_draw(l, b, w, h, sx, sy, draw_w, draw_h)
+            self.character.image.clip_draw(l, b, w, h, self.sx, self.sy, draw_w, draw_h)
         else:
-            self.character.image.clip_composite_draw(l, b, w, h, 0.0, 'h', sx, sy, draw_w, draw_h)
+            self.character.image.clip_composite_draw(l, b, w, h, 0.0, 'h', self.sx, self.sy, draw_w, draw_h)
         draw_rectangle(*self.get_bb())
 
     def get_bb(self):
@@ -73,9 +73,9 @@ class Idle:
         hw = frame['width'] * self.character.config.scale_x * hb['scale_x'] / 2
         hh = frame['height'] * self.character.config.scale_y * hb['scale_y'] / 2
         return (
-            self.character.x - hw + hb['x_offset'],  # left
-            self.character.y - hh + hb['y_offset'],  # bottom
-            self.character.x + hw + hb['x_offset'],  # right
-            self.character.y + hh + hb['y_offset']   # top
+            self.sx - hw + hb['x_offset'],  # left
+            self.sy - hh + hb['y_offset'],  # bottom
+            self.sx + hw + hb['x_offset'],  # right
+            self.sy + hh + hb['y_offset']   # top
         )
 
