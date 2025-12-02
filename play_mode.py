@@ -53,10 +53,10 @@ def init():
     player1_config = CHAR_CONFIG_LIST[selected_player1_index]
     player2_config = CHAR_CONFIG_LIST[selected_player2_index]
 
-    player1 = Character(player1_config(), key_bindings=PLAYER1_KEY_BINDINGS, x=200, y=30, stage=background)
+    player1 = Character(player1_config(), key_bindings=PLAYER1_KEY_BINDINGS, x=800, y=30, stage=background)
     game_world.add_object(player1, 1)
 
-    player2 = Character(player2_config(), key_bindings=PLAYER2_KEY_BINDINGS, x=600, y=30, stage=background)
+    player2 = Character(player2_config(), key_bindings=PLAYER2_KEY_BINDINGS, x=1200, y=30, stage=background)
     player2.face_dir = -1
     game_world.add_object(player2, 1)
 
