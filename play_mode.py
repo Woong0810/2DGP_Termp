@@ -9,6 +9,7 @@ import title_mode
 from hp_bar import HPBar
 from round_timer import RoundTimer
 import result_mode
+from camera import camera
 
 def handle_events():
     event_list = get_events()
@@ -45,6 +46,8 @@ def init():
     background = Background(stage_index = selected_stage_index)
     game_world.add_object(background, 0)
 
+    camera.set_stage_bounds(0, background.width)
+
     from player_config import PLAYER1_KEY_BINDINGS, PLAYER2_KEY_BINDINGS
 
     player1_config = CHAR_CONFIG_LIST[selected_player1_index]
@@ -56,6 +59,8 @@ def init():
     player2 = Character(player2_config(), key_bindings=PLAYER2_KEY_BINDINGS, x=600, y=30, stage=background)
     player2.face_dir = -1
     game_world.add_object(player2, 1)
+
+    camera.set_targets(player1, player2)
 
     game_world.add_collision_pairs('normal_attack:character', None, player1)
     game_world.add_collision_pairs('normal_attack:character', None, player2)
@@ -88,6 +93,7 @@ def init():
 
 def update():
     game_world.update()
+    camera.update()
     game_world.handle_collision()
     check_win_condition()
 
