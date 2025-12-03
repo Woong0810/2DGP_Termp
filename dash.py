@@ -64,21 +64,22 @@ class Dash:
         effect_frame = DASH_EFFECT_FRAMES[effect_frame_idx]
 
         effect_x = self.character.x - (20 * self.character.face_dir)
-        effect_y = self.character.y
+        effect_y = self.character.y - 10
+        e_sx, e_sy = camera.world_to_screen(effect_x, effect_y)
 
         if self.character.face_dir == 1:
             Dash.effect_image.clip_composite_draw(
                 effect_frame['left'], effect_frame['bottom'],
                 effect_frame['width'], effect_frame['height'],
                 0.0, 'h',
-                effect_x, effect_y,
+                e_sx, e_sy,
                 effect_frame['width'], effect_frame['height']
             )
         else:
             Dash.effect_image.clip_draw(
                 effect_frame['left'], effect_frame['bottom'],
                 effect_frame['width'], effect_frame['height'],
-                effect_x, effect_y,
+                e_sx, e_sy,
                 effect_frame['width'], effect_frame['height']
             )
 
