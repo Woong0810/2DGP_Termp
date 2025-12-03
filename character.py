@@ -514,6 +514,45 @@ class Character:
                 will_knockdown=will_knockdown
             )
 
+        elif group == 'character:character':
+            if self is other:
+                return
+
+            l1, b1, r1, t1 = self.get_bb()
+            l2, b2, r2, t2 = other.get_bb()
+
+            overlap_x = min(r1, r2) - max(l1, l2)
+            overlap_y = min(t1, t2) - max(b1, b2)
+
+            if overlap_x <= 0 or overlap_y <= 0:
+                return
+
+            if self.state_machine.cur_state == self.JUMP:
+                width = r1 - l1
+                margin = 1.0
+
+                new_r1 = l2 - margin
+                x_left = new_r1 - width * 0.5
+
+                new_l1 = r2 + margin
+                x_right = new_l1 + width * 0.5
+
+                if abs(self.x - x_left) < abs(self.x - x_right):
+                    self.x = x_left
+                else:
+                    self.x = x_right
+                return
+
+            move_dir = 0
+            if self.state_machine.cur_state == self.RUN:
+                move_dir = self.dir
+
+            if move_dir == 0:
+                return
+
+            margin = 1.0
+            other.x += (overlap_x + margin) * move_dir
+
         if self.hp < 0:
             self.hp = 0
 
