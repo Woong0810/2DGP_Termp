@@ -31,8 +31,9 @@ from character_config import (
     HITSTUN_FRAMES_RANGED,
     HIT_DURATION, SPECIAL_ATTACK_KNOCKBACK,
 )
-from background import Background
+
 import game_framework
+from player_config import *
 
 class Character:
     def __init__(self, character_config=None, key_bindings=None, x=400, y=90, stage=None):
@@ -50,18 +51,20 @@ class Character:
         self.image = load_image(self.config.image_path)
         self.stage = stage
 
-        self.debug_draw = True  # 디버그 모드: 바운딩 박스 표시
+        self.debug_draw = True
 
         self.up_pressed = False
         self.down_pressed = False
 
-        self.opponent = None  # 상대 캐릭터 참조
+        self.opponent = None
 
         self.max_hp = 100
         self.hp = self.max_hp
 
         self.invincible_time = 0.0
         self.jump_count = 0
+
+        self.special_timer = 0.0
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)
@@ -212,8 +215,14 @@ class Character:
             self.invincible_time -= game_framework.frame_time
             if self.invincible_time < 0:
                 self.invincible_time = 0
+        if self.special_timer > 0:
+            self.special_timer -= game_framework.frame_time
+            if self.special_timer < 0:
+                self.special_timer = 0
 
     def draw(self):
+        if self.state_machine.cur_state == (self.SPECIAL_ATTACK or self.SPECIAL_ATTACK2):
+            self.special_ui_draw()
         self.state_machine.draw()
         if self.debug_draw:
             self.draw_bb()
@@ -578,3 +587,17 @@ class Character:
             if overlap > 0:
                 attacker.x += overlap + margin
 
+    def special_ui_draw(self):
+        if self.special_timer <= 0:
+            return
+
+        if self.key_bindings == PLAYER1_KEY_BINDINGS:
+            ui_x = 150
+            ui_y = 350
+        elif self.key_bindings == PLAYER2_KEY_BINDINGS:
+            ui_x = 650
+            ui_y = 350
+
+        w, h = 300, 200
+        self.special_ui_image = load_image(self.config.special_attack_illust_image_path)
+        self.special_ui_image.draw(ui_x, ui_y, w, h)
