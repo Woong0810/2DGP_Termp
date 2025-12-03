@@ -74,6 +74,7 @@ def init():
     game_world.add_collision_pairs('ranged_attack:character', None, player2)
     game_world.add_collision_pairs('character:shuriken', player1, None)
     game_world.add_collision_pairs('character:shuriken', player2, None)
+    game_world.add_collision_pairs('character:character', player1, player2)
 
     # 서로를 상대로 설정
     player1.set_opponent(player2)
