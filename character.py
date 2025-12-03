@@ -546,8 +546,16 @@ class Character:
             move_dir = 0
             if self.state_machine.cur_state == self.RUN:
                 move_dir = self.dir
-
             if move_dir == 0:
+                return
+
+            other.move_dir = 0
+            if other.state_machine.cur_state == other.RUN:
+                other.move_dir = other.dir
+
+            if move_dir * other.move_dir < 0:
+                other.x = other.x + (overlap_x / 2.0) * other.move_dir * -1
+                self.x = self.x + (overlap_x / 2.0) * move_dir * -1
                 return
 
             margin = 1.0
