@@ -26,6 +26,7 @@ class SpecialAttack:
         self.prev_effect_frame_int = 0
         self.target = None
         self.hit_done = {f: False for f in self.hit_frames}
+        self.character.special_timer = 1.0
 
         game_world.add_collision_pairs('special_attack:character', self, None)
 
