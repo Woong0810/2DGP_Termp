@@ -1,4 +1,4 @@
-from pico2d import draw_rectangle
+from pico2d import draw_rectangle, clamp
 from character_config import RUN_SPEED_PPS, ACTION_PER_TIME, RUN_ANIMATION_SPEED
 import game_framework
 import game_world
@@ -38,7 +38,7 @@ class Run:
 
     def do(self):
         self.character.x += RUN_SPEED_PPS * game_framework.frame_time * self.character.dir
-
+        self.character.x = clamp(camera.window_left, self.character.x, camera.window_right)
         run_frames = self.character.config.run_frames
         frames_per_action = len(run_frames)
         self.character.frame = (self.character.frame + frames_per_action * ACTION_PER_TIME * RUN_ANIMATION_SPEED * game_framework.frame_time) % frames_per_action

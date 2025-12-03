@@ -37,6 +37,8 @@ class Camera:
             target_x = max_x
 
         self.x += (target_x - self.x) * self.smooth
+        self.window_left = self.x - half_w
+        self.window_right = self.x + half_w
 
     # 카메라 중심을 항상 스크린 중앙으로
     def world_to_screen(self, x, y):
