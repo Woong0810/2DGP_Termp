@@ -221,8 +221,9 @@ class Character:
                 self.special_timer = 0
 
     def draw(self):
-        if self.state_machine.cur_state == (self.SPECIAL_ATTACK or self.SPECIAL_ATTACK2):
+        if self.state_machine.cur_state == (self.SPECIAL_ATTACK or self.SPECIAL_ATTACK2) and self.special_timer > 0:
             self.special_ui_draw()
+            return
         self.state_machine.draw()
         if self.debug_draw:
             self.draw_bb()
