@@ -16,6 +16,7 @@ class Idle:
         game_world.add_collision_pairs('special_attack2:character', None, self.character)
         game_world.add_collision_pairs('ranged_attack:character', None, self.character)
         game_world.add_collision_pairs('character:shuriken', self.character, None)
+        game_world.add_collision_pairs('character:character', self.character, self.character.opponent)
 
     def exit(self, e):
         game_world.remove_collision_object(self.character)
