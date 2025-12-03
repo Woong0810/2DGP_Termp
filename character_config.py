@@ -93,6 +93,7 @@ class CharacterConfig:
         self.icon_unselected_path = ""
         self.illust_image_path = ""
         self.name_image_path = ""
+        self.special_attack_illust_image_path = ""
 
         self.frames = []  # 전체 프레임 정보
 
@@ -161,6 +162,7 @@ class NarutoConfig(CharacterConfig):
         self.icon_unselected_path = "character_naruto_icon_unselected.png"
         self.illust_image_path = "character_naruto_illust.png"
         self.name_image_path = "character_naruto_name.png"
+        self.special_attack_illust_image_path = "character_naruto_sa_illust.png"
 
         self.shuriken = {
             'image_path': 'shuriken.png',
@@ -341,6 +343,7 @@ class ItachiConfig(CharacterConfig):
         self.icon_unselected_path = "character_itachi_icon_unselected.png"
         self.illust_image_path = "character_itachi_illust.png"
         self.name_image_path = "character_itachi_name.png"
+        self.special_attack_illust_image_path = "character_itachi_sa_illust.png"
 
         self.shuriken = {
             'image_path': 'shuriken2.png',
@@ -514,6 +517,7 @@ class JiraiyaConfig(CharacterConfig):
         self.icon_unselected_path = "character_jiraiya_icon_unselected.png"
         self.illust_image_path = "character_jiraiya_illust.png"
         self.name_image_path = "character_jiraiya_name.png"
+        self.special_attack_illust_image_path = "character_jiraiya_sa_illust.png"
 
         self.scale_x = 1.1
         self.scale_y = 1.1
