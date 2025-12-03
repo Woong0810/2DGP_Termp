@@ -14,6 +14,7 @@ class RangedAttack:
     def enter(self, e):
         self.character.frame = 0
         self.shuriken_spawned = False
+        game_world.add_collision_pairs('character:character', self.character, self.character.opponent)
 
     def exit(self, e):
         pass

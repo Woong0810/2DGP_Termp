@@ -2,6 +2,7 @@ from pico2d import draw_rectangle
 from character_config import ACTION_PER_TIME, STAND_UP_ANIMATION_SPEED
 import game_framework
 from camera import camera
+import game_world
 
 class StandUp:
     def __init__(self, character):
@@ -9,6 +10,7 @@ class StandUp:
 
     def enter(self, event):
         self.character.frame = 0
+        game_world.add_collision_pairs('character:character', self.character, self.character.opponent)
 
     def exit(self, event):
         if event and event[0] == 'STAND_UP_END':
