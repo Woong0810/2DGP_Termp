@@ -37,13 +37,24 @@ class Camera:
             target_x = max_x
 
         self.x += (target_x - self.x) * self.smooth
-        self.window_left = self.x - half_w
-        self.window_right = self.x + half_w
+        self.clamp_character_position(self.p1)
+        self.clamp_character_position(self.p2)
 
     # 카메라 중심을 항상 스크린 중앙으로
     def world_to_screen(self, x, y):
         sx = x - self.x + self.width * 0.5
         sy = y - self.y + self.height * 0.5
         return sx, sy
+
+    def clamp_character_position(self, character):
+        margin = 20
+        half_w = self.width * 0.5
+        window_left = self.x - half_w + margin
+        window_right = self.x + half_w - margin
+
+        if character.x < window_left:
+            character.x = window_left
+        elif character.x > window_right:
+            character.x = window_right
 
 camera = Camera()
