@@ -4,6 +4,7 @@ from character_config import (GRAVITY_PPS2, JUMP_HEIGHT_PIXEL, JUMP_SPEED_PPS,
 import game_framework
 import game_world
 import math
+from camera import camera
 
 class Jump:
     def __init__(self, character):
@@ -30,7 +31,6 @@ class Jump:
                 if event.type == SDL_KEYDOWN and hasattr(self.character, 'key_bindings') and 'jump_key' in self.character.key_bindings and event.key == self.character.key_bindings['jump_key']:
                     self.character.jump_count = 1
                     self.character.frame = 0
-
                     from character_config import GRAVITY_PPS2, JUMP_HEIGHT_PIXEL
                     self.vy = math.sqrt(2 * GRAVITY_PPS2 * JUMP_HEIGHT_PIXEL)
                     self.ground_y = self.character.y
@@ -130,14 +130,18 @@ class Jump:
         l, b, w, h = frame['left'], frame['bottom'], frame['width'], frame['height']
         draw_w = int(w * self.character.config.scale_x)
         draw_h = int(h * self.character.config.scale_y)
-        draw_y = self.character.y + self.character.config.draw_offset_y
+
+        world_y = self.character.y + self.character.config.draw_offset_y
+        sx, sy = camera.world_to_screen(self.character.x, world_y)
 
         if self.character.face_dir == 1:
-            self.character.image.clip_draw(l, b, w, h, self.character.x, draw_y, draw_w, draw_h)
+            self.character.image.clip_draw(l, b, w, h, sx, sy, draw_w, draw_h)
         else:
-            self.character.image.clip_composite_draw(l, b, w, h, 0.0, 'h',
-                                                  self.character.x, draw_y, draw_w, draw_h)
-        draw_rectangle(*self.get_bb())
+            self.character.image.clip_composite_draw(l, b, w, h, 0.0, 'h', sx, sy, draw_w, draw_h)
+        left, bottom, right, top = self.get_bb()
+        sx1, sy1 = camera.world_to_screen(left, bottom)
+        sx2, sy2 = camera.world_to_screen(right, top)
+        draw_rectangle(sx1, sy1, sx2, sy2)
 
     def get_bb(self):
         all_frames = self.character.config.frames

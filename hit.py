@@ -2,6 +2,7 @@ from pico2d import draw_rectangle
 from character_config import ACTION_PER_TIME, HIT_ANIMATION_SPEED, HIT_DURATION, KNOCKBACK_DOWN_TIME, GRAVITY_PPS2
 import game_framework
 import game_world
+from camera import camera
 
 class Hit:
     def __init__(self, character):
@@ -216,14 +217,17 @@ class Hit:
         draw_h = int(h * self.character.config.scale_y)
 
         base_y = self.character.y + self.character.config.draw_offset_y
-        draw_y = base_y + (self.character.config.knockback_draw_offset_y if self.is_knockback else 0)
+        world_y = base_y + (self.character.config.knockback_draw_offset_y if self.is_knockback else 0)
+        sx, sy = camera.world_to_screen(self.character.x, world_y)
 
         if self.character.face_dir == 1:
-            self.character.image.clip_draw(l, b, w, h, self.character.x, draw_y, draw_w, draw_h)
+            self.character.image.clip_draw(l, b, w, h, sx, sy, draw_w, draw_h)
         else:
-            self.character.image.clip_composite_draw(l, b, w, h, 0, 'h',
-                                                      self.character.x, draw_y, draw_w, draw_h)
-        draw_rectangle(*self.get_bb())
+            self.character.image.clip_composite_draw(l, b, w, h, 0, 'h', sx, sy, draw_w, draw_h)
+        left, bottom, right, top = self.get_bb()
+        sx1, sy1 = camera.world_to_screen(left, bottom)
+        sx2, sy2 = camera.world_to_screen(right, top)
+        draw_rectangle(sx1, sy1, sx2, sy2)
 
     def get_bb(self):
         if self.is_knockback:

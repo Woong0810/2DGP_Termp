@@ -2,6 +2,7 @@ from pico2d import load_image, draw_rectangle
 import game_world
 from character_config import ACTION_PER_TIME, SPECIAL_ATTACK_ANIMATION_SPEED
 import game_framework
+from camera import camera
 
 class Amaterasu:
     def __init__(self, owner, x, y, face_dir):
@@ -19,7 +20,6 @@ class Amaterasu:
         self.frames = FRAMES
         self.effect_frames = list(range(0, 42))
 
-        # 오너의 스케일 정보 가져오기
         self.scale_x = owner.config.scale_x
         self.scale_y = owner.config.scale_y
         self.draw_offset_y = owner.config.draw_offset_y
@@ -37,13 +37,14 @@ class Amaterasu:
         el, eb, ew, eh = effect_frame['left'], effect_frame['bottom'], effect_frame['width'], effect_frame['height']
         effect_draw_w = int(ew * self.scale_x)
         effect_draw_h = int(eh * self.scale_y)
-        draw_y = self.y + self.draw_offset_y + self.owner.config.special_attack_offset_y
+
+        world_y = self.y + self.draw_offset_y + self.owner.config.special_attack_offset_y
+        sx, sy = camera.world_to_screen(self.x, world_y)
 
         if self.face_dir == 1:
-            self.image.clip_draw(el, eb, ew, eh, self.x, draw_y, effect_draw_w, effect_draw_h)
+            self.image.clip_draw(el, eb, ew, eh, sx, sy, effect_draw_w, effect_draw_h)
         else:
-            self.image.clip_composite_draw(el, eb, ew, eh, 0.0, 'h',
-                                          self.x, draw_y, effect_draw_w, effect_draw_h)
+            self.image.clip_composite_draw(el, eb, ew, eh, 0.0, 'h', sx, sy, effect_draw_w, effect_draw_h)
 
     def get_bb(self):
         effect_idx = min(int(self.frame), len(self.effect_frames) - 1)

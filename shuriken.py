@@ -1,6 +1,7 @@
 from pico2d import load_image, draw_rectangle
 import game_framework
 import game_world
+from camera import camera
 
 class Shuriken:
     _image_cache = {}
@@ -50,8 +51,13 @@ class Shuriken:
     def draw(self):
         angle = self.rotation * 3.141592 / 180.0 if self.use_rotation else 0
         flip = '' if self.direction == 1 else 'h'
-        self.image.clip_composite_draw(0, 0, self.w, self.h, angle, flip, self.x, self.y, self.w, self.h)
-        draw_rectangle(*self.get_bb())
+
+        sx, sy = camera.world_to_screen(self.x, self.y)
+        self.image.clip_composite_draw(0, 0, self.w, self.h, angle, flip, sx, sy, self.w, self.h)
+        left, bottom, right, top = self.get_bb()
+        sx1, sy1 = camera.world_to_screen(left, bottom)
+        sx2, sy2 = camera.world_to_screen(right, top)
+        draw_rectangle(sx1, sy1, sx2, sy2)
 
     def get_bb(self):
         s = self.bbox_size
