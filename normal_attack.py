@@ -1,6 +1,6 @@
 from event_to_string import up_down
 from pico2d import draw_rectangle
-from character_config import ACTION_PER_TIME, NORMAL_ATTACK_ANIMATION_SPEED
+from character_config import ACTION_PER_TIME, NORMAL_ATTACK_ANIMATION_SPEED, SPECIAL_GAUGE_ATTACK_TRY
 import game_framework
 import game_world
 from camera import camera
@@ -27,6 +27,7 @@ class NormalAttack:
         self.down_attack = is_down_attack
 
     def enter(self, e):
+        self.character.add_special_gauge(SPECIAL_GAUGE_ATTACK_TRY)
         from run import Run
         self.from_run = isinstance(self.character.state_machine.prev_state, Run)
 
