@@ -30,6 +30,7 @@ class SpecialAttack2:
         game_world.remove_collision_object(self)
 
     def do(self):
+
         if not self.frames:
             self.character.state_machine.handle_event(('SPECIAL_ATTACK2_END', None))
             return
@@ -119,7 +120,7 @@ class SpecialAttack2:
             image.clip_draw(l, b, w, h, sx, sy, draw_w, draw_h)
         else:
             image.clip_composite_draw(l, b, w, h, 0.0, 'h', sx, sy, draw_w, draw_h)
-        left, right, bottom, top = self.get_bb()
+        left, bottom, right, top = self.get_bb()
         sx1, sy1 = camera.world_to_screen(left, bottom)
         sx2, sy2 = camera.world_to_screen(right, top)
         draw_rectangle(sx1, sy1, sx2, sy2)
