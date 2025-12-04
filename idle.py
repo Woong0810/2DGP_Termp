@@ -27,6 +27,13 @@ class Idle:
         self.character.frame = (self.character.frame + frames_per_action * ACTION_PER_TIME * IDLE_ANIMATION_SPEED * game_framework.frame_time) % frames_per_action
         self.check_fall_or_snap_to_ground()
 
+        if self.character.x < self.character.opponent.x:
+            self.character.face_dir = 1
+        elif self.character.x > self.character.opponent.x:
+            self.character.face_dir = -1
+        else:
+            return
+
     def check_fall_or_snap_to_ground(self):
         if not hasattr(self.character, 'stage') or self.character.stage is None:
             return
