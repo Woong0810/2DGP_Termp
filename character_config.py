@@ -401,7 +401,7 @@ class ItachiConfig(CharacterConfig):
         self.hitbox_normal_attack = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}
         self.hitbox_defense = {'scale_x': 1.0, 'scale_y': 0.95, 'x_offset': 0, 'y_offset': 5}
         self.hitbox_special_attack = {'scale_x': 25.0, 'scale_y': 1.05, 'x_offset': 0, 'y_offset': 5}
-        self.hitbox_special_attack2 = {'scale_x': 25.0, 'scale_y': 1.05, 'x_offset': 0, 'y_offset': 5}
+        self.hitbox_special_attack2 = {'scale_x': 20.0, 'scale_y': 4.0, 'x_offset': 0, 'y_offset': 5}
         self.hitbox_ranged_attack = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 5}
         self.hitbox_hit = {'scale_x': 0.7, 'scale_y': 0.7, 'x_offset': 0, 'y_offset': 0}
 

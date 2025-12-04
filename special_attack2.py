@@ -24,13 +24,13 @@ class SpecialAttack2:
         self.target = None
         self.prev_frame_int = 0
         self.hit_done = {f: False for f in self.hit_frames}
+        self.character.special_timer = 1.0
         game_world.add_collision_pairs('special_attack2:character', self, None)
 
     def exit(self, e):
         game_world.remove_collision_object(self)
 
     def do(self):
-
         if not self.frames:
             self.character.state_machine.handle_event(('SPECIAL_ATTACK2_END', None))
             return
