@@ -34,15 +34,17 @@ from character_config import (
 
 import game_framework
 from player_config import *
+from camera import camera
 
 class Character:
     def __init__(self, character_config=None, key_bindings=None, x=400, y=90, stage=None):
-        self.config = character_config if character_config else NarutoConfig()
+        self.config = character_config
 
         self.key_bindings = key_bindings
-        if self.key_bindings is None:
-            from player_config import PLAYER1_KEY_BINDINGS
-            self.key_bindings = PLAYER1_KEY_BINDINGS
+        if self.key_bindings is PLAYER1_KEY_BINDINGS:
+            self.cursor_image = load_image('player1_mark.png')
+        elif self.key_bindings is PLAYER2_KEY_BINDINGS:
+            self.cursor_image = load_image('player2_mark.png')
 
         self.x, self.y = x, y
         self.frame = 0
@@ -226,6 +228,7 @@ class Character:
         self.state_machine.draw()
         if self.debug_draw:
             self.draw_bb()
+        self.draw_cursor()
 
     def get_bb(self):
         return self.state_machine.get_bb()
@@ -601,3 +604,16 @@ class Character:
         w, h = 300, 200
         self.special_ui_image = load_image(self.config.special_attack_illust_image_path)
         self.special_ui_image.draw(ui_x, ui_y, w, h)
+
+    def draw_cursor(self):
+        offset_y = self.config.draw_offset_y + 50
+
+        world_x = self.x
+        world_y = self.y + offset_y
+
+        sx, sy = camera.world_to_screen(world_x, world_y)
+
+        w = self.cursor_image.w / 3
+        h = self.cursor_image.h / 3
+
+        self.cursor_image.draw(sx, sy, w, h)
