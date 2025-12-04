@@ -1,5 +1,5 @@
 from pico2d import draw_rectangle
-from character_config import ACTION_PER_TIME, RANGED_ATTACK_CHAR_ANIMATION_SPEED
+from character_config import ACTION_PER_TIME, RANGED_ATTACK_CHAR_ANIMATION_SPEED, SPECIAL_GAUGE_ATTACK_TRY
 import game_framework
 from shuriken import Shuriken
 import game_world
@@ -12,6 +12,7 @@ class RangedAttack:
         self.shuriken = None
 
     def enter(self, e):
+        self.character.add_special_gauge(SPECIAL_GAUGE_ATTACK_TRY)
         self.character.frame = 0
         self.shuriken_spawned = False
         game_world.add_collision_pairs('character:character', self.character, self.character.opponent)

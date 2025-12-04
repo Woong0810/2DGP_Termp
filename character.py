@@ -28,8 +28,9 @@ from character_config import (
     HIT_DURATION,
     SPECIAL_GAUGE_MAX,
     SPECIAL_GAUGE_COST,
-    SPECIAL_GAUGE_ATTACK_TRY,
-    SPECIAL_GAUGE_ATTACK_HIT
+    SPECIAL_GAUGE_ATTACK_SUCCESS,
+    SPECIAL_GAUGE_ATTACK_HIT,
+    SPECIAL_GAUGE_DEFENSE
 )
 
 import game_framework
@@ -404,7 +405,8 @@ class Character:
                     knockback_dir = 1
                 else:
                     knockback_dir = -self.face_dir
-
+            attacker.add_special_gauge(SPECIAL_GAUGE_ATTACK_SUCCESS)
+            self.add_special_gauge(SPECIAL_GAUGE_ATTACK_HIT)
             self.hp -= damage
             game_framework.add_hitstop(hitstop_frames)
             self.take_hit(
@@ -454,7 +456,8 @@ class Character:
                     knockback_dir = 1
                 else:
                     knockback_dir = -self.face_dir
-
+            attacker.add_special_gauge(SPECIAL_GAUGE_ATTACK_SUCCESS)
+            self.add_special_gauge(SPECIAL_GAUGE_ATTACK_HIT)
             self.hp -= damage
             game_framework.add_hitstop(hitstop_frames)
             self.take_hit(
@@ -521,7 +524,8 @@ class Character:
                     knockback_dir = 1
                 else:
                     knockback_dir = -self.face_dir
-
+            attacker.add_special_gauge(SPECIAL_GAUGE_ATTACK_SUCCESS)
+            self.add_special_gauge(SPECIAL_GAUGE_ATTACK_HIT)
             self.hp -= damage
             game_framework.add_hitstop(hitstop_frames)
             self.take_hit(
@@ -595,6 +599,7 @@ class Character:
             overlap = r_def - l_att
             if overlap > 0:
                 attacker.x += overlap + margin
+        self.add_special_gauge(SPECIAL_GAUGE_DEFENSE)
 
     def special_ui_draw(self):
         if self.special_timer <= 0:

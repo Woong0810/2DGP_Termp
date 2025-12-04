@@ -1,6 +1,6 @@
 from pico2d import draw_rectangle
 from character_config import (GRAVITY_PPS2, JUMP_SPEED_PPS, ACTION_PER_TIME,
-                              NORMAL_ATTACK_ANIMATION_SPEED)
+                              NORMAL_ATTACK_ANIMATION_SPEED, SPECIAL_GAUGE_ATTACK_TRY)
 import game_framework
 import game_world
 from camera import camera
@@ -23,6 +23,7 @@ class JumpAttack:
         self.segment_move_elapsed = 0.0
 
     def enter(self, e):
+        self.character.add_special_gauge(SPECIAL_GAUGE_ATTACK_TRY)
         jump_state = self.character.JUMP
         self.vy = jump_state.vy
         self.vx = jump_state.vx
