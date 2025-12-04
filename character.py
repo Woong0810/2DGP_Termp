@@ -85,13 +85,18 @@ class Character:
         self.special_chain_active = False
 
         kb = self.key_bindings
+        def can_special(e):
+            return key_down(kb['special']) and self.can_use_special_attack()
+        def can_special2(e):
+            return key_down(kb['special2']) and self.can_use_special_attack()
+
         idle_rules = {
             key_down(kb['attack']): self.NORMAL_ATTACK,
             key_down(kb['right']): self.RUN,
             key_down(kb['left']): self.RUN,
             key_down(kb['down']): self.DEFENSE,
-            key_down(kb['special']): self.SPECIAL_ATTACK,
-            key_down(kb.get('special2', -1)): self.SPECIAL_ATTACK2,
+            can_special: self.SPECIAL_ATTACK,
+            can_special2: self.SPECIAL_ATTACK2,
             key_down(kb['ranged']): self.RANGED_ATTACK,
             key_down(kb['dash']): self.DASH,
             key_down(kb['jump_key']): self.JUMP,
@@ -103,8 +108,8 @@ class Character:
             key_up(kb['left']): self.IDLE,
             key_down(kb['attack']): self.NORMAL_ATTACK,
             key_down(kb['down']): self.DEFENSE,
-            key_down(kb['special']): self.SPECIAL_ATTACK,
-            key_down(kb.get('special2', -1)): self.SPECIAL_ATTACK2,
+            can_special: self.SPECIAL_ATTACK,
+            can_special2: self.SPECIAL_ATTACK2,
             key_down(kb['ranged']): self.RANGED_ATTACK,
             key_down(kb['dash']): self.DASH,
             key_down(kb['jump_key']): self.JUMP,
@@ -114,8 +119,8 @@ class Character:
         attack_rules = {
             segment_end: self.IDLE,
             key_down(kb['down']): self.DEFENSE,
-            key_down(kb['special']): self.SPECIAL_ATTACK,
-            key_down(kb.get('special2', -1)): self.SPECIAL_ATTACK2,
+            can_special: self.SPECIAL_ATTACK,
+            can_special2: self.SPECIAL_ATTACK2,
             key_down(kb['ranged']): self.RANGED_ATTACK,
             key_down(kb['dash']): self.DASH,
             key_down(kb['jump_key']): self.JUMP,
@@ -129,8 +134,8 @@ class Character:
         defense_rules = {
             key_up(kb['down']): self.IDLE,
             key_down(kb['attack']): self.NORMAL_ATTACK,
-            key_down(kb['special']): self.SPECIAL_ATTACK,
-            key_down(kb.get('special2', -1)): self.SPECIAL_ATTACK2,
+            can_special: self.SPECIAL_ATTACK,
+            can_special2: self.SPECIAL_ATTACK2,
             key_down(kb['ranged']): self.RANGED_ATTACK,
             key_down(kb['dash']): self.DASH,
             take_hit: self.HIT
@@ -151,7 +156,7 @@ class Character:
                 self.DEFENSE: defense_rules,
                 self.SPECIAL_ATTACK: {
                     special_attack_end: self.IDLE,
-                    key_down(kb.get('special2', -1)): self.SPECIAL_ATTACK2
+                    key_down(kb['special2']): self.SPECIAL_ATTACK2
                 },
                 self.SPECIAL_ATTACK2: {
                     special_attack2_end: self.IDLE,
@@ -618,3 +623,16 @@ class Character:
         h = self.cursor_image.h / 3
 
         self.cursor_image.draw(sx, sy, w, h)
+
+    def add_special_gauge(self, amount):
+        self.special_gauge += amount
+        if self.special_gauge > SPECIAL_GAUGE_MAX:
+            self.special_gauge = SPECIAL_GAUGE_MAX
+
+    def do_special_attack(self, amount):
+        self.special_gauge -= amount
+        if self.special_gauge < 0:
+            self.special_gauge = 0
+
+    def can_use_special_attack(self):
+        return self.special_gauge >= SPECIAL_GAUGE_COST
