@@ -1,5 +1,5 @@
 from pico2d import draw_rectangle, load_image
-from character_config import ACTION_PER_TIME, SPECIAL_ATTACK_ANIMATION_SPEED
+from character_config import ACTION_PER_TIME, SPECIAL_ATTACK_ANIMATION_SPEED, SPECIAL_GAUGE_COST
 import game_framework
 import game_world
 from camera import camera
@@ -21,6 +21,7 @@ class SpecialAttack:
         self.prev_effect_frame_int = 0
 
     def enter(self, e):
+        self.character.do_special_attack(SPECIAL_GAUGE_COST)
         self.character.frame = 0
         self.prev_frame_int = 0
         self.prev_effect_frame_int = 0
