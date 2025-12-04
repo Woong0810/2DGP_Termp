@@ -87,9 +87,9 @@ class Character:
 
         kb = self.key_bindings
         def can_special(e):
-            return key_down(kb['special']) and self.can_use_special_attack()
+            return key_down(kb['special'])(e) and self.can_use_special_attack()
         def can_special2(e):
-            return key_down(kb['special2']) and self.can_use_special_attack()
+            return key_down(kb['special2'])(e) and self.can_use_special_attack()
 
         idle_rules = {
             key_down(kb['attack']): self.NORMAL_ATTACK,
