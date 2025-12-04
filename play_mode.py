@@ -10,6 +10,7 @@ from hp_bar import HPBar
 from round_timer import RoundTimer
 import result_mode
 from camera import camera
+from special_gauge_bar import SpecialGaugeBar
 
 def handle_events():
     event_list = get_events()
@@ -41,7 +42,7 @@ def set_selected_stage(stage_index):
 
 def init():
     global player1, player2, background, player1_hp_bar, player2_hp_bar, round_timer
-    global player1_icon_image, player2_icon_image
+    global player1_icon_image, player2_icon_image, player1_gauge_bar, player2_gauge_bar
 
     background = Background(stage_index = selected_stage_index)
     game_world.add_object(background, 0)
@@ -85,6 +86,12 @@ def init():
 
     player2_hp_bar = HPBar(600, 550, character=player2, is_flipped=True)
     game_world.add_object(player2_hp_bar, 2)
+
+    player1_gauge_bar = SpecialGaugeBar(80, 10, character=player1, is_flipped=False)
+    game_world.add_object(player1_gauge_bar, 2)
+
+    player2_gauge_bar = SpecialGaugeBar(720, 10, character=player2, is_flipped=True)
+    game_world.add_object(player2_gauge_bar, 2)
 
     player1_icon_image = load_image(player1_config().icon_default_path)
     player2_icon_image = load_image(player2_config().icon_default_path)

@@ -3,8 +3,8 @@ from character_config import SPECIAL_GAUGE_MAX
 
 class SpecialGaugeBar:
     def __init__(self, x, y, character=None, is_flipped=False):
-        self.empty_image = load_image('special_gauge_bar_empty.png')
-        self.full_image = load_image('special_gauge_bar_full.png')
+        self.empty_image = load_image('special_gauge_ui_empty.png')
+        self.full_image = load_image('special_gauge_ui_full.png')
         self.x = x
         self.y = y
         self.width = self.empty_image.w
