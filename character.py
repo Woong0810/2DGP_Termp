@@ -14,26 +14,26 @@ from dash import Dash
 from state_machine import StateMachine
 from event_to_string import *
 from character_config import (
-    NarutoConfig,
     NORMAL_ATTACK_DAMAGE,
     NORMAL_ATTACK_KNOCKBACK,
     JUMP_ATTACK_DAMAGE,
     JUMP_ATTACK_KNOCKBACK,
-    SPECIAL_ATTACK_DAMAGE,
     RANGED_ATTACK_DAMAGE,
     HITSTOP_FRAMES_NORMAL,
     HITSTOP_FRAMES_JUMP,
-    HITSTOP_FRAMES_SPECIAL,
     HITSTOP_FRAMES_RANGED,
     HITSTUN_FRAMES_NORMAL,
     HITSTUN_FRAMES_JUMP,
-    HITSTUN_FRAMES_SPECIAL,
     HITSTUN_FRAMES_RANGED,
-    HIT_DURATION, SPECIAL_ATTACK_KNOCKBACK,
+    HIT_DURATION,
+    SPECIAL_GAUGE_MAX,
+    SPECIAL_GAUGE_COST,
+    SPECIAL_GAUGE_ATTACK_TRY,
+    SPECIAL_GAUGE_ATTACK_HIT
 )
 
 import game_framework
-from player_config import *
+from player_config import PLAYER1_KEY_BINDINGS, PLAYER2_KEY_BINDINGS
 from camera import camera
 
 class Character:
@@ -67,6 +67,7 @@ class Character:
         self.jump_count = 0
 
         self.special_timer = 0.0
+        self.special_gauge = 0.0
 
         self.IDLE = Idle(self)
         self.RUN = Run(self)
