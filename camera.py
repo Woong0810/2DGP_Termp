@@ -15,6 +15,7 @@ class Camera:
         self.p2 = None
 
         self.smooth = 0.15
+        self.initialized = True
 
     def set_stage_bounds(self, left, right):
         self.stage_left = float(left)
@@ -23,6 +24,7 @@ class Camera:
     def set_targets(self, p1, p2):
         self.p1 = p1
         self.p2 = p2
+        self.initialized = True
 
     def update(self):
         target_x = (self.p1.x + self.p2.x) * 0.5
@@ -35,6 +37,11 @@ class Camera:
             target_x = min_x
         elif target_x > max_x:
             target_x = max_x
+
+        if self.initialized:
+            self.x = target_x
+            self.initialized = False
+            return
 
         self.x += (target_x - self.x) * self.smooth
         self.clamp_character_position(self.p1)
