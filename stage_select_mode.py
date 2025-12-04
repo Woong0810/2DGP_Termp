@@ -63,9 +63,9 @@ def handle_events():
                 game_framework.change_mode(character_select_mode)
                 return
 
-            if key == SDLK_UP:
+            if key == SDLK_w:
                 stage_cursor_index = (stage_cursor_index - 1) % len(STAGE_INFOS)
-            elif key == SDLK_DOWN:
+            elif key == SDLK_s:
                 stage_cursor_index = (stage_cursor_index + 1) % len(STAGE_INFOS)
 
             elif key == P1_ATTACK:

@@ -1,13 +1,10 @@
-"""
-플레이어별 키 바인딩 설정
-캐릭터와 독립적으로 플레이어 번호에 따라 키 바인딩을 제공
-"""
 from sdl2 import SDLK_LEFT, SDLK_RIGHT, SDLK_UP, SDLK_DOWN
 from sdl2 import SDLK_j, SDLK_k, SDLK_l, SDLK_u, SDLK_i, SDLK_o
 from sdl2 import SDLK_a, SDLK_d, SDLK_w, SDLK_s
 from sdl2 import SDLK_b, SDLK_c, SDLK_v, SDLK_g, SDLK_f, SDLK_h
-# Player 1 키 바인딩 (방향키 + J, K, L, U, I, O)
-PLAYER1_KEY_BINDINGS = {
+
+# Player 2 키 바인딩 (방향키 + J, K, L, U, I, O)
+PLAYER2_KEY_BINDINGS = {
     'left': SDLK_LEFT,
     'right': SDLK_RIGHT,
     'up': SDLK_UP,
@@ -20,8 +17,8 @@ PLAYER1_KEY_BINDINGS = {
     'special2': SDLK_o     # 필살기2
 }
 
-# Player 2 키 바인딩 (WASD + C, V, B, F, G, H)
-PLAYER2_KEY_BINDINGS = {
+# Player 1 키 바인딩 (WASD + C, V, B, F, G, H)
+PLAYER1_KEY_BINDINGS = {
     'left': SDLK_a,
     'right': SDLK_d,
     'up': SDLK_w,
