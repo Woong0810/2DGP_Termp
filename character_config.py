@@ -84,6 +84,12 @@ HITSTOP_FRAMES_JUMP = 4         # 점프 공격
 HITSTOP_FRAMES_SPECIAL = 6      # 스페셜 / 강한 기술
 HITSTOP_FRAMES_RANGED = 2       # 수리검 등 원거리
 
+SPECIAL_GAUGE_MAX = 100.0
+SPECIAL_GAUGE_COST = 100.0
+
+SPECIAL_GAUGE_ATTACK_TRY = 3.0
+SPECIAL_GAUGE_HIT = 6.0
+
 class CharacterConfig:
     def __init__(self):
         self.name = ""
