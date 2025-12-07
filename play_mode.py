@@ -8,9 +8,9 @@ import game_framework
 import title_mode
 from hp_bar import HPBar
 from round_timer import RoundTimer
-import result_mode
 from camera import camera
 from special_gauge_bar import SpecialGaugeBar
+from round_manager import RoundManager
 
 def handle_events():
     event_list = get_events()
@@ -20,6 +20,8 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.change_mode(title_mode)
         else:
+            if round_manager is None or not round_manager.can_control():
+                continue
             player1.handle_event(event)
             player2.handle_event(event)
 
@@ -30,6 +32,7 @@ selected_stage_index = 0
 
 player1_icon_image = None
 player2_icon_image = None
+round_manager = None
 
 def set_selected_characters(p1_idx, p2_idx):
     global selected_player1_index, selected_player2_index
@@ -42,7 +45,7 @@ def set_selected_stage(stage_index):
 
 def init():
     global player1, player2, background, player1_hp_bar, player2_hp_bar, round_timer
-    global player1_icon_image, player2_icon_image, player1_gauge_bar, player2_gauge_bar
+    global player1_icon_image, player2_icon_image, player1_gauge_bar, player2_gauge_bar, round_manager
 
     background = Background(stage_index = selected_stage_index)
     game_world.add_object(background, 0)
@@ -99,42 +102,50 @@ def init():
     round_timer = RoundTimer(400, 550, round_time=60)
     game_world.add_object(round_timer, 2)
 
+    round_manager = RoundManager(player1, player2, background, (800, 30), (1200, 30))
+    round_manager.start_first_round()
+
 def update():
     game_world.update()
     camera.update()
     game_world.handle_collision()
     check_win_condition()
+    round_manager.update()
+    if round_manager.state == RoundManager.STATE_MATCH_OVER:
+        if round_manager.timer > 2.0:
+            game_framework.change_mode(title_mode)
 
 def draw():
     clear_canvas()
     game_world.render()
     player1_icon_image.draw(40, 550, 60, 60)
     player2_icon_image.draw(760, 550, 60, 60)
+    if round_manager:
+        round_manager.draw_ui()
     update_canvas()
 
 def finish():
     game_world.clear()
 
 def check_win_condition():
-    if player2.hp <= 0:
-        result_mode.set_winner('player1')
-        game_framework.change_mode(result_mode)
-        return
+    winner_str = None
 
-    if player1.hp <= 0:
-        result_mode.set_winner('player2')
-        game_framework.change_mode(result_mode)
-        return
-
-    if round_timer.is_time_over():
+    if player1.hp <= 0 and player2.hp <= 0:
+        winner_str = 'draw'
+    elif player2.hp <= 0:
+        winner_str = 'player1'
+    elif player1.hp <= 0:
+        winner_str = 'player2'
+    elif round_timer.is_time_over():
         if player1.hp > player2.hp:
-            result_mode.set_winner('player1')
+            winner_str = 'player1'
         elif player2.hp > player1.hp:
-            result_mode.set_winner('player2')
+            winner_str = 'player2'
         else:
-            result_mode.set_winner('draw')  # 무승부
-        game_framework.change_mode(result_mode)
-        return
+            winner_str = 'draw'
+
+    if winner_str is not None:
+        round_manager.on_round_end(winner_str)
 
 def pause(): pass
 def resume(): pass
