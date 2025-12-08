@@ -102,7 +102,7 @@ def init():
     round_timer = RoundTimer(400, 550, round_time=60)
     game_world.add_object(round_timer, 2)
 
-    round_manager = RoundManager(player1, player2, background, (800, 30), (1200, 30))
+    round_manager = RoundManager(player1, player2, background, (800, 30), (1200, 30), round_timer)
     round_manager.start_first_round()
 
 def update():

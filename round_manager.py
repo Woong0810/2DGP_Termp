@@ -1,6 +1,7 @@
 from pico2d import load_font
 import game_framework
 from camera import camera
+from round_timer import RoundTimer
 
 ROUND_INTRO_DURATION = 2.0
 ROUND_END_DURATION   = 3.0
@@ -11,10 +12,11 @@ class RoundManager:
     STATE_END = 2
     STATE_MATCH_OVER = 3
 
-    def __init__(self, p1, p2, stage, p1_spawn, p2_spawn):
+    def __init__(self, p1, p2, stage, p1_spawn, p2_spawn, round_timer):
         self.p1 = p1
         self.p2 = p2
         self.stage = stage
+        self.round_timer = round_timer
 
         self.p1_spawn = p1_spawn
         self.p2_spawn = p2_spawn
@@ -40,6 +42,7 @@ class RoundManager:
         self.state = RoundManager.STATE_INTRO
         self.timer = 0.0
         self.winner = None
+        self.round_timer.reset()
 
         self.reset_character_for_round(self.p1, self.p1_spawn)
         self.reset_character_for_round(self.p2, self.p2_spawn)
@@ -132,11 +135,13 @@ class RoundManager:
         elif self.state in (RoundManager.STATE_END, RoundManager.STATE_MATCH_OVER):
             if self.winner is self.p1:
                 msg = "PLAYER 1 WINS"
+                self.draw_bold_text(self.font_big, 200, 300, msg, (255, 215, 0), thickness=2)
             elif self.winner is self.p2:
                 msg = "PLAYER 2 WINS"
+                self.draw_bold_text(self.font_big, 200, 300, msg, (255, 215, 0), thickness=2)
             else:
                 msg = "DRAW"
-            self.draw_bold_text(self.font_big, 200, 300, msg, (255, 215, 0), thickness=2)
+                self.draw_bold_text(self.font_big, 330, 300, msg, (255, 215, 0), thickness=2)
 
     def draw_bold_text(self, font, x, y, text, color, thickness=1):
         for dx in range(-thickness, thickness + 1):
