@@ -18,7 +18,7 @@ class RoundTimer:
 
     def draw(self):
         time_int = int(self.time)
-        self.font.draw(self.x - 25, self.y, f'{time_int:02d}', (0, 0, 0))
+        self.draw_bold_text(self.font, self.x - 25, self.y, f'{time_int:02d}', (0, 0, 0), thickness=2)
 
     def is_time_over(self):
         return self.time <= 0
@@ -28,4 +28,9 @@ class RoundTimer:
 
     def handle_collision(self, group, other):
         pass
+
+    def draw_bold_text(self, font, x, y, text, color, thickness=1):
+        for dx in range(-thickness, thickness + 1):
+            for dy in range(-thickness, thickness + 1):
+                font.draw(x + dx, y + dy, text, color)
 
