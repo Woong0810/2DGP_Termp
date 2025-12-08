@@ -1,7 +1,6 @@
 from pico2d import load_font
 import game_framework
 from camera import camera
-from round_timer import RoundTimer
 
 ROUND_INTRO_DURATION = 2.0
 ROUND_END_DURATION   = 3.0

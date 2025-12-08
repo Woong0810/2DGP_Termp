@@ -535,7 +535,6 @@ class JiraiyaConfig(CharacterConfig):
         self.special_attack_offset_y = 0
         self.special_attack2_offset_y = 0
 
-        # TODO: Jiraiya의 프레임 인덱스 설정 (나중에 추가)
         self.idle_frames = list(range(54, 54 + 4))
         self.run_frames = list(range(39, 39 + 6))
         self.normal_attack_frames = list(range(0, 34))

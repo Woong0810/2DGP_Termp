@@ -3,7 +3,7 @@ from pico2d import *
 import game_world
 from background import Background
 from character import Character
-from character_config import NarutoConfig, ItachiConfig, JiraiyaConfig, CHARACTER_CONFIGS
+from character_config import CHARACTER_CONFIGS
 import game_framework
 import title_mode
 from hp_bar import HPBar
@@ -27,7 +27,7 @@ def handle_events():
 
 CHAR_CONFIG_LIST = list(CHARACTER_CONFIGS.values())
 selected_player1_index = 0
-selected_player2_index = 1
+selected_player2_index = 2
 selected_stage_index = 0
 
 player1_icon_image = None

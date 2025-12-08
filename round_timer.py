@@ -1,6 +1,5 @@
 from pico2d import load_font
 import game_framework
-import os
 
 class RoundTimer:
     def __init__(self, x, y, round_time=60):
