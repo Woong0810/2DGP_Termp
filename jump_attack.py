@@ -22,6 +22,8 @@ class JumpAttack:
         self.segment_move_speed = 0.0
         self.segment_move_elapsed = 0.0
 
+        self.hit_targets = set()
+
     def enter(self, e):
         self.character.add_special_gauge(SPECIAL_GAUGE_ATTACK_TRY)
         jump_state = self.character.JUMP
@@ -71,10 +73,11 @@ class JumpAttack:
         if self.attack_frame >= segment_length:
             if hasattr(self.character.config, 'jump_attack_segments'):
                 segments = self.character.config.jump_attack_segments
-                if self.combo_index < len(segments) - 1:
+                if self.n_key_pressed and self.combo_index < len(segments) - 1:
                     self.combo_index += 1
                     self.start_frame, self.end_frame = segments[self.combo_index]
                     self.attack_frame = 0.0
+                    self.hit_targets.clear()
                     self.update_segment_move()
                 else:
                     self.character.state_machine.handle_event(('SEGMENT_END', None))

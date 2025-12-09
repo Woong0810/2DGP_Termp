@@ -20,6 +20,8 @@ class NormalAttack:
         self.segment_move_speed = 0.0
         self.segment_move_elapsed = 0.0
 
+        self.hit_targets = set()
+
     def set_up_attack(self, is_up_attack):
         self.up_attack = is_up_attack
 
@@ -47,6 +49,7 @@ class NormalAttack:
         self.character.frame = self.start_frame
 
         self.collision_hold_remaining = 0.0
+        self.hit_targets.clear()
 
         # 동적으로 attack 키 체크
         from sdl2 import SDL_KEYDOWN
@@ -109,6 +112,7 @@ class NormalAttack:
                 self.combo_index = (self.combo_index + 1) % len(segments)
                 self.start_frame, self.end_frame = segments[self.combo_index]
                 self.character.frame = self.start_frame
+                self.hit_targets.clear()
                 self.update_segment_move()
             else:
                 self.character.state_machine.handle_event(('SEGMENT_END', None))

@@ -354,6 +354,9 @@ class Character:
             return
 
         if group == 'normal_attack:character':
+            if hasattr(other, 'hit_targets') and self in other.hit_targets:
+                return
+
             attacker = getattr(other, 'character', None)
             if attacker is self:
                 return
@@ -409,6 +412,9 @@ class Character:
                 else:
                     knockback_dir = -self.face_dir
 
+            if hasattr(other, 'hit_targets'):
+                other.hit_targets.add(self)
+
             attacker.add_special_gauge(SPECIAL_GAUGE_ATTACK_SUCCESS)
             self.add_special_gauge(SPECIAL_GAUGE_ATTACK_HIT)
             self.hp -= damage
@@ -422,6 +428,9 @@ class Character:
             )
 
         elif group == 'jump_attack:character':
+            if hasattr(other, 'hit_targets') and self in other.hit_targets:
+                return
+
             attacker = getattr(other, 'character', None)
             if attacker is self:
                 return
@@ -463,6 +472,9 @@ class Character:
                     knockback_dir = 1
                 else:
                     knockback_dir = -self.face_dir
+
+            if hasattr(other, 'hit_targets'):
+                other.hit_targets.add(self)
 
             attacker.add_special_gauge(SPECIAL_GAUGE_ATTACK_SUCCESS)
             self.add_special_gauge(SPECIAL_GAUGE_ATTACK_HIT)
