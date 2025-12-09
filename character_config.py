@@ -4,7 +4,7 @@ from characters_jiraiya_frames import FRAMES as JIRAIYA_FRAMES
 from character_naruto_frames import FRAMES as NARUTO_FRAMES
 from character_naruto_sa_frames import FRAMES as NARUTO_SPECIAL_FRAMES
 from character_naruto_sa_2_frames import FRAMES as NARUTO_SPECIAL2_FRAMES
-
+from character_jiraiya_sa_frames import FRAMES as JIRAIYA_SPECIAL_FRAMES
 # ===== 물리 기반 상수 설정 =====
 PIXEL_PER_METER = (10.0 / 0.4)  # 10 pixel = 40 cm
 
@@ -527,6 +527,9 @@ class JiraiyaConfig(CharacterConfig):
         self.name_image_path = "character_jiraiya_name.png"
         self.special_attack_illust_image_path = "character_jiraiya_sa_illust.png"
 
+        self.special_attack_image_path = "character_jiraiya_sa.png"
+        self.special_attack_frames_data = JIRAIYA_SPECIAL_FRAMES
+
         self.scale_x = 1.1
         self.scale_y = 1.1
         self.draw_offset_y = -5
@@ -540,7 +543,7 @@ class JiraiyaConfig(CharacterConfig):
         self.normal_attack_frames = list(range(0, 34))
         self.normal_attack_segments = [(0, 4), (5, 12), (28, 33)]
         self.run_attack_segments = [(50, 51)]
-        self.up_attack_segments = [(24, 28)]
+        self.up_attack_segments = [(24, 27)]
         self.down_attack_segments = [(28, 33)]
         self.jump_attack_segments = [(13, 22), (34, 38)]
         self.jump_frames = [48, 49]
@@ -559,14 +562,124 @@ class JiraiyaConfig(CharacterConfig):
         self.special2_offset_x = 50
 
         self.hitbox_idle = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
-        self.hitbox_run = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_run = {'scale_x': 0.55, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_jump = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
-        self.hitbox_normal_attack = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_normal_attack = {'scale_x': 0.6, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_defense = {'scale_x': 1.0, 'scale_y': 1.0, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_special_attack = {'scale_x': 1.15, 'scale_y': 1.15, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_special_attack2 = {'scale_x': 1.15, 'scale_y': 1.15, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_ranged_attack = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_hit = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
+
+        self.normal_attack_data = [
+            {
+                'name': 'jiraiya_ground_A_1',
+                'damage': 4,
+                'hitstop_frames': 3,
+                'hitstun_frames': 14,
+                'knockback': 10,
+                'attacker_push': 10,
+                'knockdown': False,
+            },
+            {
+                'name': 'jiraiya_ground_A_2',
+                'damage': 5,
+                'hitstop_frames': 3,
+                'hitstun_frames': 16,
+                'knockback': 15,
+                'attacker_push': 15,
+                'knockdown': False,
+            },
+            {
+                'name': 'jiraiya_ground_A_3',
+                'damage': 8,
+                'hitstop_frames': 5,
+                'hitstun_frames': 20,
+                'knockback': 80,
+                'attacker_push': 20,
+                'knockdown': True,
+            },
+        ]
+        self.run_attack_data = [
+            {
+                'name': 'jiraiya_run_A',
+                'damage': 6,
+                'hitstop_frames': 4,
+                'hitstun_frames': 18,
+                'knockback': 70,
+                'attacker_push': 40,
+                'knockdown': True,
+            },
+        ]
+        self.up_attack_data = [
+            {
+                'name': 'jiraiya_up_A',
+                'damage': 5,
+                'hitstop_frames': 3,
+                'hitstun_frames': 18,
+                'knockback': 30,
+                'attacker_push': 0,
+                'knockdown': False,
+            },
+        ]
+        self.down_attack_data = [
+            {
+                'name': 'jiraiya_down_A',
+                'damage': 7,
+                'hitstop_frames': 4,
+                'hitstun_frames': 22,
+                'knockback': 80,
+                'attacker_push': 10,
+                'knockdown': True,
+            },
+        ]
+        self.jump_attack_data = [
+            {
+                'name': 'jiraiya_jump_A_1',
+                'damage': 5,
+                'hitstop_frames': 3,
+                'hitstun_frames': 16,
+                'knockback': 15,
+                'attacker_push': 5,
+                'knockdown': False,
+            },
+            {
+                'name': 'jiraiya_jump_A_2',
+                'damage': 7,
+                'hitstop_frames': 4,
+                'hitstun_frames': 22,
+                'knockback': 70,
+                'attacker_push': 10,
+                'knockdown': True,
+            },
+        ]
+        self.special_attack_data = [
+            {
+                'name': 'jiraiya_special_A_1',
+                'damage': 5,
+                'hitstop_frames': 15,
+                'hitstun_frames': 32,
+                'knockback': 40,
+                'knockdown': False,
+            },
+            {
+                'name': 'jiraiya_special_A_2',
+                'damage': 3.5,
+                'hitstop_frames': 20,
+                'hitstun_frames': 40,
+                'knockback': 60,
+                'knockdown': False,
+            },
+        ]
+
+        self.ranged_attack_data = {
+            'name': 'jiraiya_shuriken',
+            'damage': 10,
+            'hitstop_frames': 2,
+            'hitstun_frames': 14,
+            'knockback': 20,
+            'knockdown': False,
+        }
 
 CHARACTER_CONFIGS = {
     "Naruto": NarutoConfig,
