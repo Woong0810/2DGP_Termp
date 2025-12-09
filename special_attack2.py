@@ -30,6 +30,9 @@ class SpecialAttack2:
 
     def exit(self, e):
         game_world.remove_collision_object(self)
+        if self.target:
+            self.target.special_chain_active = False
+        self.target = None
 
     def do(self):
         if not self.frames:
