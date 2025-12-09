@@ -118,6 +118,7 @@ class Character:
             take_hit: self.HIT
         }
         attack_rules = {
+            run_attack_end: self.JUMP_ATTACK,
             segment_end: self.IDLE,
             key_down(kb['down']): self.DEFENSE,
             can_special: self.SPECIAL_ATTACK,

@@ -87,7 +87,7 @@ HITSTOP_FRAMES_RANGED = 2       # 수리검 등 원거리
 SPECIAL_GAUGE_MAX = 100.0
 SPECIAL_GAUGE_COST = 100.0
 
-SPECIAL_GAUGE_ATTACK_TRY = 5.0
+SPECIAL_GAUGE_ATTACK_TRY = 15.0
 SPECIAL_GAUGE_ATTACK_SUCCESS = 5.0
 SPECIAL_GAUGE_ATTACK_HIT = 5.0
 SPECIAL_GAUGE_DEFENSE = 5.0
@@ -529,7 +529,7 @@ class JiraiyaConfig(CharacterConfig):
 
         self.scale_x = 1.1
         self.scale_y = 1.1
-        self.draw_offset_y = 0
+        self.draw_offset_y = -5
 
         self.knockback_draw_offset_y = -15
         self.special_attack_offset_y = 0
@@ -539,9 +539,9 @@ class JiraiyaConfig(CharacterConfig):
         self.run_frames = list(range(39, 39 + 6))
         self.normal_attack_frames = list(range(0, 34))
         self.normal_attack_segments = [(0, 4), (5, 12), (28, 33)]
-        self.run_attack_segments = [(50, 51)] # 상대 위치로 순간 이동 후 점프 공격?
+        self.run_attack_segments = [(50, 51)]
         self.up_attack_segments = [(24, 28)]
-        self.down_attack_segments = [] # 불 나가게?
+        self.down_attack_segments = [(28, 33)]
         self.jump_attack_segments = [(13, 22), (34, 38)]
         self.jump_frames = [48, 49]
         self.defense_frames = [69]
