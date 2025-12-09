@@ -5,6 +5,7 @@ from character_naruto_frames import FRAMES as NARUTO_FRAMES
 from character_naruto_sa_frames import FRAMES as NARUTO_SPECIAL_FRAMES
 from character_naruto_sa_2_frames import FRAMES as NARUTO_SPECIAL2_FRAMES
 from character_jiraiya_sa_frames import FRAMES as JIRAIYA_SPECIAL_FRAMES
+from character_jiraiya_sa_2_frames import FRAMES as JIRAIYA_SPECIAL2_FRAMES
 # ===== 물리 기반 상수 설정 =====
 PIXEL_PER_METER = (10.0 / 0.4)  # 10 pixel = 40 cm
 
@@ -529,6 +530,8 @@ class JiraiyaConfig(CharacterConfig):
 
         self.special_attack_image_path = "character_jiraiya_sa.png"
         self.special_attack_frames_data = JIRAIYA_SPECIAL_FRAMES
+        self.special_attack2_image_path = "character_jiraiya_sa_2.png"
+        self.special_attack2_frames_data = JIRAIYA_SPECIAL2_FRAMES
 
         self.scale_x = 1.1
         self.scale_y = 1.1
@@ -549,7 +552,7 @@ class JiraiyaConfig(CharacterConfig):
         self.jump_frames = [48, 49]
         self.defense_frames = [69]
         self.special_attack_frames = list(range(0, 34))
-        self.special_attack2_frames = list(range(252, 252 + 39))
+        self.special_attack2_frames = list(range(0, 39))
         self.ranged_attack_frames = list(range(69, 69 + 4))
         self.hit_frames = [58, 59]
         self.knockback_frames = [60, 65, 64, 63, 62, 61]
@@ -557,7 +560,7 @@ class JiraiyaConfig(CharacterConfig):
         self.dash_frames = list(range(87, 87 + 2))
 
         self.special1_hit_frames = [18, 19, 20, 22, 23, 25, 26, 28, 29]
-        self.special2_hit_frames = []
+        self.special2_hit_frames = [16, 18, 20, 23, 26, 29, 32, 35, 38]
         self.special1_offset_x = 100
         self.special2_offset_x = 50
 
@@ -566,7 +569,7 @@ class JiraiyaConfig(CharacterConfig):
         self.hitbox_jump = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_normal_attack = {'scale_x': 0.6, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_defense = {'scale_x': 1.0, 'scale_y': 1.0, 'x_offset': 0, 'y_offset': 0}
-        self.hitbox_special_attack = {'scale_x': 15.0, 'scale_y': 1.15, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_special_attack = {'scale_x': 12.0, 'scale_y': 1.15, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_special_attack2 = {'scale_x': 1.15, 'scale_y': 1.15, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_ranged_attack = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_hit = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
@@ -664,7 +667,7 @@ class JiraiyaConfig(CharacterConfig):
             },
             {
                 'name': 'jiraiya_special_A_2',
-                'damage': 3.5,
+                'damage': 3.2,
                 'hitstop_frames': 20,
                 'hitstun_frames': 40,
                 'knockback': 60,
