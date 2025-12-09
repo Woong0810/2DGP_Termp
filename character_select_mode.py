@@ -152,6 +152,7 @@ def handle_events():
                     p2_selected_index = p2_cursor_index
 
                 play_mode.set_selected_characters(p1_selected_index, p2_selected_index)
+                play_mode.set_game_mode(game_mode)
 
                 game_framework.change_mode(stage_select_mode)
                 return

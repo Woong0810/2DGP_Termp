@@ -3,6 +3,7 @@ from pico2d import *
 import game_world
 from background import Background
 from character import Character
+from ai_character import AiCharacter
 from character_config import CHARACTER_CONFIGS
 import game_framework
 import title_mode
@@ -46,6 +47,10 @@ def set_selected_stage(stage_index):
     global selected_stage_index
     selected_stage_index = stage_index
 
+def set_game_mode(mode):
+    global game_mode
+    game_mode = mode
+
 def init():
     global player1, player2, background, player1_hp_bar, player2_hp_bar, round_timer
     global player1_icon_image, player2_icon_image, player1_gauge_bar, player2_gauge_bar, round_manager
@@ -63,7 +68,11 @@ def init():
     player1 = Character(player1_config(), key_bindings=PLAYER1_KEY_BINDINGS, x=800, y=30, stage=background)
     game_world.add_object(player1, 1)
 
-    player2 = Character(player2_config(), key_bindings=PLAYER2_KEY_BINDINGS, x=1200, y=30, stage=background)
+    if game_mode == 'AI':
+        player2 = AiCharacter(player2_config(), key_bindings=PLAYER2_KEY_BINDINGS, x=1200, y=30, stage=background)
+    else:
+        player2 = Character(player2_config(), key_bindings=PLAYER2_KEY_BINDINGS, x=1200, y=30, stage=background)
+
     player2.face_dir = -1
     game_world.add_object(player2, 1)
 
