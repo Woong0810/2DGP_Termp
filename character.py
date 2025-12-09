@@ -512,12 +512,12 @@ class Character:
                 return
 
         elif group == 'character:shuriken':
-            attacker = getattr(other, 'character', None)
+            owner = getattr(other, 'owner', None)
             if hasattr(other, 'owner') and other.owner == self:
                 return
             if self.state_machine.cur_state == self.DEFENSE:
-                if attacker is not None:
-                    self.block_attacker_on_guard(attacker)
+                if owner is not None:
+                    self.block_attacker_on_guard(owner)
                 return
             if self.state_machine.cur_state == self.HIT:
                 return

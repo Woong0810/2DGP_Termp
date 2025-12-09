@@ -67,10 +67,4 @@ class Shuriken:
         if other == self.owner:
             return
 
-        try:
-            if hasattr(other, 'take_hit'):
-                other.take_hit(False, self.damage)
-        except Exception:
-            pass
-
         game_world.remove_object(self)
