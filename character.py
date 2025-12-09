@@ -362,6 +362,8 @@ class Character:
                 return
 
             if self.state_machine.cur_state == self.DEFENSE:
+                if hasattr(other, 'hit_targets'):
+                    other.hit_targets.add(self)
                 if attacker is not None:
                     self.block_attacker_on_guard(attacker)
                 return
@@ -436,10 +438,11 @@ class Character:
                 return
 
             if self.state_machine.cur_state == self.DEFENSE:
-                if self.state_machine.cur_state == self.DEFENSE:
-                    if attacker is not None:
-                        self.block_attacker_on_guard(attacker)
-                    return
+                if hasattr(other, 'hit_targets'):
+                    other.hit_targets.add(self)
+                if attacker is not None:
+                    self.block_attacker_on_guard(attacker)
+                return
             if self.state_machine.cur_state == self.HIT:
                 return
 
