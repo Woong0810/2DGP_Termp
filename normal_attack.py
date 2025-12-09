@@ -88,7 +88,14 @@ class NormalAttack:
             self.character.x += self.character.face_dir * DOWN_ATTACK_SPEED_PPS * game_framework.frame_time
 
         if self.character.frame >= self.end_frame + 1:
-            # 윗 방향키 공격, 아래 방향키 공격, 달리기 공격은 콤보 없이 바로 종료
+            if self.from_run and self.character.config.name == 'Jiraiya':
+                opp = self.character.opponent
+                if opp is not None:
+                    teleport_dist = 40
+                    self.character.x = opp.x - teleport_dist * opp.face_dir
+                    self.character.y = opp.y
+                    self.character.face_dir = -opp.face_dir
+                self.character.state_machine.handle_event(('SEGMENT_END', None))
             if self.up_attack or self.down_attack or self.from_run:
                 self.character.state_machine.handle_event(('SEGMENT_END', None))
             elif self.n_key_pressed:
