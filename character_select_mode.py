@@ -10,6 +10,8 @@ import stage_select_mode
 CHAR_NAMES = list(CHARACTER_CONFIGS.keys())
 CHAR_CLASSES = list(CHARACTER_CONFIGS.values())
 
+game_mode = '2P'
+
 char_select_mode_bg = None
 
 char_icons_unselected = []
@@ -38,7 +40,6 @@ P1_ATTACK = PLAYER1_KEY_BINDINGS['attack']
 P2_LEFT = PLAYER2_KEY_BINDINGS['left']
 P2_RIGHT = PLAYER2_KEY_BINDINGS['right']
 P2_ATTACK = PLAYER2_KEY_BINDINGS['attack']
-
 
 def init():
     global char_select_mode_bg

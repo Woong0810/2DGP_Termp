@@ -71,6 +71,10 @@ def handle_events():
             elif key == P1_ATTACK:
                 stage_index, _image_path = STAGE_INFOS[stage_cursor_index]
                 play_mode.set_selected_stage(stage_index)
+
+                import character_select_mode
+                play_mode.game_mode = character_select_mode.game_mode
+
                 game_framework.change_mode(play_mode)
                 return
 

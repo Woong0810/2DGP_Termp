@@ -23,12 +23,15 @@ def handle_events():
             if round_manager is None or not round_manager.can_control():
                 continue
             player1.handle_event(event)
-            player2.handle_event(event)
+            if game_mode == '2P':
+                player2.handle_event(event)
 
 CHAR_CONFIG_LIST = list(CHARACTER_CONFIGS.values())
 selected_player1_index = 0
 selected_player2_index = 2
 selected_stage_index = 0
+
+game_mode = '2P'
 
 player1_icon_image = None
 player2_icon_image = None
