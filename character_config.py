@@ -539,7 +539,7 @@ class JiraiyaConfig(CharacterConfig):
 
         self.knockback_draw_offset_y = -15
         self.special_attack_offset_y = 20
-        self.special_attack2_offset_y = 0
+        self.special_attack2_offset_y = 30
 
         self.idle_frames = list(range(54, 54 + 4))
         self.run_frames = list(range(39, 39 + 6))
@@ -570,7 +570,7 @@ class JiraiyaConfig(CharacterConfig):
         self.hitbox_normal_attack = {'scale_x': 0.6, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_defense = {'scale_x': 1.0, 'scale_y': 1.0, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_special_attack = {'scale_x': 12.0, 'scale_y': 1.15, 'x_offset': 0, 'y_offset': 0}
-        self.hitbox_special_attack2 = {'scale_x': 1.15, 'scale_y': 1.15, 'x_offset': 0, 'y_offset': 0}
+        self.hitbox_special_attack2 = {'scale_x': 18.0, 'scale_y': 1.15, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_ranged_attack = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
         self.hitbox_hit = {'scale_x': 0.65, 'scale_y': 0.78, 'x_offset': 0, 'y_offset': 0}
 
