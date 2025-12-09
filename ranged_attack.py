@@ -15,6 +15,12 @@ class RangedAttack:
         self.character.add_special_gauge(SPECIAL_GAUGE_ATTACK_TRY)
         self.character.frame = 0
         self.shuriken_spawned = False
+        game_world.add_collision_pairs('normal_attack:character', None, self.character)
+        game_world.add_collision_pairs('jump_attack:character', None, self.character)
+        game_world.add_collision_pairs('special_attack:character', None, self.character)
+        game_world.add_collision_pairs('special_attack2:character', None, self.character)
+        game_world.add_collision_pairs('ranged_attack:character', None, self.character)
+        game_world.add_collision_pairs('character:shuriken', self.character, None)
         game_world.add_collision_pairs('character:character', self.character, self.character.opponent)
 
     def exit(self, e):

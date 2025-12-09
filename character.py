@@ -355,6 +355,9 @@ class Character:
 
         if group == 'normal_attack:character':
             attacker = getattr(other, 'character', None)
+            if attacker is self:
+                return
+
             if self.state_machine.cur_state == self.DEFENSE:
                 if attacker is not None:
                     self.block_attacker_on_guard(attacker)
@@ -405,6 +408,7 @@ class Character:
                     knockback_dir = 1
                 else:
                     knockback_dir = -self.face_dir
+
             attacker.add_special_gauge(SPECIAL_GAUGE_ATTACK_SUCCESS)
             self.add_special_gauge(SPECIAL_GAUGE_ATTACK_HIT)
             self.hp -= damage
@@ -416,12 +420,12 @@ class Character:
                 hitstun_frames=hitstun_frames,
                 will_knockdown=will_knockdown
             )
-            # 거리가 가까울때 다단 히트가 되는 문제 발생했는데 원인 파악 필요
-            # 아니면 한 번 히트했을 때 그 프레임동안 상대에게 충돌 판정을 없애는 방법도 고려
-            other.invincible_time = HIT_DURATION
 
         elif group == 'jump_attack:character':
             attacker = getattr(other, 'character', None)
+            if attacker is self:
+                return
+
             if self.state_machine.cur_state == self.DEFENSE:
                 if self.state_machine.cur_state == self.DEFENSE:
                     if attacker is not None:
@@ -459,6 +463,7 @@ class Character:
                     knockback_dir = 1
                 else:
                     knockback_dir = -self.face_dir
+
             attacker.add_special_gauge(SPECIAL_GAUGE_ATTACK_SUCCESS)
             self.add_special_gauge(SPECIAL_GAUGE_ATTACK_HIT)
             self.hp -= damage
@@ -470,7 +475,6 @@ class Character:
                 hitstun_frames=hitstun_frames,
                 will_knockdown=will_knockdown
             )
-            other.invincible_time = HIT_DURATION
 
         elif group == 'special_attack:character':
             attacker = getattr(other, 'character', None)
@@ -528,6 +532,7 @@ class Character:
                     knockback_dir = 1
                 else:
                     knockback_dir = -self.face_dir
+
             owner.add_special_gauge(SPECIAL_GAUGE_ATTACK_SUCCESS)
             self.add_special_gauge(SPECIAL_GAUGE_ATTACK_HIT)
             self.hp -= damage
@@ -539,7 +544,6 @@ class Character:
                 hitstun_frames=hitstun_frames,
                 will_knockdown=will_knockdown
             )
-            other.invincible_time = HIT_DURATION
 
         elif group == 'character:character':
             if self is other:
