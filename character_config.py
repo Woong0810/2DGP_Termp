@@ -88,7 +88,7 @@ HITSTOP_FRAMES_RANGED = 2       # 수리검 등 원거리
 SPECIAL_GAUGE_MAX = 100.0
 SPECIAL_GAUGE_COST = 100.0
 
-SPECIAL_GAUGE_ATTACK_TRY = 10.0
+SPECIAL_GAUGE_ATTACK_TRY = 100.0
 SPECIAL_GAUGE_ATTACK_SUCCESS = 5.0
 SPECIAL_GAUGE_ATTACK_HIT = 5.0
 SPECIAL_GAUGE_DEFENSE = 5.0
@@ -187,8 +187,10 @@ class NarutoConfig(CharacterConfig):
 
         self.special_attack_image_path = "character_naruto_2.png"
         self.special_attack_frames_data = NARUTO_SPECIAL_FRAMES
+        self.special_attack_sound = "naruto_sa.wav"
         self.special_attack2_image_path = "character_naruto_sa_2.png"
         self.special_attack2_frames_data = NARUTO_SPECIAL2_FRAMES
+        self.special_attack2_sound = "naruto_sa_2.wav"
 
         self.scale_x = 1.1
         self.scale_y = 1.2
@@ -368,10 +370,12 @@ class ItachiConfig(CharacterConfig):
 
         self.special_attack_image_path = "character_itachi_sa.png"
         self.special_attack_frames_data = ITACHI_SPECIAL_FRAMES
+        self.special_attack_sound = "itachi_sa.wav"
 
         from character_itachi_sa_2_frames import FRAMES as ITACHI_SPECIAL2_FRAMES
         self.special_attack2_image_path = "character_itachi_sa_2.png"
         self.special_attack2_frames_data = ITACHI_SPECIAL2_FRAMES
+        self.special_attack2_sound = "itachi_sa_2.wav"
 
         self.scale_x = 1.0
         self.scale_y = 1.0
@@ -530,8 +534,10 @@ class JiraiyaConfig(CharacterConfig):
 
         self.special_attack_image_path = "character_jiraiya_sa.png"
         self.special_attack_frames_data = JIRAIYA_SPECIAL_FRAMES
+        self.special_attack_sound = "jiraiya_sa.wav"
         self.special_attack2_image_path = "character_jiraiya_sa_2.png"
         self.special_attack2_frames_data = JIRAIYA_SPECIAL2_FRAMES
+        self.special_attack2_sound = "jiraiya_sa_2.wav"
 
         self.scale_x = 1.1
         self.scale_y = 1.1

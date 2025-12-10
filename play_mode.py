@@ -37,6 +37,7 @@ game_mode = '2P'
 player1_icon_image = None
 player2_icon_image = None
 round_manager = None
+bgm = None
 
 def set_selected_characters(p1_idx, p2_idx):
     global selected_player1_index, selected_player2_index
@@ -54,9 +55,17 @@ def set_game_mode(mode):
 def init():
     global player1, player2, background, player1_hp_bar, player2_hp_bar, round_timer
     global player1_icon_image, player2_icon_image, player1_gauge_bar, player2_gauge_bar, round_manager
+    global bgm
 
     background = Background(stage_index = selected_stage_index)
     game_world.add_object(background, 0)
+
+    if selected_stage_index == 0:
+        bgm = load_music('stage1_bgm.mp3')
+    else:
+        bgm = load_music('stage2_bgm.mp3')
+    bgm.set_volume(64)
+    bgm.repeat_play()
 
     camera.set_stage_bounds(0, background.width)
 
@@ -138,6 +147,9 @@ def draw():
     update_canvas()
 
 def finish():
+    global bgm
+    if bgm:
+        bgm.stop()
     game_world.clear()
 
 def check_win_condition():
