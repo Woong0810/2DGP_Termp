@@ -55,6 +55,7 @@ class RoundManager:
         ch.invincible_time = 0.0
         ch.special_gauge = 0.0
         ch.jump_count = 0
+        ch.special_chain_active = False
 
         ch.state_machine.cur_state.exit(('ROUND_RESET', None))
         ch.state_machine.prev_state = ch.state_machine.cur_state

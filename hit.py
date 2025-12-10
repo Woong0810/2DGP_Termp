@@ -58,7 +58,7 @@ class Hit:
 
         if getattr(self.character, 'special_chain_active', False):
             self.chain_active = True
-            self.chain_hold_last = True
+            self.chain_hold_last = False
 
         game_world.add_collision_pairs('normal_attack:character', None, self.character)
         game_world.add_collision_pairs('jump_attack:character', None, self.character)
@@ -151,7 +151,17 @@ class Hit:
                 else:
                     if frames_per_action > 0:
                         self.character.frame = frames_per_action - 1
+                    if self.elapsed_time > 5.0:
+                        self.chain_active = False
+                        self.chain_hold_last = False
+                        self.character.special_chain_active = False
+                        if self.was_in_air:
+                            self.character.state_machine.add_event(('RESUME_JUMP', self.ground_y))
+                        else:
+                            self.character.state_machine.add_event(('HIT_END', 0))
+                        return
                 return
+
             self.character.frame = ( self.character.frame + frames_per_action * ACTION_PER_TIME
                                      * HIT_ANIMATION_SPEED * dt ) % frames_per_action
             if self.elapsed_time >= self.hit_duration:
