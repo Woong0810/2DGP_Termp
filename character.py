@@ -170,7 +170,6 @@ class Character:
                 self.HIT: {
                     hit_end: self.IDLE,
                     stand_up: self.STAND_UP,
-                    key_down(kb['dash']): self.DASH,
                     resume_jump: self.JUMP,
                     take_hit: self.HIT
                 },
@@ -178,7 +177,8 @@ class Character:
                     stand_up_end: self.IDLE
                 },
                 self.DASH: {
-                    dash_end: self.IDLE
+                    dash_end: self.IDLE,
+                    take_hit: self.HIT
                 }
             }
         )
@@ -350,7 +350,7 @@ class Character:
         self.opponent = opponent
 
     def handle_collision(self, group, other):
-        if self.invincible_time > 0 or self.state_machine.cur_state == self.DASH:
+        if self.invincible_time > 0:
             return
 
         if group == 'normal_attack:character':

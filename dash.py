@@ -34,9 +34,6 @@ class Dash:
         self.frame = 0.0
         self.elapsed_time = 0.0
 
-        if hasattr(self.character, 'invincible_time'):
-            if self.character.invincible_time < self.dash_duration:
-                self.character.invincible_time = self.dash_duration
         game_world.add_collision_pairs('normal_attack:character', None, self.character)
         game_world.add_collision_pairs('jump_attack:character', None, self.character)
         game_world.add_collision_pairs('special_attack:character', None, self.character)
