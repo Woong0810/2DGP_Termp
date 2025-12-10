@@ -289,7 +289,7 @@ class NarutoConfig(CharacterConfig):
                 'hitstop_frames': 4,
                 'hitstun_frames': 22,
                 'knockback': 80,
-                'attacker_push': 10,
+                'attacker_push': 100,
                 'knockdown': True,
             },
         ]
@@ -472,7 +472,7 @@ class ItachiConfig(CharacterConfig):
                 'hitstop_frames': 4,
                 'hitstun_frames': 22,
                 'knockback': 70,
-                'attacker_push': 10,
+                'attacker_push': 100,
                 'knockdown': True,
             },
         ]
@@ -632,7 +632,7 @@ class JiraiyaConfig(CharacterConfig):
                 'hitstop_frames': 4,
                 'hitstun_frames': 22,
                 'knockback': 80,
-                'attacker_push': 10,
+                'attacker_push': 100,
                 'knockdown': True,
             },
         ]

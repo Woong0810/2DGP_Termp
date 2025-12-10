@@ -94,7 +94,7 @@ class NormalAttack:
                 from character_config import DOWN_ATTACK_SPEED_PPS
             except ImportError:
                 from character_config import RUN_SPEED_PPS as DOWN_ATTACK_SPEED_PPS
-            self.character.x += self.character.face_dir * DOWN_ATTACK_SPEED_PPS * game_framework.frame_time
+            self.character.x += self.character.face_dir * DOWN_ATTACK_SPEED_PPS * game_framework.frame_time * 1.5
 
         if self.character.frame >= self.end_frame + 1:
             if self.from_run and self.character.config.name == 'Jiraiya':
@@ -218,5 +218,6 @@ class NormalAttack:
 
     def handle_collision(self, group, other):
         if group == 'normal_attack:character' and self.down_attack and self.collision_hold_remaining <= 0.0:
-            self.character.frame = self.end_frame
+            # self.character.frame = self.end_frame
             self.collision_hold_remaining = 1.0
+            pass

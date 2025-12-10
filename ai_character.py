@@ -181,6 +181,10 @@ class AiCharacter(Character):
         self.move_timer = self.MOVE_PULSE
 
     def can_control(self):
+        import play_mode
+        if play_mode.round_manager and not play_mode.round_manager.can_control():
+            return BehaviorTree.FAIL
+
         cs = self.state_machine.cur_state
         controllable_states = (self.IDLE, self.RUN, self.JUMP, self.DEFENSE)
         if cs in controllable_states:
