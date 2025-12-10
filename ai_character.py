@@ -331,7 +331,12 @@ class AiCharacter(Character):
             return BehaviorTree.FAIL
 
         self.face_opponent()
-        key = self.key_bindings['special']
+
+        import random
+        if random.random() < 0.5:
+            key = self.key_bindings['special']
+        else:
+            key = self.key_bindings['special2']
 
         self.send_key(key, down=True)
         self.send_key(key, down=False)
