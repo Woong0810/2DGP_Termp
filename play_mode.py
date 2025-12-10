@@ -61,9 +61,9 @@ def init():
     game_world.add_object(background, 0)
 
     if selected_stage_index == 0:
-        bgm = load_music('stage1_bgm.mp3')
+        bgm = load_music('sound/stage1_bgm.mp3')
     else:
-        bgm = load_music('stage2_bgm.mp3')
+        bgm = load_music('sound/stage2_bgm.mp3')
     bgm.set_volume(64)
     bgm.repeat_play()
 
