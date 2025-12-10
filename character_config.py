@@ -88,7 +88,7 @@ HITSTOP_FRAMES_RANGED = 2       # 수리검 등 원거리
 SPECIAL_GAUGE_MAX = 100.0
 SPECIAL_GAUGE_COST = 100.0
 
-SPECIAL_GAUGE_ATTACK_TRY = 100.0
+SPECIAL_GAUGE_ATTACK_TRY = 10.0
 SPECIAL_GAUGE_ATTACK_SUCCESS = 5.0
 SPECIAL_GAUGE_ATTACK_HIT = 5.0
 SPECIAL_GAUGE_DEFENSE = 5.0
@@ -150,7 +150,7 @@ class CharacterConfig:
 
         self.shuriken = {
             'image_path': None,
-            'speed': 300,
+            'speed': 500,
             'rotation_speed': 720,
             'max_distance': 400,
             'damage': 10,
@@ -175,7 +175,7 @@ class NarutoConfig(CharacterConfig):
 
         self.shuriken = {
             'image_path': 'shuriken.png',
-            'speed': 300,
+            'speed': 400,
             'rotation_speed': 720,
             'max_distance': 400,
             'damage': 10,

@@ -422,6 +422,11 @@ class Character:
             attacker.add_special_gauge(SPECIAL_GAUGE_ATTACK_SUCCESS)
             self.add_special_gauge(SPECIAL_GAUGE_ATTACK_HIT)
             self.hp -= damage
+            if self.hp <= 0:
+                self.hp = 0
+                will_knockdown = True
+                if knockback_distance < 80:
+                    knockback_distance = 80
             game_framework.add_hitstop(hitstop_frames)
             self.take_hit(
                 is_knockback=will_knockdown,
@@ -484,6 +489,12 @@ class Character:
             attacker.add_special_gauge(SPECIAL_GAUGE_ATTACK_SUCCESS)
             self.add_special_gauge(SPECIAL_GAUGE_ATTACK_HIT)
             self.hp -= damage
+            if self.hp <= 0:
+                self.hp = 0
+                # HP가 0이 되면 강제 넉다운
+                will_knockdown = True
+                if knockback_distance < 80:
+                    knockback_distance = 80
             game_framework.add_hitstop(hitstop_frames)
             self.take_hit(
                 is_knockback=will_knockdown,
@@ -553,6 +564,12 @@ class Character:
             owner.add_special_gauge(SPECIAL_GAUGE_ATTACK_SUCCESS)
             self.add_special_gauge(SPECIAL_GAUGE_ATTACK_HIT)
             self.hp -= damage
+            if self.hp <= 0:
+                self.hp = 0
+                # HP가 0이 되면 강제 넉다운
+                will_knockdown = True
+                if knockback_distance < 80:
+                    knockback_distance = 80
             game_framework.add_hitstop(hitstop_frames)
             self.take_hit(
                 is_knockback=will_knockdown,
@@ -609,8 +626,6 @@ class Character:
             margin = 1.0
             other.x += (overlap_x + margin) * move_dir
 
-        if self.hp < 0:
-            self.hp = 0
 
     def block_attacker_on_guard(self, attacker):
         l_def, b_def, r_def, t_def = self.get_bb()
