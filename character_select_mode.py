@@ -51,7 +51,7 @@ def init():
 
     char_select_mode_bg = load_image('character_select_background.png')
 
-    bgm = load_music('select_screen_bgm.mp3')
+    bgm = load_music('sound/select_screen_bgm.mp3')
     bgm.set_volume(64)
     bgm.repeat_play()
 

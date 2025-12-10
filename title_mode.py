@@ -17,7 +17,7 @@ def init():
     image = load_image('title.png')
     font = load_font('font.ttf', 40)
     selected_mode = 0
-    bgm = load_music('title_bgm.mp3')
+    bgm = load_music('sound/title_bgm.mp3')
     bgm.set_volume(64)
     bgm.repeat_play()
 

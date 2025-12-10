@@ -38,12 +38,6 @@ class SpecialAttack:
             self.sound.play()
 
         game_world.add_collision_pairs('special_attack:character', self, None)
-        game_world.add_collision_pairs('normal_attack:character', None, self.character)
-        game_world.add_collision_pairs('jump_attack:character', None, self.character)
-        game_world.add_collision_pairs('special_attack:character', None, self.character)
-        game_world.add_collision_pairs('special_attack2:character', None, self.character)
-        game_world.add_collision_pairs('ranged_attack:character', None, self.character)
-        game_world.add_collision_pairs('character:shuriken', self.character, None)
 
     def exit(self, e):
         game_world.remove_collision_object(self)
