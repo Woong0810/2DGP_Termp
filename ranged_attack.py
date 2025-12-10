@@ -11,6 +11,10 @@ class RangedAttack:
         self.shuriken_spawned = False
         self.shuriken = None
 
+        from pico2d import load_wav
+        self.shuriken_sound = load_wav('sound/shuriken.wav')
+        self.shuriken_sound.set_volume(64)
+
     def enter(self, e):
         self.character.add_special_gauge(SPECIAL_GAUGE_ATTACK_TRY)
         self.character.frame = 0
@@ -43,6 +47,7 @@ class RangedAttack:
             self.character.state_machine.handle_event(('RANGED_ATTACK_END', None))
 
     def spawn_shuriken(self):
+        self.shuriken_sound.play()
         offset_x = 20 * self.character.face_dir
         self.shuriken = Shuriken(
             self.character,

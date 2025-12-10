@@ -19,9 +19,12 @@ STAGE_INFOS = [
     # (2, 'background3.png'),
 ]
 bgm = None
+cursor_sound = None
+select_sound = None
 
 def init():
     global stage_select_bg, stage_images, stage_positions, stage_cursor_index
+    global cursor_sound, select_sound
 
     stage_select_bg = load_image('character_select_background.png')
 
@@ -31,6 +34,11 @@ def init():
         stage_images.append(img)
 
     stage_cursor_index = 0
+
+    cursor_sound = load_wav('sound/cursor.wav')
+    cursor_sound.set_volume(64)
+    select_sound = load_wav('sound/select.wav')
+    select_sound.set_volume(64)
 
     n = len(STAGE_INFOS)
     cx = 400
@@ -66,11 +74,14 @@ def handle_events():
                 return
 
             if key == SDLK_w:
+                cursor_sound.play()
                 stage_cursor_index = (stage_cursor_index - 1) % len(STAGE_INFOS)
             elif key == SDLK_s:
+                cursor_sound.play()
                 stage_cursor_index = (stage_cursor_index + 1) % len(STAGE_INFOS)
 
             elif key == P1_ATTACK:
+                select_sound.play()
                 stage_index, _image_path = STAGE_INFOS[stage_cursor_index]
                 play_mode.set_selected_stage(stage_index)
 

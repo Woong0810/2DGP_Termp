@@ -6,6 +6,8 @@ image = None
 font = None
 selected_mode = 0
 bgm = None
+cursor_sound = None
+select_sound = None
 
 def draw_bold_text(font, x, y, text, color, thickness=1):
     for dx in range(-thickness, thickness + 1):
@@ -13,13 +15,18 @@ def draw_bold_text(font, x, y, text, color, thickness=1):
             font.draw(x + dx, y + dy, text, color)
 
 def init():
-    global image, font, selected_mode, bgm
+    global image, font, selected_mode, bgm, cursor_sound, select_sound
     image = load_image('title.png')
     font = load_font('font.ttf', 40)
     selected_mode = 0
     bgm = load_music('sound/title_bgm.mp3')
     bgm.set_volume(64)
     bgm.repeat_play()
+
+    cursor_sound = load_wav('sound/cursor.wav')
+    cursor_sound.set_volume(64)
+    select_sound = load_wav('sound/select.wav')
+    select_sound.set_volume(64)
 
 def update():
     pass
@@ -57,11 +64,14 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
+            select_sound.play()
             character_select_mode.game_mode = 'AI' if selected_mode == 1 else '2P'
             game_framework.change_mode(character_select_mode)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_UP:
+            cursor_sound.play()
             selected_mode = (selected_mode - 1) % 2
         elif event.type == SDL_KEYDOWN and event.key == SDLK_DOWN:
+            cursor_sound.play()
             selected_mode = (selected_mode + 1) % 2
 
 def pause(): pass

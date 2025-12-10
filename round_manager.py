@@ -31,6 +31,15 @@ class RoundManager:
         self.font_big = load_font('font.ttf', 60)
         self.font_small = load_font('font.ttf', 30)
 
+        from pico2d import load_wav
+        self.round_1_sound = load_wav('sound/round_1.wav')
+        self.round_2_sound = load_wav('sound/round_2.wav')
+        self.round_3_sound = load_wav('sound/round_3.wav')
+        self.winner_sound = load_wav('sound/winner.wav')
+
+        for sound in [self.round_1_sound, self.round_2_sound, self.round_3_sound, self.winner_sound]:
+            sound.set_volume(64)
+
     def start_first_round(self):
         self.current_round = 1
         self.p1_wins = 0
@@ -48,6 +57,13 @@ class RoundManager:
 
         camera.set_targets(self.p1, self.p2)
         camera.initialized = True
+
+        if self.current_round == 1:
+            self.round_1_sound.play()
+        elif self.current_round == 2:
+            self.round_2_sound.play()
+        elif self.current_round == 3:
+            self.round_3_sound.play()
 
     def reset_character_for_round(self, ch, spawn_pos):
         ch.x, ch.y = spawn_pos
@@ -99,6 +115,7 @@ class RoundManager:
         if self.winner is not None:
             camera.set_targets(self.winner, self.winner)
             camera.initialized = True
+            self.winner_sound.play()
 
         self.state = RoundManager.STATE_END
         self.timer = 0.0

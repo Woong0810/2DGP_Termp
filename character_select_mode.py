@@ -14,6 +14,8 @@ game_mode = '2P'
 
 char_select_mode_bg = None
 bgm = None
+cursor_sound = None
+select_sound = None
 
 char_icons_unselected = []
 char_icons_selected = []
@@ -43,7 +45,7 @@ P2_RIGHT = PLAYER2_KEY_BINDINGS['right']
 P2_ATTACK = PLAYER2_KEY_BINDINGS['attack']
 
 def init():
-    global char_select_mode_bg, bgm
+    global char_select_mode_bg, bgm, cursor_sound, select_sound
     global char_icons_unselected, char_icons_selected, char_illusts, char_name_images, icon_positions
     global p1_cursor_index, p2_cursor_index
     global p1_selected_index, p2_selected_index, p1_locked, p2_locked
@@ -54,6 +56,11 @@ def init():
     bgm = load_music('sound/select_screen_bgm.mp3')
     bgm.set_volume(64)
     bgm.repeat_play()
+
+    cursor_sound = load_wav('sound/cursor.wav')
+    cursor_sound.set_volume(64)
+    select_sound = load_wav('sound/select.wav')
+    select_sound.set_volume(64)
 
     p1_cursor_image = load_image('player1_mark.png')
     p2_cursor_image = load_image('player2_mark.png')
@@ -139,17 +146,26 @@ def handle_events():
 
             if not p1_locked:
                 if key == P1_LEFT:
+                    cursor_sound.play()
                     p1_cursor_index = (p1_cursor_index - 1) % len(CHAR_NAMES)
                 elif key == P1_RIGHT:
+                    cursor_sound.play()
                     p1_cursor_index = (p1_cursor_index + 1) % len(CHAR_NAMES)
 
             if not p2_locked:
                 if key == P2_LEFT:
+                    cursor_sound.play()
                     p2_cursor_index = (p2_cursor_index - 1) % len(CHAR_NAMES)
                 elif key == P2_RIGHT:
+                    cursor_sound.play()
                     p2_cursor_index = (p2_cursor_index + 1) % len(CHAR_NAMES)
 
             lock_if_select_done(key)
+
+            if key == P1_ATTACK and not p1_locked:
+                select_sound.play()
+            if key == P2_ATTACK and not p2_locked:
+                select_sound.play()
 
             if p1_locked and p2_locked:
                 if p1_selected_index is None:

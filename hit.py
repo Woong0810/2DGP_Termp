@@ -22,7 +22,13 @@ class Hit:
         self.chain_hold_last = False
         self.chain_force_knockdown = False
 
+        from pico2d import load_wav
+        self.punch_sound = load_wav('sound/punch.wav')
+        self.punch_sound.set_volume(64)
+
     def enter(self, event):
+        self.punch_sound.play()
+
         self.character.frame = 0
         self.elapsed_time = 0.0
         self.is_lying_down = False
