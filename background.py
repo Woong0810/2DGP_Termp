@@ -17,11 +17,17 @@ class Background:
         else:
             self.image = load_image('background2.png')
             self.platforms = [
-                {'left': 0, 'bottom': 0, 'right': 800, 'top': 20},
-                {'left': 0, 'bottom': 180, 'right': 200, 'top': 200},
-                {'left': 300, 'bottom': 180, 'right': 650, 'top': 200},
-                {'left': 360, 'bottom': 240, 'right': 600, 'top': 260},
-                {'left': 730, 'bottom': 180, 'right': 800, 'top': 200},
+                {'left': 0, 'bottom': 0, 'right': 2000, 'top': 20},
+                {'left': 470, 'bottom': 180, 'right': 700, 'top': 200},
+                {'left': 870, 'bottom': 240, 'right': 1080, 'top': 260},
+                {'left': 800, 'bottom': 180, 'right': 1150, 'top': 200},
+                {'left': 1230, 'bottom': 180, 'right': 1470, 'top': 200},
+                {'left': 100, 'bottom': 150, 'right': 300, 'top': 170},
+                {'left': 50, 'bottom': 250, 'right': 100, 'top': 270},
+                {'left': 170, 'bottom': 370, 'right': 230, 'top': 390},
+                {'left': 1700, 'bottom': 150, 'right': 1900, 'top': 170},
+                {'left': 1900, 'bottom': 250, 'right': 1950, 'top': 270},
+                {'left': 1770, 'bottom': 370, 'right': 1900, 'top': 390},
             ]
         self.width = self.image.w
         self.height = self.image.h
