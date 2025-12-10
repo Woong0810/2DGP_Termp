@@ -40,8 +40,18 @@ class AiCharacter(Character):
         self.backing_off = False
         self.back_timer = 0.0
 
+        self.platform_jump_cooldown = 0.0
+        self.PLATFORM_JUMP_COOLDOWN = 5.0
+
+        self.double_jump_timer = 0.0
+
     def build_behavior_tree(self):
         main_logic = Selector("메인 로직",
+            Sequence("플랫폼 점프",
+                Condition("위쪽 플랫폼 존재", self.has_platform_above),
+                Condition("상대가 플랫폼 위에 있으면 70% 확률", self.opponent_on_platform),
+                Action("이단 점프로 착지", self.jump_to_platform),
+            ),
             Sequence("필살기 쓰기",
                 Condition("필살기 사용 가능", self.can_use_special_check),
                 Condition("상대와 Y좌표 같음", self.is_same_y),
@@ -149,6 +159,16 @@ class AiCharacter(Character):
             if self.back_timer <= 0.0:
                 self.backing_off = False
 
+        if self.platform_jump_cooldown > 0.0:
+            self.platform_jump_cooldown -= dt
+
+        if self.double_jump_timer > 0.0:
+            self.double_jump_timer -= dt
+            if self.double_jump_timer <= 0.0:
+                jump_key = self.key_bindings['jump_key']
+                self.send_key(jump_key, down=True)
+                self.send_key(jump_key, down=False)
+
     def send_key(self, key, down=True):
         ev_type = SDL_KEYDOWN if down else SDL_KEYUP
         ev = SimpleNamespace(type=ev_type, key=key)
@@ -225,9 +245,6 @@ class AiCharacter(Character):
             return BehaviorTree.SUCCESS
         return BehaviorTree.FAIL
 
-    def is_attack_ready(self):
-        return BehaviorTree.SUCCESS if self.attack_cooldown <= 0.0 else BehaviorTree.FAIL
-
     def is_ranged_ready(self):
         return BehaviorTree.SUCCESS if self.ranged_cooldown <= 0.0 else BehaviorTree.FAIL
 
@@ -256,6 +273,55 @@ class AiCharacter(Character):
         if cs == opp.DEFENSE:
             return BehaviorTree.SUCCESS
         return BehaviorTree.FAIL
+
+    def has_platform_above(self):
+        if self.platform_jump_cooldown > 0.0:
+            return BehaviorTree.FAIL
+
+        left, bottom, right, top = self.get_bb()
+        center_x = (left + right) / 2
+
+        for platform in self.stage.platforms:
+            p_top = platform['top']
+
+            if p_top <= self.y + 10 or p_top > self.y + 200:
+                continue
+
+            if platform['left'] <= center_x <= platform['right']:
+                return BehaviorTree.SUCCESS
+
+        return BehaviorTree.FAIL
+
+    def opponent_on_platform(self):
+        import random
+
+        opp_left, opp_bottom, opp_right, opp_top = self.opponent.get_bb()
+        opp_center_x = (opp_left + opp_right) / 2
+
+        for platform in self.stage.platforms:
+            if platform['bottom'] <= 10:
+                continue
+
+            p_left = platform['left']
+            p_right = platform['right']
+            p_top = platform['top']
+
+            if p_left <= opp_center_x <= p_right and abs(self.opponent.y - p_top) < 30:
+                return BehaviorTree.SUCCESS if random.random() < 0.7 else BehaviorTree.FAIL
+
+        return BehaviorTree.FAIL
+
+    def jump_to_platform(self):
+        jump_key = self.key_bindings['jump_key']
+
+        self.send_key(jump_key, down=True)
+        self.send_key(jump_key, down=False)
+
+        self.double_jump_timer = 0.3
+
+        self.platform_jump_cooldown = self.PLATFORM_JUMP_COOLDOWN
+
+        return BehaviorTree.SUCCESS
 
     def do_idle(self):
         return BehaviorTree.RUNNING
