@@ -18,6 +18,7 @@ class SpecialAttack2:
         self.hit_frames = getattr(self.character.config, 'special2_hit_frames', [])
         self.hit_done = {f: False for f in self.hit_frames}
         self.prev_frame_int = 0
+        self.sound = None
 
     def enter(self, e):
         self.character.do_special_attack(SPECIAL_GAUGE_COST)
@@ -26,6 +27,13 @@ class SpecialAttack2:
         self.prev_frame_int = 0
         self.hit_done = {f: False for f in self.hit_frames}
         self.character.special_timer = 1.0
+
+        if hasattr(self.character.config, 'special_attack2_sound'):
+            from pico2d import load_wav
+            self.sound = load_wav(self.character.config.special_attack2_sound)
+            self.sound.set_volume(64)
+            self.sound.play()
+
         game_world.add_collision_pairs('special_attack2:character', self, None)
         game_world.add_collision_pairs('normal_attack:character', None, self.character)
         game_world.add_collision_pairs('jump_attack:character', None, self.character)

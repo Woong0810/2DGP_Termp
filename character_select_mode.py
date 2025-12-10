@@ -13,6 +13,7 @@ CHAR_CLASSES = list(CHARACTER_CONFIGS.values())
 game_mode = '2P'
 
 char_select_mode_bg = None
+bgm = None
 
 char_icons_unselected = []
 char_icons_selected = []
@@ -42,13 +43,17 @@ P2_RIGHT = PLAYER2_KEY_BINDINGS['right']
 P2_ATTACK = PLAYER2_KEY_BINDINGS['attack']
 
 def init():
-    global char_select_mode_bg
+    global char_select_mode_bg, bgm
     global char_icons_unselected, char_icons_selected, char_illusts, char_name_images, icon_positions
     global p1_cursor_index, p2_cursor_index
     global p1_selected_index, p2_selected_index, p1_locked, p2_locked
     global p1_cursor_image, p2_cursor_image
 
     char_select_mode_bg = load_image('character_select_background.png')
+
+    bgm = load_music('select_screen_bgm.mp3')
+    bgm.set_volume(64)
+    bgm.repeat_play()
 
     p1_cursor_image = load_image('player1_mark.png')
     p2_cursor_image = load_image('player2_mark.png')
@@ -100,7 +105,8 @@ def init():
 
 
 def finish():
-    pass
+    global bgm
+    stage_select_mode.bgm = bgm
 
 
 def lock_if_select_done(key):

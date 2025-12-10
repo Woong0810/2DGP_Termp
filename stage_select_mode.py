@@ -18,7 +18,7 @@ STAGE_INFOS = [
     (1, 'background2.png'),
     # (2, 'background3.png'),
 ]
-
+bgm = None
 
 def init():
     global stage_select_bg, stage_images, stage_positions, stage_cursor_index
@@ -44,7 +44,9 @@ def init():
         stage_positions.append((x, y))
 
 def finish():
-    pass
+    if bgm:
+        bgm.stop()
+
 
 
 def handle_events():

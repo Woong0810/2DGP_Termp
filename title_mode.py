@@ -5,6 +5,7 @@ import character_select_mode
 image = None
 font = None
 selected_mode = 0
+bgm = None
 
 def draw_bold_text(font, x, y, text, color, thickness=1):
     for dx in range(-thickness, thickness + 1):
@@ -12,10 +13,13 @@ def draw_bold_text(font, x, y, text, color, thickness=1):
             font.draw(x + dx, y + dy, text, color)
 
 def init():
-    global image, font, selected_mode
+    global image, font, selected_mode, bgm
     image = load_image('title.png')
     font = load_font('font.ttf', 40)
     selected_mode = 0
+    bgm = load_music('title_bgm.mp3')
+    bgm.set_volume(64)
+    bgm.repeat_play()
 
 def update():
     pass
@@ -38,10 +42,11 @@ def draw():
     update_canvas()
 
 def finish():
-    global image, font
+    global image, font, bgm
+    if bgm:
+        bgm.stop()
     del image
     del font
-    pass
 
 def handle_events():
     global selected_mode
