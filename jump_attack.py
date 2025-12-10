@@ -24,6 +24,10 @@ class JumpAttack:
 
         self.hit_targets = set()
 
+        from pico2d import load_wav
+        self.swing_sound = load_wav('sound/swing.wav')
+        self.swing_sound.set_volume(64)
+
     def enter(self, e):
         self.character.add_special_gauge(SPECIAL_GAUGE_ATTACK_TRY)
         jump_state = self.character.JUMP
@@ -43,6 +47,8 @@ class JumpAttack:
         self.segment_move_elapsed = 0.0
         self.segment_move_speed = 0.0
         self.update_segment_move()
+
+        self.swing_sound.play()
 
         game_world.add_collision_pairs('jump_attack:character', self, None)
         game_world.add_collision_pairs('normal_attack:character', None, self.character)
@@ -79,6 +85,8 @@ class JumpAttack:
                     self.attack_frame = 0.0
                     self.hit_targets.clear()
                     self.update_segment_move()
+
+                    self.swing_sound.play()
                 else:
                     self.character.state_machine.handle_event(('SEGMENT_END', None))
 

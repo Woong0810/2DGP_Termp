@@ -121,10 +121,12 @@ def lock_if_select_done(key):
 
     if key == P1_ATTACK and not p1_locked:
         p1_selected_index = p1_cursor_index
+        select_sound.play()
         p1_locked = True
 
     if key == P2_ATTACK and not p2_locked:
         p2_selected_index = p2_cursor_index
+        select_sound.play()
         p2_locked = True
 
 
@@ -161,11 +163,6 @@ def handle_events():
                     p2_cursor_index = (p2_cursor_index + 1) % len(CHAR_NAMES)
 
             lock_if_select_done(key)
-
-            if key == P1_ATTACK and not p1_locked:
-                select_sound.play()
-            if key == P2_ATTACK and not p2_locked:
-                select_sound.play()
 
             if p1_locked and p2_locked:
                 if p1_selected_index is None:

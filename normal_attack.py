@@ -22,6 +22,10 @@ class NormalAttack:
 
         self.hit_targets = set()
 
+        from pico2d import load_wav
+        self.swing_sound = load_wav('sound/swing.wav')
+        self.swing_sound.set_volume(64)
+
     def set_up_attack(self, is_up_attack):
         self.up_attack = is_up_attack
 
@@ -50,6 +54,8 @@ class NormalAttack:
 
         self.collision_hold_remaining = 0.0
         self.hit_targets.clear()
+
+        self.swing_sound.play()
 
         # 동적으로 attack 키 체크
         from sdl2 import SDL_KEYDOWN
@@ -114,6 +120,8 @@ class NormalAttack:
                 self.character.frame = self.start_frame
                 self.hit_targets.clear()
                 self.update_segment_move()
+
+                self.swing_sound.play()
             else:
                 self.character.state_machine.handle_event(('SEGMENT_END', None))
 

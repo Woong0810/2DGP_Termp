@@ -27,8 +27,6 @@ class Hit:
         self.punch_sound.set_volume(64)
 
     def enter(self, event):
-        self.punch_sound.play()
-
         self.character.frame = 0
         self.elapsed_time = 0.0
         self.is_lying_down = False

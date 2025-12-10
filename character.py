@@ -212,6 +212,8 @@ class Character:
         else:
             hit_duration = HIT_DURATION
 
+        self.HIT.punch_sound.play()
+
         self.state_machine.add_event(
             ('TAKE_HIT', (is_knockback, knockback_distance, knockback_dir, hit_duration, will_knockdown))
         )
